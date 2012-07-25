@@ -171,7 +171,7 @@ namespace MicroDAQ
         }
         Meter meter;
         Controller MetersCtrl;
-        MachineData M;
+
         private void CreateMeters()
         {
             int count = dataItems.Sum();
@@ -205,8 +205,8 @@ namespace MicroDAQ
                 }
             }
 
-            M = new MachineData("MachineData", h.ToArray(), d.ToArray());
-            M.Connect("127.0.0.1");
+            Program.M = new MachineData("MachineData", h.ToArray(), d.ToArray());
+            Program.M.Connect("127.0.0.1");
 
 
 
@@ -254,7 +254,7 @@ namespace MicroDAQ
 
         private void update2()
         {
-            foreach (var item in M.Items)
+            foreach (var item in Program.M.Items)
             {
                 Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f);
             }
@@ -295,7 +295,7 @@ namespace MicroDAQ
         {
             if (!readConfig)
             {
-                Thread.Sleep(180000);
+                Thread.Sleep(100);
                 ReadConfig();
                 readConfig = true;
             }
@@ -433,6 +433,11 @@ namespace MicroDAQ
                     this.WindowState = FormWindowState.Normal;
                     break;
             }
+        }
+
+        private void tsslMeters_Click(object sender, EventArgs e)
+        {
+            (new DataDisplayForm()).Show();
         }
 
     }

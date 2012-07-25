@@ -46,7 +46,6 @@ namespace MicroDAQ
             switch (groupName)
             {
                 case GROUP_NAME_CTRL:
-
                     for (int i = 0; i < item.Length; i++)
                     {
                         ushort[] val = null;

@@ -98,6 +98,12 @@
   <ItemGroup>
     <Compile Include="Controller.cs" />
     <Compile Include="DatabaseManager.cs" />
+    <Compile Include="DataDisplayForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataDisplayForm.Designer.cs">
+      <DependentUpon>DataDisplayForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataItem.cs" />
     <Compile Include="MachineDataItem.cs" />
     <Compile Include="MachineData.cs" />
@@ -112,6 +118,9 @@
     <Compile Include="Meter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DataDisplayForm.resx">
+      <DependentUpon>DataDisplayForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -126,6 +135,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="MicroDAQ.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
