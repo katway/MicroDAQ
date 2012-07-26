@@ -215,42 +215,7 @@ namespace MicroDAQ
 
         int updateMeters;
         int remoteMeters;
-        private void update()
-        {
-            try
-            {
-                updateMeters = 0;
-                foreach (var meter in Program.MeterManager.Meters.Values)
-                {
-                    if (meter.GetType() == typeof(Meter) || meter.GetType() == typeof(MachineDataItem))
-                    {
-                        Meter mt = meter as Meter;
-                        mt.SyncTick = plcTick;
-                        //if (mt.State != MeterState.通讯中断)
-#warning 临时应对OPCMES和PLC仪表组结方式不一致
-                        if (mt.Type == DataType.尘埃粒子)
-                        {
-                            mt.CalcPaticleCount();
-                            Program.DatabaseManager.UpdateMeterValue(mt.ID, (int)mt.Type, (int)mt.State, mt.Value1, 0, 0);
-                            Program.DatabaseManager.UpdateMeterValue(mt.ID + 10000, (int)mt.Type, (int)mt.State, mt.Value2, 0, 0);
-                            Program.DatabaseManager.UpdateMeterValue(mt.ID + 11000, (int)mt.Type, (int)mt.State, mt.ParticleCount.Value1, 0, 0);
-                            Program.DatabaseManager.UpdateMeterValue(mt.ID + 12000, (int)mt.Type, (int)mt.State, mt.ParticleCount.Value2, 0, 0);
-                            Program.DatabaseManager.UpdateMeterValue(mt.ID + 13000, (int)mt.Type + 1, (int)mt.State, (mt.Warning) ? (2) : (1), 0, 0);
-                        }
-                        else
-                        {
-                            Program.DatabaseManager.UpdateMeterValue(mt.ID, (int)mt.Type, (int)mt.State, mt.Value1, mt.Value2, (float)(int)mt.ConnectionState);
-                        }
-                    }
-                }
-                System.Threading.Thread.Sleep(900);
-            }
-            catch (Exception ex)
-            {
-                System.Threading.Thread.Sleep(3000);
-            }
-
-        }
+        
 
         private void update2()
         {
@@ -311,7 +276,7 @@ namespace MicroDAQ
 
                 UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
                 RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
-                UpdateCycle.Run(update, System.Threading.ThreadPriority.BelowNormal);
+                UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);
                 RemoteCtrl.Run(remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
                 Start.SetExit = true;
             }

@@ -35,13 +35,6 @@
       <FileName>MachineData.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MicroDAQ.MachineDataItem" Collapsed="true">
-    <Position X="2.75" Y="3.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MachineDataItem.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="MicroDAQ.MachineManager" Collapsed="true">
     <Position X="7.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
@@ -52,7 +45,7 @@
   <Class Name="MicroDAQ.MainForm" Collapsed="true">
     <Position X="9.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ICAEQKGSgSmAEAggABKAA4IiAgghVAADAKiAFIEkAAE=</HashCode>
+      <HashCode>ICAEQKGSgSmAEAggABKAA4IiAgghVAADAKiAFIEgAAE=</HashCode>
       <FileName>MainForm.cs</FileName>
     </TypeIdentifier>
   </Class>

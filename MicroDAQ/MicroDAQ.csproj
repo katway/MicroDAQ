@@ -105,7 +105,6 @@
       <DependentUpon>DataDisplayForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DataItem.cs" />
-    <Compile Include="MachineDataItem.cs" />
     <Compile Include="MachineData.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
