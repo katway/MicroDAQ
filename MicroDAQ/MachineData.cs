@@ -55,6 +55,7 @@ namespace MicroDAQ
                             this.Items[item[i]].ID = val[0];
                             this.Items[item[i]].Type = (DataType)val[1];
                             this.Items[item[i]].State = (DataState)val[2];
+                            this.Items[item[i]].Quality = Qualities[i];
                             UpdateItemPair(this.Items[item[i]].ID, this.Items[item[i]]);
                         }
                     }
@@ -65,6 +66,7 @@ namespace MicroDAQ
                         if (value[i] != null)
                         {
                             this.Items[item[i]].Value = (float)value[i];
+                            this.Items[item[i]].Quality = Qualities[i];
                         }
                     }
                     break;

@@ -15,7 +15,7 @@ namespace MicroDAQ
         { }
         public SqlConnection connRemoteCtrl;
         public SqlConnection connUpdate;
-        string ConnectionString;
+        public string ConnectionString;
         public DatabaseManager(string svrAddress, string port, string dbName, string dbUser, string dbUserPassword)
         {
             if (instanceFlag)
@@ -91,7 +91,7 @@ namespace MicroDAQ
                         break;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 connRemoteCtrl.Close();
