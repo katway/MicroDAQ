@@ -17,21 +17,24 @@ namespace MicroDAQ
     {
         System.Data.ConnectionState ConnectionState;
         int plcCount;
+        /// <summary>
+        /// 每个PLC中数据项数量
+        /// </summary>
         int[] meters;
         int[] dataItems;
         byte[] projectCode = new byte[4];
         byte[] version = new byte[2];
-        int plcTick;
-        int ctMeter;
+
         uint[] ctMeterID;
         string[] plcConnection;//= string.Empty;
+
+        List<Unit> Plcs = new List<Unit>();
         public MainForm()
         {
             InitializeComponent();
             PLC = new AsyncPLC4();
             //PLC.DataChange += new AsyncPLC4.dgtDataChange(PLC_DataChange);
             PLC.ReadComplete += new AsyncPLC4.dgtReadComplete(PLC_ReadComplete);
-
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -48,7 +51,8 @@ namespace MicroDAQ
                 this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
                 Duty = ini.GetValue("General", "Duty");
-                plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
+                 plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
+
                 plcConnection = new string[plcCount];
                 meters = new int[plcCount];
                 dataItems = new int[plcCount];
@@ -107,20 +111,13 @@ namespace MicroDAQ
                 case "Cfg-DataItem":
                     this.BeginInvoke((Action)delegate
                                     {
-                                        //tsslProject.Text = string.Format("项目代码：{0}{1}{2}{3}", (char)projectCode[0], (char)projectCode[1], (char)projectCode[2], (char)projectCode[3]);
-                                        //this.tsslVersion.Text = string.Format("接口版本：{0}.{1}", version[0], version[1]);
                                         this.tsslMeters.Text = "采集点：";
-                                        //switch (Duty)
-                                        //{
-                                        //    case "E":
                                         foreach (int ms in meters)
                                             this.tsslMeters.Text += ms.ToString() + " ";
-                                        //    break;
-                                        //case "M":
+
                                         foreach (int ds in dataItems)
                                             this.tsslMeters.Text += ds.ToString() + " ";
-                                        //        break;
-                                        //}
+
                                     });
                     break;
                 case "CtMeters":
@@ -147,7 +144,7 @@ namespace MicroDAQ
             items = new string[plcCount];
             for (int i = 0; i < plcCount; i++)
             {
-                items[i] = plcConnection[i] + "DB1,W22";
+                items[i] = plcConnection[i] + "DB1,W30";
             }
             PLC.AddGroup("Cfg", 1, 0);
             PLC.AddItems("Cfg", items);
@@ -157,17 +154,11 @@ namespace MicroDAQ
             items = new string[plcCount];
             for (int i = 0; i < plcCount; i++)
             {
-                items[i] = plcConnection[i] + "DB1,W42";
+                items[i] = plcConnection[i] + "DB1,W32";
             }
             PLC.AddGroup("Cfg-DataItem", 1, 0);
             PLC.AddItems("Cfg-DataItem", items);
-
             PLC.Read("Cfg-DataItem");
-            //        break;
-            //}
-            //meters[0] = 43; meters[1] = 45; meters[2] = 21; meters[3] = 0;
-            //dataItems[0] = 138; dataItems[1] = 164; dataItems[2] = 0; dataItems[3] = 30;
-            //getConfig = true;
         }
         Meter meter;
         Controller MetersCtrl;
@@ -175,6 +166,9 @@ namespace MicroDAQ
         private void CreateMeters()
         {
             int count = dataItems.Sum();
+
+            
+
             List<string> h = new List<string>();
             List<string> d = new List<string>();
 
@@ -183,14 +177,14 @@ namespace MicroDAQ
 
                 for (int meterIndex = 0; meterIndex < meters[plcIndex]; meterIndex++)
                 {
-                    h.Add(string.Format(plcConnection[plcIndex] + "DB3,W{0},3", meterIndex * 20 + 0));
-                    d.Add(string.Format(plcConnection[plcIndex] + "DB3,REAL{0}", meterIndex * 20 + 10));
+                    h.Add(string.Format("{0}DB3,W{1},3", plcConnection[plcIndex], meterIndex * 10 + 0));
+                    d.Add(string.Format("{0}DB3,REAL{1}", plcConnection[plcIndex], meterIndex * 10 + 6));
                 }
                 if (meters[plcIndex] > 0)
                 {
                     MetersCtrl = new Controller("MetersCtrl",
-                                  new string[] { string.Format(plcConnection[plcIndex] + "DB4,W0,5") },
-                                    new string[] { string.Format(plcConnection[plcIndex] + "DB5,W0,5") });
+                                  new string[] { string.Format(plcConnection[plcIndex] + "DB2,W100,5") },
+                                    new string[] { string.Format(plcConnection[plcIndex] + "DB2,W120,5") });
                     Program.MeterManager.CTMeters.Add(plcIndex * 10000 + 99, MetersCtrl);
                     MetersCtrl.Connect("127.0.0.1");
                 }
@@ -200,14 +194,13 @@ namespace MicroDAQ
             {
                 for (int itemIndex = 0; itemIndex < dataItems[plcIndex]; itemIndex++)
                 {
-                    h.Add(string.Format(plcConnection[plcIndex] + "DB6,W{0},3", itemIndex * 10));
-                    d.Add(string.Format(plcConnection[plcIndex] + "DB6,REAL{0}", itemIndex * 10 + 6));
+                    h.Add(string.Format("{0}DB4,W{1},3", plcConnection[plcIndex], itemIndex * 20));
+                    d.Add(string.Format("{0}DB4,REAL{1}", plcConnection[plcIndex], itemIndex * 20 + 10));
                 }
             }
 
-            Program.M = new MachineData("MachineData", h.ToArray(), d.ToArray());
+            Program.M = new DataItemManager("MachineData", h.ToArray(), d.ToArray());
             Program.M.Connect("127.0.0.1");
-
 
 
         }
@@ -215,7 +208,7 @@ namespace MicroDAQ
 
         int updateMeters;
         int remoteMeters;
-        
+
 
         private void update2()
         {
@@ -324,10 +317,8 @@ namespace MicroDAQ
                                          this.tsslUpdate.Text = "S";
                                          break;
                                  }
-
                              });
         }
-
 
 
         CycleTask UpdateCycle;

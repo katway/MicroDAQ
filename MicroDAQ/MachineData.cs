@@ -6,11 +6,20 @@ using System.Data;
 
 namespace MicroDAQ
 {
-    class MachineData : JonLibrary.OPC.Machine
+    /// <summary>
+    /// 数量项管理器
+    /// </summary>
+    class DataItemManager : JonLibrary.OPC.Machine
     {
         public List<DataItem> Items = null;
         public Dictionary<int, DataItem> ItemPair = null;
-        public MachineData(string name, string[] dataHead, string[] data)
+        /// <summary>
+        /// 使用由指定的xx建立管理器
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dataHead"></param>
+        /// <param name="data"></param>
+        public DataItemManager(string name, string[] dataHead, string[] data)
             : base()
         {
             this.Name = Name;

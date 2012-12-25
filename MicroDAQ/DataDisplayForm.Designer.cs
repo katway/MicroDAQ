@@ -47,6 +47,7 @@
             this.labOPCState = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.btnRefreshData = new System.Windows.Forms.Button();
+            this.bkwConnect = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDB)).BeginInit();
             this.grpDB.SuspendLayout();
             this.grpItem.SuspendLayout();
@@ -270,5 +271,6 @@
         private System.Windows.Forms.Label labOPCState;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnRefreshData;
+        private System.ComponentModel.BackgroundWorker bkwConnect;
     }
 }

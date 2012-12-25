@@ -26,7 +26,7 @@ namespace MicroDAQ
                 //ConnectionString = string.Format("server={0};port={1};database={2};uid={3};pwd={4};charset=utf8;", svrAddress, port, dbName, dbUser, dbUserPassword);
                 connRemoteCtrl = new SqlConnection(ConnectionString);
                 connUpdate = new SqlConnection(ConnectionString);
-                getRemoteAdapter = new SqlDataAdapter("SELECT * FROM v_remotecontrol WHERE cmdstate=1", connRemoteCtrl);
+                getRemoteAdapter = new SqlDataAdapter("SELECT * FROM v_remotecontrol WITH(nolock) WHERE cmdstate=1 AND ID IS NOT NULL AND cycle is not null", connRemoteCtrl);
                 getRemoteControl = new SqlCommand();
 
                 connRemoteCtrl.StateChange += new StateChangeEventHandler(Connection_StateChange);

@@ -20,10 +20,28 @@ namespace MicroDAQ
         DataTable dt;
         private void DataDisplayForm_Load(object sender, EventArgs e)
         {
-            connection.Open();
+            bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
+            bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
+            bkwConnect.RunWorkerAsync();
+
+           
+
+        }
+
+        void bkwConnect_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             ShowItems();
             ShowDB();
+        }
 
+        void bkwConnect_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                connection.Open();
+            }
+            catch
+            { }
         }
         private void ShowItems()
         {
@@ -165,7 +183,12 @@ namespace MicroDAQ
 
         private void DataDisplayForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            connection.Close();
+            try
+            {
+                connection.Close();
+            }
+            catch
+            { }
         }
 
         private void btnInstant_Click(object sender, EventArgs e)
