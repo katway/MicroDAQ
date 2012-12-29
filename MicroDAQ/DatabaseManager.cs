@@ -98,7 +98,67 @@ namespace MicroDAQ
             }
             return result;
         }
-
+        private void RunProcedure(SqlCommand command, string storedProcName, SqlParameter[] parameters)
+        {
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = storedProcName;
+            command.Parameters.AddRange(parameters);
+            command.ExecuteNonQuery();
+        }
+        //public bool UpdateControlState(int MeterId, int CommandCode, int CommandState, int CommandData)
+        //{
+        //    bool success = false;
+        //    try
+        //    {
+        //        lock (this)
+        //        {
+        //            if (connUpdate.State == ConnectionState.Open)
+        //            {
+        //                SqlCommand command = new SqlCommand();
+        //                command.Connection = connRemoteCtrl;
+        //                SqlParameter[] values = new SqlParameter[]
+        //                                                    { new SqlParameter("@MeterId",SqlDbType.Int),
+        //                                                        new SqlParameter("@Command" ,sql
+        //                                                    };
+        //                try
+        //                {
+        //                    RunProcedure(command,"UpdateControlState",
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Console.WriteLine(ex.ToString());
+        //                    success = false;
+        //                    command.Dispose();
+        //                }
+        //            }
+        //            else
+        //            {
+        //                switch (connUpdate.State)
+        //                {
+        //                    case ConnectionState.Broken:
+        //                        connUpdate.Close();
+        //                        break;
+        //                    case ConnectionState.Closed:
+        //                        connUpdate.Open();
+        //                        break;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch
+        //    { success = false; }
+        //    return success;
+        //}
+        /// <summary>
+        /// 使用存储过程UpdateMeterValue更新仪表参数
+        /// </summary>
+        /// <param name="MeterId">仪表参数项ID</param>
+        /// <param name="MeterType">仪表类型</param>
+        /// <param name="MeterState">仪表状态</param>
+        /// <param name="Value1">仪表数值1</param>
+        /// <param name="Value2">仪表数值2</param>
+        /// <param name="Value3">仪表数值3</param>
+        /// <returns></returns>
         public bool UpdateMeterValue(int MeterId, int MeterType, int MeterState, float Value1, float Value2, float Value3)
         {
             bool success = false;

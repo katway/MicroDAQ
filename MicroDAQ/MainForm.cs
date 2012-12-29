@@ -253,7 +253,7 @@ namespace MicroDAQ
         {
             if (!readConfig)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(180000);
                 ReadConfig();
                 readConfig = true;
             }
