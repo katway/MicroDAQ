@@ -40,3 +40,5 @@ Test
 #KDiff
 *.orig
 *~HEAD
+
+*.exe
