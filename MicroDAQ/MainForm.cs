@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using JonLibrary.OPC;
@@ -51,7 +50,7 @@ namespace MicroDAQ
                 this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
                 Duty = ini.GetValue("General", "Duty");
-                 plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
+                plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
 
                 plcConnection = new string[plcCount];
                 meters = new int[plcCount];
@@ -109,7 +108,7 @@ namespace MicroDAQ
             {
                 case "Cfg":
                 case "Cfg-DataItem":
-                    this.BeginInvoke((Action)delegate
+                    this.BeginInvoke(new MethodInvoker(delegate
                                     {
                                         this.tsslMeters.Text = "采集点：";
                                         foreach (int ms in meters)
@@ -117,8 +116,7 @@ namespace MicroDAQ
 
                                         foreach (int ds in dataItems)
                                             this.tsslMeters.Text += ds.ToString() + " ";
-
-                                    });
+                                    }));
                     break;
                 case "CtMeters":
                     ctMeterID = (uint[])value[0];
@@ -165,9 +163,9 @@ namespace MicroDAQ
 
         private void CreateMeters()
         {
-            int count = dataItems.Sum();
+            int count = dataItems.Length;
 
-            
+
 
             List<string> h = new List<string>();
             List<string> d = new List<string>();
@@ -214,7 +212,7 @@ namespace MicroDAQ
         {
             foreach (var item in Program.M.Items)
             {
-                Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f);
+                Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
             }
         }
         int running;
@@ -278,7 +276,7 @@ namespace MicroDAQ
 
         void RemoteCtrl_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.BeginInvoke((Action)delegate
+            this.BeginInvoke(new MethodInvoker(delegate
             {
                 switch (state)
                 {
@@ -295,12 +293,12 @@ namespace MicroDAQ
                         this.tsslRemote.Text = "S";
                         break;
                 }
-            });
+            }));
         }
 
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.BeginInvoke((Action)delegate
+            this.BeginInvoke(new MethodInvoker(delegate
                              {
                                  switch (state)
                                  {
@@ -317,7 +315,7 @@ namespace MicroDAQ
                                          this.tsslUpdate.Text = "S";
                                          break;
                                  }
-                             });
+                             }));
         }
 
 

@@ -36,7 +36,7 @@
             this.数据值2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.设备类型 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.状态 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.可信度 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.数据质量 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.dgvDB = new System.Windows.Forms.DataGridView();
             this.grpDB = new System.Windows.Forms.GroupBox();
             this.labDBState = new System.Windows.Forms.Label();
@@ -61,7 +61,7 @@
             this.数据值2,
             this.设备类型,
             this.状态,
-            this.可信度});
+            this.数据质量});
             this.lsvItems.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lsvItems.FullRowSelect = true;
             this.lsvItems.GridLines = true;
@@ -99,10 +99,10 @@
             this.状态.Text = "状态";
             this.状态.Width = 80;
             // 
-            // 可信度
+            // 数据质量
             // 
-            this.可信度.Text = "可信度";
-            this.可信度.Width = 80;
+            this.数据质量.Text = "可信度";
+            this.数据质量.Width = 80;
             // 
             // dgvDB
             // 
@@ -261,7 +261,7 @@
         private System.Windows.Forms.ColumnHeader 数据值1;
         private System.Windows.Forms.ColumnHeader 数据值2;
         private System.Windows.Forms.DataGridView dgvDB;
-        private System.Windows.Forms.ColumnHeader 可信度;
+        private System.Windows.Forms.ColumnHeader 数据质量;
         private System.Windows.Forms.GroupBox grpDB;
         private System.Windows.Forms.Label labDBState;
         private System.Windows.Forms.Label label3;
