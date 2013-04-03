@@ -233,7 +233,7 @@ namespace MicroDAQ
                                                   );
                         Thread.Sleep(400);
                     }
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(60000);
             }
             catch (Exception ex)
             {
