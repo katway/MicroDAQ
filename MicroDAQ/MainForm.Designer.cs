@@ -121,7 +121,6 @@
             this.tsslMeters.Text = "采集点：";
             this.tsslMeters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.tsslMeters.Click += new System.EventHandler(this.tsslMeters_Click);
-
             // 
             // tsslUpdate
             // 

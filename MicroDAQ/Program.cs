@@ -6,13 +6,25 @@ namespace MicroDAQ
 {
     static class Program
     {
+        public static int waitMillionSecond = 180000;
         public static bool BeQuit;
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
+            #region 处理来自参数的快速启动请求，跳过对OPCSERVER的三分钟等待
+            foreach (string arg in args)
+            {
+                if (arg.Contains("fast"))
+                {
+                    waitMillionSecond = 1000;
+                    break;
+                }
+
+            }
+            #endregion
             bool createNew;
             //try
             //{
@@ -30,23 +42,24 @@ namespace MicroDAQ
                                                         ini.GetValue("Database", "Password"));
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    MainForm frmMain = null;
 
-                    while (!BeQuit)
-                        try
-                        {
-                            frmMain = new MainForm();
-                            Application.Run(frmMain);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine("OH. NO!" + ex.ToString());
-                        }
-                        finally
-                        {
-                            if (frmMain != null) frmMain.Dispose();
-                        }
-                    Environment.Exit(Environment.ExitCode);
+                    Form MainForm = null;
+                    //while (!BeQuit)
+                    //try
+                    //{
+                    MainForm = new MainForm();
+                    //frmMain = new TestAlarm();
+                    Application.Run(MainForm);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    Console.WriteLine("OH. NO!" + ex.ToString());
+                    //}
+                    //finally
+                    //{
+                    //    if (frmMain != null) frmMain.Dispose();
+                    //}
+                    //Environment.Exit(Environment.ExitCode);
                 }
                 else
                 {

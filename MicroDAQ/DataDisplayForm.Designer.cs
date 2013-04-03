@@ -44,6 +44,7 @@
             this.btnInstant = new System.Windows.Forms.Button();
             this.btnRefreshDB = new System.Windows.Forms.Button();
             this.grpItem = new System.Windows.Forms.GroupBox();
+            this.btnTestAlarm = new System.Windows.Forms.Button();
             this.labOPCState = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.btnRefreshData = new System.Windows.Forms.Button();
@@ -186,6 +187,7 @@
             // 
             // grpItem
             // 
+            this.grpItem.Controls.Add(this.btnTestAlarm);
             this.grpItem.Controls.Add(this.labOPCState);
             this.grpItem.Controls.Add(this.label1);
             this.grpItem.Controls.Add(this.btnRefreshData);
@@ -196,6 +198,16 @@
             this.grpItem.TabIndex = 28;
             this.grpItem.TabStop = false;
             this.grpItem.Text = "PLC数据项";
+            // 
+            // btnTestAlarm
+            // 
+            this.btnTestAlarm.Location = new System.Drawing.Point(23, 204);
+            this.btnTestAlarm.Name = "btnTestAlarm";
+            this.btnTestAlarm.Size = new System.Drawing.Size(107, 34);
+            this.btnTestAlarm.TabIndex = 27;
+            this.btnTestAlarm.Text = "测试报警灯";
+            this.btnTestAlarm.UseVisualStyleBackColor = true;
+            this.btnTestAlarm.Click += new System.EventHandler(this.btnTestAlarm_Click);
             // 
             // labOPCState
             // 
@@ -272,5 +284,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnRefreshData;
         private System.ComponentModel.BackgroundWorker bkwConnect;
+        private System.Windows.Forms.Button btnTestAlarm;
     }
 }

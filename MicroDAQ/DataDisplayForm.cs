@@ -22,9 +22,6 @@ namespace MicroDAQ
             bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
             bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
             bkwConnect.RunWorkerAsync();
-
-           
-
         }
 
         void bkwConnect_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -228,7 +225,6 @@ namespace MicroDAQ
                         this.labDBState.ForeColor = Color.White;
                         this.labDBState.Text = "通信正常";
                         break;
-
                 }
 
             }
@@ -237,6 +233,13 @@ namespace MicroDAQ
 
             this.btnInstant.Enabled = true;
         }
-
+        Form testAlarm = null;
+        private void btnTestAlarm_Click(object sender, EventArgs e)
+        {
+            if (testAlarm != null && !testAlarm.IsDisposed)
+                testAlarm.Show();
+            else
+                (testAlarm = new TestAlarm()).Show();
+        }
     }
 }

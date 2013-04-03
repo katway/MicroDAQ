@@ -251,7 +251,8 @@ namespace MicroDAQ
         {
             if (!readConfig)
             {
-                Thread.Sleep(180000);
+                //等OPCSERVER启动
+                Thread.Sleep(Program.waitMillionSecond);
                 ReadConfig();
                 readConfig = true;
             }
@@ -319,8 +320,8 @@ namespace MicroDAQ
         }
 
 
-        CycleTask UpdateCycle;
-        CycleTask RemoteCtrl;
+        private CycleTask UpdateCycle;
+        private CycleTask RemoteCtrl;
         CycleTask Start;
         private void btnStart_Click(object sender, EventArgs e)
         {
@@ -388,10 +389,13 @@ namespace MicroDAQ
                     break;
             }
         }
-
+        Form frmDataDisplay = null;
         private void tsslMeters_Click(object sender, EventArgs e)
         {
-            (new DataDisplayForm()).Show();
+            if (frmDataDisplay != null && !frmDataDisplay.IsDisposed)
+                frmDataDisplay.Show();
+            else
+                (frmDataDisplay = new DataDisplayForm()).Show();
         }
 
     }
