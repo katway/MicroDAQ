@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using JonLibrary.Common;
+using JonLibrary.Automatic;
 namespace MicroDAQ
 {
     static class Program
     {
         public static int waitMillionSecond = 180000;
         public static bool BeQuit;
+        public static CycleTask RemoteCycle;
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>

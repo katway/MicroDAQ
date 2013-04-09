@@ -37,7 +37,7 @@ namespace MicroDAQ
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            AlarmControl alarm = AddAlarm(++alarmIndex + initSlave, 0);
+            AlarmControl alarm = AddAlarm(alarmIndex++ + initSlave, 0);
             alarm.Location = new Point(30, 40 + 29 * alarmIndex);
 
         }
@@ -55,13 +55,11 @@ namespace MicroDAQ
             RemoveAlarm();
             alarmIndex--;
         }
-        JonLibrary.Automatic.CycleTask cycle;
-
 
         private void TestAlarm_Load(object sender, EventArgs e)
         {
-
-
+            if (Program.RemoteCycle != null)
+                Program.RemoteCycle.SetPause = true;
         }
         int runningNum = 0;
 
@@ -78,6 +76,12 @@ namespace MicroDAQ
                     mt.SetCommand(runningNum, alarm.Slave, 1, (int)alarm.AlertCode);
                 }
             }
+        }
+
+        private void TestAlarm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Program.RemoteCycle != null)
+                Program.RemoteCycle.SetPause = false;
         }
 
     }

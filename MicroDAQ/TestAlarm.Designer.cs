@@ -95,6 +95,7 @@
             this.Name = "TestAlarm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "报警灯测试";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TestAlarm_FormClosing);
             this.Load += new System.EventHandler(this.TestAlarm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -265,7 +265,7 @@ namespace MicroDAQ
                 started = true;
                 UpdateCycle = new CycleTask();
                 RemoteCtrl = new CycleTask();
-
+                Program.RemoteCycle = RemoteCtrl;
                 UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
                 RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
                 UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);

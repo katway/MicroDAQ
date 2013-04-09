@@ -39,11 +39,10 @@
             // 
             this.mtxtSlave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.mtxtSlave.Location = new System.Drawing.Point(6, 2);
-            this.mtxtSlave.Mask = "00000";
+            this.mtxtSlave.Mask = "000";
             this.mtxtSlave.Name = "mtxtSlave";
             this.mtxtSlave.Size = new System.Drawing.Size(49, 21);
             this.mtxtSlave.TabIndex = 0;
-            this.mtxtSlave.ValidatingType = typeof(int);
             this.mtxtSlave.TextChanged += new System.EventHandler(this.mtxtSlave_TextChanged);
             // 
             // rdoBuzzRed
@@ -83,12 +82,10 @@
             // 
             this.rdoGreen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.rdoGreen.AutoSize = true;
-            this.rdoGreen.Checked = true;
             this.rdoGreen.Location = new System.Drawing.Point(289, 5);
             this.rdoGreen.Name = "rdoGreen";
             this.rdoGreen.Size = new System.Drawing.Size(35, 16);
             this.rdoGreen.TabIndex = 4;
-            this.rdoGreen.TabStop = true;
             this.rdoGreen.Text = "绿";
             this.rdoGreen.UseVisualStyleBackColor = true;
             // 
