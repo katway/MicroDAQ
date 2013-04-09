@@ -20,7 +20,9 @@ namespace MicroDAQ
             value[0] = (ushort)(runningNumber & 0xFFFF);
             value[1] = (ushort)(MeterID & 0xFFFF);
             value[2] = (ushort)(Cmd & 0xFFFF);
-            value[4] = (ushort)(cmdValue & 0xFFFF);
+            value[3] = (ushort)(cmdValue & 0xFFFF);
+            value[4] = (ushort)(10& 0xFFFF);
+
             return PLC.Write(GROUP_NAME_CTRL, new object[] { value });
         }
 
