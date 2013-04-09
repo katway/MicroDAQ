@@ -46,22 +46,22 @@ namespace MicroDAQ
                     Application.SetCompatibleTextRenderingDefault(false);
 
                     Form MainForm = null;
-                    //while (!BeQuit)
-                    //try
-                    //{
-                    MainForm = new MainForm();
-                    //frmMain = new TestAlarm();
-                    Application.Run(MainForm);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    Console.WriteLine("OH. NO!" + ex.ToString());
-                    //}
-                    //finally
-                    //{
-                    //    if (frmMain != null) frmMain.Dispose();
-                    //}
-                    //Environment.Exit(Environment.ExitCode);
+                    while (!BeQuit)
+                        try
+                        {
+                            MainForm = new MainForm();
+                            //frmMain = new TestAlarm();
+                            Application.Run(MainForm);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("OH. NO!" + ex.ToString());
+                        }
+                        finally
+                        {
+                            if (MainForm != null) MainForm.Dispose();
+                        }
+                    Environment.Exit(Environment.ExitCode);
                 }
                 else
                 {
