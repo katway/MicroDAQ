@@ -82,7 +82,7 @@ namespace MicroDAQ
             OnStatusChannge();
         }
 
-        private void UpdateItemPair(int key, DataItem item)
+        protected void UpdateItemPair(int key, DataItem item)
         {
             if (!ItemPair.ContainsKey(key))
             { ItemPair.Add(key, item); }

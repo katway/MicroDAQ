@@ -170,6 +170,9 @@ namespace MicroDAQ
             List<string> h = new List<string>();
             List<string> d = new List<string>();
 
+            List<string> h_flow = new List<string>();
+            List<string> d_flow = new List<string>();
+
             for (int plcIndex = 0; plcIndex < plcCount; plcIndex++)
             {
 
@@ -194,13 +197,15 @@ namespace MicroDAQ
                 {
                     h.Add(string.Format("{0}DB4,W{1},3", plcConnection[plcIndex], itemIndex * 20));
                     d.Add(string.Format("{0}DB4,REAL{1}", plcConnection[plcIndex], itemIndex * 20 + 10));
+                    h_flow.Add(string.Format("{0}DB4,W{1},3", plcConnection[plcIndex], itemIndex * 20));
+                    d_flow.Add(string.Format("{0}DB4,W{1}", plcConnection[plcIndex], itemIndex * 20 + 10));
                 }
             }
 
             Program.M = new DataItemManager("MachineData", h.ToArray(), d.ToArray());
             Program.M.Connect("127.0.0.1");
-
-
+            Program.M_flowAlert = new FlowAlertManager("FlowAlert", h_flow.ToArray(), d_flow.ToArray());
+            Program.M_flowAlert.Connect("127.0.0.1");
         }
 
 
@@ -214,6 +219,11 @@ namespace MicroDAQ
             {
                 Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
             }
+            foreach (var item in Program.M_flowAlert.Items)
+            {
+                Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
+            }
+
         }
         int running;
         public void remoteCtrl()

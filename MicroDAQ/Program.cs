@@ -78,5 +78,7 @@ namespace MicroDAQ
         public static MachineManager MeterManager = new MachineManager();
         public static DatabaseManager DatabaseManager;// = new DatabaseManager();
         public static DataItemManager M;
+        public static FlowAlertManager M_flowAlert;
+
     }
 }
