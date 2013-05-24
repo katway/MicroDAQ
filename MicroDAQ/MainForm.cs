@@ -221,7 +221,10 @@ namespace MicroDAQ
             }
             foreach (var item in Program.M_flowAlert.Items)
             {
-                Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
+                float t = 0.0f;
+                if (item.Value == 0) t = 28.3f;
+                if (item.Value == 2) t = 0.0f;
+                Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
             }
 
         }
