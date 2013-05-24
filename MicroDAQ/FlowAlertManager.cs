@@ -1,14 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Data;
 
 namespace MicroDAQ
 {
-    class FlowAlertManager : DataItemManager
+    class FlowAlertManager : JonLibrary.OPC.Machine
     {
+        public List<DataItem> Items = null;
+        public Dictionary<int, DataItem> ItemPair = null;
+        //public FlowAlertManager(string name, string[] dataHead, string[] data)
+        //    : base(name, dataHead, data)
+        //{ }
+
         public FlowAlertManager(string name, string[] dataHead, string[] data)
-            : base(name, dataHead, data)
-        { }
+            : base()
+        {
+            this.Name = Name;
+            ItemCtrl = dataHead;
+            ItemStatus = data;
+            int count = (dataHead.Length < data.Length) ? (dataHead.Length) : (data.Length);
+            Items = new List<DataItem>();
+            ItemPair = new Dictionary<int, DataItem>();
+            for (int i = 0; i < count; i++)
+                Items.Add(new DataItem());
+        }
+
+
+
+        internal protected override bool Connect(string OPCServerIP)
+        {
+            bool success = true;
+            success &= PLC.Connect("OPC.SimaticNET", OPCServerIP);
+            success &= PLC.AddGroup(GROUP_NAME_CTRL, 1, 0);
+            success &= PLC.AddItems(GROUP_NAME_CTRL, ItemCtrl);
+            success &= PLC.AddGroup(GROUP_NAME_STATE, 1, 0);
+            success &= PLC.AddItems(GROUP_NAME_STATE, ItemStatus);
+            PLC.SetState(GROUP_NAME_CTRL, true);
+            PLC.SetState(GROUP_NAME_STATE, true);
+            ConnectionState = (success) ? (ConnectionState.Open) : (ConnectionState.Closed);
+            return success;
+        }
+
+
+
+        protected void UpdateItemPair(int key, DataItem item)
+        {
+            if (!ItemPair.ContainsKey(key))
+            { ItemPair.Add(key, item); }
+            ItemPair[key] = item;
+        }
         protected override void PLC_DataChange(string groupName, int[] item, object[] value, short[] Qualities)
         {
             base.PLC_DataChange(groupName, item, value, Qualities);

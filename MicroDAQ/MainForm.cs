@@ -198,7 +198,7 @@ namespace MicroDAQ
                     h.Add(string.Format("{0}DB4,W{1},3", plcConnection[plcIndex], itemIndex * 20));
                     d.Add(string.Format("{0}DB4,REAL{1}", plcConnection[plcIndex], itemIndex * 20 + 10));
                     h_flow.Add(string.Format("{0}DB4,W{1},3", plcConnection[plcIndex], itemIndex * 20));
-                    d_flow.Add(string.Format("{0}DB4,W{1}", plcConnection[plcIndex], itemIndex * 20 + 10));
+                    d_flow.Add(string.Format("{0}DB4,W{1}", plcConnection[plcIndex], itemIndex * 20 + 18));
                 }
             }
 
@@ -222,9 +222,12 @@ namespace MicroDAQ
             foreach (var item in Program.M_flowAlert.Items)
             {
                 float t = 0.0f;
-                if (item.Value == 0) t = 28.3f;
-                if (item.Value == 2) t = 0.0f;
+                if ((item.Value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                    t = 28.3f;
+                if (item.Value == 2)
+                    t = 0.0f;
                 Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
+                Console.WriteLine(item.ToString());
             }
 
         }
