@@ -1,10 +1,265 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using JonLibrary.OPC;
+using JonLibrary.Automatic;
+using JonLibrary.Common;
+using System.Threading;
+using System.Data;
 
 namespace MicroDAQ.Gateway
 {
-    class OpcGateway
+    class OpcGateway : GatewayBase
     {
+        
+        int plcCount;
+        /// <summary>
+        /// 每个PLC中数据项数量
+        /// </summary>
+        int[] meters;
+        int[] dataItems;
+        byte[] projectCode = new byte[4];
+        byte[] version = new byte[2];
+
+        uint[] ctMeterID;
+        string[] plcConnection;//= string.Empty;
+
+        List<PLCStation> Plcs = new List<PLCStation>();
+
+        public OpcGateway(int plcCount)
+        {
+            PLC = new AsyncPLC4();
+            //PLC.DataChange += new AsyncPLC4.dgtDataChange(PLC_DataChange);
+            PLC.ReadComplete += new AsyncPLC4.dgtReadComplete(PLC_ReadComplete);
+        }
+
+
+        void PLC_DataChange(string groupName, int[] item, object[] value, short[] Qualities)
+        {
+            bool r = true;
+            foreach (short q in Qualities)
+            {
+                r &= (q >= 192) ? (true) : (false);
+            }
+            ConnectionState = (r) ? (ConnectionState.Open) : (ConnectionState.Closed);
+
+            switch (groupName)
+            {
+                case "Cfg":
+                    for (int i = 0; i < item.Length; i++)
+                    {
+                        if (value[i] == null) continue;
+                        meters[item[i]] = (ushort)value[i];
+                    }
+                    break;
+                case "Cfg-DataItem":
+                    for (int i = 0; i < item.Length; i++)
+                    {
+                        if (value[i] == null) continue;
+                        dataItems[item[i]] = (ushort)value[i];
+                    }
+                    getConfig = true;
+                    break;
+                case "CtMeters":
+                    break;
+            }
+        }
+
+        void PLC_ReadComplete(string groupName, int[] item, object[] value, short[] Qualities)
+        {
+            this.PLC_DataChange(groupName, item, value, Qualities);
+            switch (groupName)
+            {
+                case "Cfg":
+                case "Cfg-DataItem":
+                    this.BeginInvoke(new MethodInvoker(delegate
+                    {
+                        this.tsslMeters.Text = "采集点：";
+                        foreach (int ms in meters)
+                            this.tsslMeters.Text += ms.ToString() + " ";
+
+                        foreach (int ds in dataItems)
+                            this.tsslMeters.Text += ds.ToString() + " ";
+                    }));
+                    break;
+                case "CtMeters":
+                    ctMeterID = (uint[])value[0];
+                    for (int i = 0; i < ctMeterID.Length; i++)
+                    {
+                        ctMeterID[i] = ctMeterID[i] >> 16;
+                    }
+                    break;
+            }
+        }
+        AsyncPLC4 PLC;
+
+        string Duty = string.Empty;
+        private void ReadConfig()
+        {
+            PLC.Connect("OPC.SimaticNET", "127.0.0.1");
+            //配置
+
+            string[] items = null;
+            //switch (Duty)
+            //{
+            //    case "E":
+            items = new string[plcCount];
+            for (int i = 0; i < plcCount; i++)
+            {
+                items[i] = plcConnection[i] + "DB1,W30";
+            }
+            PLC.AddGroup("Cfg", 1, 0);
+            PLC.AddItems("Cfg", items);
+            PLC.Read("Cfg");
+            //    break;
+            //case "M":
+            items = new string[plcCount];
+            for (int i = 0; i < plcCount; i++)
+            {
+                items[i] = plcConnection[i] + "DB1,W32";
+            }
+            PLC.AddGroup("Cfg-DataItem", 1, 0);
+            PLC.AddItems("Cfg-DataItem", items);
+            PLC.Read("Cfg-DataItem");
+        }
+        Meter meter;
+        Controller MetersCtrl;
+
+        private void CreateMeters()
+        {
+            int count = dataItems.Length;
+
+
+
+            List<string> h = new List<string>();
+            List<string> d = new List<string>();
+
+            List<string> h_flow = new List<string>();
+            List<string> d_flow = new List<string>();
+
+            for (int plcIndex = 0; plcIndex < plcCount; plcIndex++)
+            {
+
+                for (int meterIndex = 0; meterIndex < meters[plcIndex]; meterIndex++)
+                {
+                    h.Add(string.Format("{0}DB3,W{1},3", plcConnection[plcIndex], meterIndex * 10 + 0));
+                    d.Add(string.Format("{0}DB3,REAL{1}", plcConnection[plcIndex], meterIndex * 10 + 6));
+                }
+                if (meters[plcIndex] > 0)
+                {
+                    MetersCtrl = new Controller("MetersCtrl",
+                                  new string[] { string.Format(plcConnection[plcIndex] + "DB2,W100,5") },
+                                    new string[] { string.Format(plcConnection[plcIndex] + "DB2,W120,5") });
+                    Program.MeterManager.CTMeters.Add(plcIndex * 10000 + 99, MetersCtrl);
+                    MetersCtrl.Connect("127.0.0.1");
+                }
+            }
+
+            for (int plcIndex = 0; plcIndex < plcCount; plcIndex++)
+            {
+                for (int itemIndex = 0; itemIndex < dataItems[plcIndex]; itemIndex++)
+                {
+                    h.Add(string.Format("{0}DB4,W{1},3", plcConnection[plcIndex], itemIndex * 20));
+                    d.Add(string.Format("{0}DB4,REAL{1}", plcConnection[plcIndex], itemIndex * 20 + 10));
+                    h_flow.Add(string.Format("{0}DB4,W{1},3", plcConnection[plcIndex], itemIndex * 20));
+                    d_flow.Add(string.Format("{0}DB4,W{1}", plcConnection[plcIndex], itemIndex * 20 + 18));
+                }
+            }
+
+            Program.M = new DataItemManager("MachineData", h.ToArray(), d.ToArray());
+            Program.M.Connect("127.0.0.1");
+            Program.M_flowAlert = new FlowAlertManager("FlowAlert", h_flow.ToArray(), d_flow.ToArray());
+            Program.M_flowAlert.Connect("127.0.0.1");
+        }
+
+
+        int updateMeters;
+        int remoteMeters;
+
+
+        private void update2()
+        {
+            foreach (var item in Program.M.Items)
+            {
+                Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
+            }
+            foreach (var item in Program.M_flowAlert.Items)
+            {
+                float t = 0.0f;
+                if ((item.Value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                    t = 28.3f;
+                if (item.Value == 2)
+                    t = 0.0f;
+                Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
+                Console.WriteLine(item.ToString());
+            }
+
+        }
+        int running;
+        public void remoteCtrl()
+        {
+            try
+            {
+                DataRow[] Rows = Program.DatabaseManager.GetRemoteControl();
+                if (Rows != null)
+                    foreach (var row in Rows)
+                    {
+                        //MessageBox.Show((row["cycle"].ToString() != null).ToString());
+                        foreach (var mt in Program.MeterManager.CTMeters.Values)
+                            mt.SetCommand(++running,
+                                                      int.Parse(row["id"].ToString()),
+                                                      int.Parse(row["command"].ToString()),
+                                                      int.Parse((row["cycle"] != null) ? (row["cycle"].ToString()) : ("0"))
+                                                  );
+                        Thread.Sleep(400);
+                    }
+                System.Threading.Thread.Sleep(200);
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.ToString());
+                System.Threading.Thread.Sleep(3000);
+            }
+        }
+
+        bool readConfig = false;
+        bool getConfig = false;
+        bool createMeters = false;
+        bool metersCreated = false;
+        bool started = false;
+        public void start()
+        {
+            if (!readConfig)
+            {
+                //等OPCSERVER启动
+                Thread.Sleep(Program.waitMillionSecond);
+                ReadConfig();
+                readConfig = true;
+            }
+
+            if (getConfig && !started)
+            {
+
+                CreateMeters();
+
+                started = true;
+                UpdateCycle = new CycleTask();
+                RemoteCtrl = new CycleTask();
+                Program.RemoteCycle = RemoteCtrl;
+                UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
+                RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
+                UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);
+                RemoteCtrl.Run(remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
+                Start.SetExit = true;
+            }
+            Thread.Sleep(200);
+        }
+
+
+
+        private CycleTask UpdateCycle;
+        private CycleTask RemoteCtrl;
+        CycleTask Start;
+
     }
 }
