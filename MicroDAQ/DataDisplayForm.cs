@@ -95,7 +95,7 @@ namespace MicroDAQ
                         {
                             lsvItems.Items[i - 1].SubItems[0].Text = meter.ID.ToString();
                             lsvItems.Items[i - 1].SubItems[1].Text = meter.Value.ToString();
-                            lsvItems.Items[i - 1].SubItems[3].Text = meter.Type.ToString();
+                            lsvItems.Items[i - 1].SubItems[3].Text = "流量";
                             lsvItems.Items[i - 1].SubItems[4].Text = meter.State.ToString();
                             lsvItems.Items[i - 1].SubItems[5].Text = meter.Quality.ToString();
                         }
