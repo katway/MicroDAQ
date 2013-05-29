@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MicroDAQ
 {
-    class Unit
+    class PLCStation
     {
         public string ProjectCode { get; set; }
         public string Version { get; set; }

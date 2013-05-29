@@ -27,7 +27,7 @@ namespace MicroDAQ
         uint[] ctMeterID;
         string[] plcConnection;//= string.Empty;
 
-        List<Unit> Plcs = new List<Unit>();
+        List<PLCStation> Plcs = new List<PLCStation>();
         public MainForm()
         {
             InitializeComponent();

@@ -105,7 +105,7 @@
     </Compile>
     <Compile Include="DataItem.cs" />
     <Compile Include="FlowAlertManager.cs" />
-    <Compile Include="MachineData.cs" />
+    <Compile Include="DataItemManager.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,7 +123,7 @@
     <Compile Include="TestAlarm.Designer.cs">
       <DependentUpon>TestAlarm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Unit.cs" />
+    <Compile Include="PLCStation.cs" />
     <EmbeddedResource Include="AlarmControl.resx">
       <DependentUpon>AlarmControl.cs</DependentUpon>
     </EmbeddedResource>
