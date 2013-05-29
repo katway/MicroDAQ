@@ -115,6 +115,7 @@
     <Compile Include="Machine.cs" />
     <Compile Include="MachineManager.cs" />
     <Compile Include="Meter.cs" />
+    <Compile Include="Gateway\OpcGateway.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAlarm.cs">
