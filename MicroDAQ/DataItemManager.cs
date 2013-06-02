@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
+using MicroDAQ.DataItem;
 
 namespace MicroDAQ
 {
@@ -10,8 +11,8 @@ namespace MicroDAQ
     /// </summary>
     class DataItemManager : JonLibrary.OPC.Machine
     {
-        public List<DataItem> Items = null;
-        public Dictionary<int, DataItem> ItemPair = null;
+        public List<Item> Items = null;
+        public Dictionary<int, Item> ItemPair = null;
         /// <summary>
         /// 使用由指定的xx建立管理器
         /// </summary>
@@ -25,10 +26,10 @@ namespace MicroDAQ
             ItemCtrl = dataHead;
             ItemStatus = data;
             int count = (dataHead.Length < data.Length) ? (dataHead.Length) : (data.Length);
-            Items = new List<DataItem>();
-            ItemPair = new Dictionary<int, DataItem>();
+            Items = new List<Item>();
+            ItemPair = new Dictionary<int, Item>();
             for (int i = 0; i < count; i++)
-                Items.Add(new DataItem());
+                Items.Add(new Item());
         }
 
 
@@ -82,7 +83,7 @@ namespace MicroDAQ
             OnStatusChannge();
         }
 
-        protected void UpdateItemPair(int key, DataItem item)
+        protected void UpdateItemPair(int key, Item item)
         {
             if (!ItemPair.ContainsKey(key))
             { ItemPair.Add(key, item); }

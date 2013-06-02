@@ -6,176 +6,63 @@ using JonLibrary.Automatic;
 using JonLibrary.Common;
 using System.Threading;
 using System.Data;
+using MicroDAQ.Database;
+using MicroDAQ.DataItem;
 
 namespace MicroDAQ.Gateway
 {
-    class OpcGateway : GatewayBase
+    public class OpcGateway : GatewayBase
     {
-        
-        int plcCount;
+
+
         /// <summary>
-        /// 每个PLC中数据项数量
+        /// 使用多个ItemManage创建OpcGateway实例
         /// </summary>
-        int[] meters;
-        int[] dataItems;
-        byte[] projectCode = new byte[4];
-        byte[] version = new byte[2];
-
-        uint[] ctMeterID;
-        string[] plcConnection;//= string.Empty;
-
-        List<PLCStation> Plcs = new List<PLCStation>();
-
-        public OpcGateway(int plcCount)
+        /// <param name="itemManager"></param>
+        public OpcGateway(IList<MicroDAQ.DataItem.IDataItemManage> itemManager, IList<IDatabaseManage> databaseManager)
         {
-            PLC = new AsyncPLC4();
-            //PLC.DataChange += new AsyncPLC4.dgtDataChange(PLC_DataChange);
-            PLC.ReadComplete += new AsyncPLC4.dgtReadComplete(PLC_ReadComplete);
+            ItemManagers = itemManager;
+
+            UpdateCycle = new CycleTask();
+            RemoteCtrlCycle = new CycleTask();
+            UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
+            RemoteCtrlCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
         }
 
-
-        void PLC_DataChange(string groupName, int[] item, object[] value, short[] Qualities)
+        void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            bool r = true;
-            foreach (short q in Qualities)
-            {
-                r &= (q >= 192) ? (true) : (false);
-            }
-            ConnectionState = (r) ? (ConnectionState.Open) : (ConnectionState.Closed);
-
-            switch (groupName)
-            {
-                case "Cfg":
-                    for (int i = 0; i < item.Length; i++)
-                    {
-                        if (value[i] == null) continue;
-                        meters[item[i]] = (ushort)value[i];
-                    }
-                    break;
-                case "Cfg-DataItem":
-                    for (int i = 0; i < item.Length; i++)
-                    {
-                        if (value[i] == null) continue;
-                        dataItems[item[i]] = (ushort)value[i];
-                    }
-                    getConfig = true;
-                    break;
-                case "CtMeters":
-                    break;
-            }
+            throw new NotImplementedException();
         }
+        /// <summary>
+        /// 数据项管理器
+        /// </summary>
+        public IList<IDataItemManage> ItemManagers { get; private set; }
+        /// <summary>
+        /// 数据库管理器
+        /// </summary>
+        public IList<IDatabaseManage> DatabaseManagers { get; set; }
+        public CycleTask UpdateCycle { get; private set; }
+        public CycleTask RemoteCtrlCycle { get; private set; }
 
-        void PLC_ReadComplete(string groupName, int[] item, object[] value, short[] Qualities)
-        {
-            this.PLC_DataChange(groupName, item, value, Qualities);
-            switch (groupName)
-            {
-                case "Cfg":
-                case "Cfg-DataItem":
-                    this.BeginInvoke(new MethodInvoker(delegate
-                    {
-                        this.tsslMeters.Text = "采集点：";
-                        foreach (int ms in meters)
-                            this.tsslMeters.Text += ms.ToString() + " ";
 
-                        foreach (int ds in dataItems)
-                            this.tsslMeters.Text += ds.ToString() + " ";
-                    }));
-                    break;
-                case "CtMeters":
-                    ctMeterID = (uint[])value[0];
-                    for (int i = 0; i < ctMeterID.Length; i++)
-                    {
-                        ctMeterID[i] = ctMeterID[i] >> 16;
-                    }
-                    break;
-            }
-        }
-        AsyncPLC4 PLC;
 
-        string Duty = string.Empty;
-        private void ReadConfig()
-        {
-            PLC.Connect("OPC.SimaticNET", "127.0.0.1");
-            //配置
-
-            string[] items = null;
-            //switch (Duty)
-            //{
-            //    case "E":
-            items = new string[plcCount];
-            for (int i = 0; i < plcCount; i++)
-            {
-                items[i] = plcConnection[i] + "DB1,W30";
-            }
-            PLC.AddGroup("Cfg", 1, 0);
-            PLC.AddItems("Cfg", items);
-            PLC.Read("Cfg");
-            //    break;
-            //case "M":
-            items = new string[plcCount];
-            for (int i = 0; i < plcCount; i++)
-            {
-                items[i] = plcConnection[i] + "DB1,W32";
-            }
-            PLC.AddGroup("Cfg-DataItem", 1, 0);
-            PLC.AddItems("Cfg-DataItem", items);
-            PLC.Read("Cfg-DataItem");
-        }
         Meter meter;
         Controller MetersCtrl;
 
-        private void CreateMeters()
+
+        protected virtual void Update()
         {
-            int count = dataItems.Length;
-
-
-
-            List<string> h = new List<string>();
-            List<string> d = new List<string>();
-
-            List<string> h_flow = new List<string>();
-            List<string> d_flow = new List<string>();
-
-            for (int plcIndex = 0; plcIndex < plcCount; plcIndex++)
+            foreach (IDatabaseManage dbMgr in this.DatabaseManagers)
             {
-
-                for (int meterIndex = 0; meterIndex < meters[plcIndex]; meterIndex++)
+                foreach (DataItemManager mgr in this.ItemManagers)
                 {
-                    h.Add(string.Format("{0}DB3,W{1},3", plcConnection[plcIndex], meterIndex * 10 + 0));
-                    d.Add(string.Format("{0}DB3,REAL{1}", plcConnection[plcIndex], meterIndex * 10 + 6));
-                }
-                if (meters[plcIndex] > 0)
-                {
-                    MetersCtrl = new Controller("MetersCtrl",
-                                  new string[] { string.Format(plcConnection[plcIndex] + "DB2,W100,5") },
-                                    new string[] { string.Format(plcConnection[plcIndex] + "DB2,W120,5") });
-                    Program.MeterManager.CTMeters.Add(plcIndex * 10000 + 99, MetersCtrl);
-                    MetersCtrl.Connect("127.0.0.1");
+                    foreach (Item item in mgr.Items)
+                    {
+                        dbMgr.UpdateItem(item);
+                    }
                 }
             }
-
-            for (int plcIndex = 0; plcIndex < plcCount; plcIndex++)
-            {
-                for (int itemIndex = 0; itemIndex < dataItems[plcIndex]; itemIndex++)
-                {
-                    h.Add(string.Format("{0}DB4,W{1},3", plcConnection[plcIndex], itemIndex * 20));
-                    d.Add(string.Format("{0}DB4,REAL{1}", plcConnection[plcIndex], itemIndex * 20 + 10));
-                    h_flow.Add(string.Format("{0}DB4,W{1},3", plcConnection[plcIndex], itemIndex * 20));
-                    d_flow.Add(string.Format("{0}DB4,W{1}", plcConnection[plcIndex], itemIndex * 20 + 18));
-                }
-            }
-
-            Program.M = new DataItemManager("MachineData", h.ToArray(), d.ToArray());
-            Program.M.Connect("127.0.0.1");
-            Program.M_flowAlert = new FlowAlertManager("FlowAlert", h_flow.ToArray(), d_flow.ToArray());
-            Program.M_flowAlert.Connect("127.0.0.1");
         }
-
-
-        int updateMeters;
-        int remoteMeters;
-
 
         private void update2()
         {
@@ -211,9 +98,9 @@ namespace MicroDAQ.Gateway
                                                       int.Parse(row["command"].ToString()),
                                                       int.Parse((row["cycle"] != null) ? (row["cycle"].ToString()) : ("0"))
                                                   );
-                        Thread.Sleep(400);
+                        Thread.Sleep(500);
                     }
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(500);
             }
             catch (Exception ex)
             {
@@ -222,44 +109,94 @@ namespace MicroDAQ.Gateway
             }
         }
 
-        bool readConfig = false;
-        bool getConfig = false;
-        bool createMeters = false;
-        bool metersCreated = false;
-        bool started = false;
-        public void start()
+        /// <summary>
+        /// 启动
+        /// </summary>
+        public override void Start()
         {
-            if (!readConfig)
-            {
-                //等OPCSERVER启动
-                Thread.Sleep(Program.waitMillionSecond);
-                ReadConfig();
-                readConfig = true;
-            }
-
-            if (getConfig && !started)
-            {
-
-                CreateMeters();
-
-                started = true;
-                UpdateCycle = new CycleTask();
-                RemoteCtrl = new CycleTask();
-                Program.RemoteCycle = RemoteCtrl;
-                UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
-                RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
-                UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);
-                RemoteCtrl.Run(remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
-                Start.SetExit = true;
-            }
-            Thread.Sleep(200);
+            UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);
+            RemoteCtrlCycle.Run(this.remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
+        }
+        #region Pasue()
+        /// <summary>
+        /// 暂停更新和控制
+        /// </summary>
+        public override void Pause()
+        {
+            this.Pause(this.UpdateCycle);
+            this.Pause(this.RemoteCtrlCycle);
+        }
+        /// <summary>
+        /// 根据参数暂停更新任务或控制任务
+        /// </summary>
+        /// <param name="pauseUpdate">是否暂停更新</param>
+        /// <param name="pauseRemoteCtrl">是否暂停控制</param>
+        public void Pasue(bool pauseUpdate, bool pauseRemoteCtrl)
+        {
+            this.UpdateCycle.SetPause = pauseUpdate;
+            this.RemoteCtrlCycle.SetPause = pauseRemoteCtrl;
+        }
+        /// <summary>
+        /// 暂停参数指定的任务对象
+        /// </summary>
+        /// <param name="task">要暂停的任务对象</param>
+        public void Pause(CycleTask task)
+        {
+            task.SetPause = true;
+        }
+        #endregion
+        #region Continue()
+        /// <summary>
+        /// 暂停更新和控制
+        /// </summary>
+        public override void Continue()
+        {
+            this.Continue(this.UpdateCycle);
+            this.Continue(this.RemoteCtrlCycle);
         }
 
+        /// <summary>
+        /// 继续参数指定的任务对象
+        /// </summary>
+        /// <param name="task">要继续的任务对象</param>
+        public void Continue(CycleTask task)
+        {
+            task.SetPause = false;
+        }
 
+        #endregion
+        #region Stop()
+        /// <summary>
+        /// 暂停更新和控制
+        /// </summary>
+        public override void Stop()
+        {
+            this.Stop(this.UpdateCycle);
+            this.Stop(this.RemoteCtrlCycle);
+        }
+        /// <summary>
+        /// 根据参数暂停更新任务或控制任务
+        /// </summary>
+        /// <param name="ExitUpdate">是否暂停更新</param>
+        /// <param name="ExitRemoteCtrl">是否暂停控制</param>
+        private void Stop(bool ExitUpdate, bool ExitRemoteCtrl)
+        {
+            this.UpdateCycle.SetExit = ExitUpdate;
+            this.RemoteCtrlCycle.SetExit = ExitRemoteCtrl;
+        }
+        /// <summary>
+        /// 暂停参数指定的任务对象
+        /// </summary>
+        /// <param name="task">要暂停的任务对象</param>
+        private void Stop(CycleTask task)
+        {
+            task.SetExit = true;
+        }
+        #endregion
 
-        private CycleTask UpdateCycle;
-        private CycleTask RemoteCtrl;
-        CycleTask Start;
+        public override void Dispose()
+        {
 
+        }
     }
 }

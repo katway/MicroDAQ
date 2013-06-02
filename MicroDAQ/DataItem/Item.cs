@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MicroDAQ
+namespace MicroDAQ.DataItem
 {
-    public class DataItem
+    public class Item
     {
         public int ID { get; internal protected set; }
         public DataType Type { get; internal protected set; }

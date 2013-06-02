@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
+using MicroDAQ.DataItem;
 
 namespace MicroDAQ
 {
-    class FlowAlertManager : JonLibrary.OPC.Machine
+    class FlowAlertManager : JonLibrary.OPC.Machine, IDataItemManage
     {
-        public List<DataItem> Items = null;
-        public Dictionary<int, DataItem> ItemPair = null;
+        public List<Item> Items { get; set; }
+        public Dictionary<int, Item> ItemPair = null;
         //public FlowAlertManager(string name, string[] dataHead, string[] data)
         //    : base(name, dataHead, data)
         //{ }
@@ -20,10 +21,10 @@ namespace MicroDAQ
             ItemCtrl = dataHead;
             ItemStatus = data;
             int count = (dataHead.Length < data.Length) ? (dataHead.Length) : (data.Length);
-            Items = new List<DataItem>();
-            ItemPair = new Dictionary<int, DataItem>();
+            Items = new List<Item>();
+            ItemPair = new Dictionary<int, Item>();
             for (int i = 0; i < count; i++)
-                Items.Add(new DataItem());
+                Items.Add(new Item());
         }
 
 
@@ -44,7 +45,7 @@ namespace MicroDAQ
 
 
 
-        protected void UpdateItemPair(int key, DataItem item)
+        protected void UpdateItemPair(int key, Item item)
         {
             if (!ItemPair.ContainsKey(key))
             { ItemPair.Add(key, item); }

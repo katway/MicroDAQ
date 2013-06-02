@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using JonLibrary.Common;
 using JonLibrary.Automatic;
+using MicroDAQ.Database;
 namespace MicroDAQ
 {
     static class Program
@@ -37,7 +38,7 @@ namespace MicroDAQ
                 {
                     IniFile ini = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "MicroDAQ.ini");
 
-                    DatabaseManager = new DatabaseManager(ini.GetValue("Database", "Address"),
+                    DatabaseManager = new DatabaseManage(ini.GetValue("Database", "Address"),
                                                         ini.GetValue("Database", "Port"),
                                                         ini.GetValue("Database", "Database"),
                                                         ini.GetValue("Database", "Username"),
@@ -76,7 +77,7 @@ namespace MicroDAQ
         }
 
         public static MachineManager MeterManager = new MachineManager();
-        public static DatabaseManager DatabaseManager;// = new DatabaseManager();
+        public static DatabaseManage DatabaseManager;// = new DatabaseManager();
         public static DataItemManager M;
         public static FlowAlertManager M_flowAlert;
 

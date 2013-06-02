@@ -8,7 +8,7 @@ namespace MicroDAQ.Gateway
     {
         void Start();
         void Pause();
-        void Conntinue();
-        void Stop();        
+        void Continue();
+        void Stop();
     }
 }

@@ -9,16 +9,40 @@ using JonLibrary.OPC;
 using JonLibrary.Automatic;
 using JonLibrary.Common;
 using System.Threading;
+using MicroDAQ.UI;
 
 namespace MicroDAQ
 {
     public partial class MainForm : Form
     {
 
+        int plcCount;
+        /// <summary>
+        /// 每个PLC中数据项数量
+        /// </summary>
+        int[] meters;
+        int[] dataItems;
+        byte[] projectCode = new byte[4];
+        byte[] version = new byte[2];
+
+        uint[] ctMeterID;
+        string[] plcConnection;//= string.Empty;
+
+
+        /// <summary>
+        /// 监控数据项
+        /// </summary>
+        public ItemsAddress DataItem { get; set; }
+        /// <summary>
+        /// 粒子流量报警
+        /// </summary>
+        public ItemsAddress FlowAlert { get; set; }
         public MainForm()
         {
             InitializeComponent();
-
+            PLC = new AsyncPLC4();
+            //PLC.DataChange += new AsyncPLC4.dgtDataChange(PLC_DataChange);
+            PLC.ReadComplete += new AsyncPLC4.dgtReadComplete(PLC_ReadComplete);
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -34,7 +58,7 @@ namespace MicroDAQ
                 this.tsslProject.Text = "项目代码：" + ini.GetValue("General", "ProjetCode");
                 this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
-                Duty = ini.GetValue("General", "Duty");
+
                 plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
 
                 plcConnection = new string[plcCount];
@@ -54,6 +78,96 @@ namespace MicroDAQ
             }
             ni.Text = this.Text;
         }
+
+        void PLC_DataChange(string groupName, int[] item, object[] value, short[] Qualities)
+        {
+            bool r = true;
+            foreach (short q in Qualities)
+            {
+                r &= (q >= 192) ? (true) : (false);
+            }
+            ConnectionState = (r) ? (ConnectionState.Open) : (ConnectionState.Closed);
+
+            switch (groupName)
+            {
+                case "Cfg":
+                    for (int i = 0; i < item.Length; i++)
+                    {
+                        if (value[i] == null) continue;
+                        meters[item[i]] = (ushort)value[i];
+                    }
+                    break;
+                case "Cfg-DataItem":
+                    for (int i = 0; i < item.Length; i++)
+                    {
+                        if (value[i] == null) continue;
+                        dataItems[item[i]] = (ushort)value[i];
+                    }
+                    getConfig = true;
+                    break;
+                case "CtMeters":
+                    break;
+            }
+        }
+
+        void PLC_ReadComplete(string groupName, int[] item, object[] value, short[] Qualities)
+        {
+            this.PLC_DataChange(groupName, item, value, Qualities);
+            switch (groupName)
+            {
+                case "Cfg":
+                case "Cfg-DataItem":
+                    this.BeginInvoke(new MethodInvoker(delegate
+                    {
+                        this.tsslMeters.Text = "采集点：";
+                        foreach (int ms in meters)
+                            this.tsslMeters.Text += ms.ToString() + " ";
+
+                        foreach (int ds in dataItems)
+                            this.tsslMeters.Text += ds.ToString() + " ";
+                    }));
+                    break;
+                case "CtMeters":
+                    ctMeterID = (uint[])value[0];
+                    for (int i = 0; i < ctMeterID.Length; i++)
+                    {
+                        ctMeterID[i] = ctMeterID[i] >> 16;
+                    }
+                    break;
+            }
+        }
+        AsyncPLC4 PLC;
+
+        string Duty = string.Empty;
+        private void ReadConfig()
+        {
+            PLC.Connect("OPC.SimaticNET", "127.0.0.1");
+            //配置
+
+            string[] items = null;
+            //switch (Duty)
+            //{
+            //    case "E":
+            items = new string[plcCount];
+            for (int i = 0; i < plcCount; i++)
+            {
+                items[i] = plcConnection[i] + "DB1,W30";
+            }
+            PLC.AddGroup("Cfg", 1, 0);
+            PLC.AddItems("Cfg", items);
+            PLC.Read("Cfg");
+            //    break;
+            //case "M":
+            items = new string[plcCount];
+            for (int i = 0; i < plcCount; i++)
+            {
+                items[i] = plcConnection[i] + "DB1,W32";
+            }
+            PLC.AddGroup("Cfg-DataItem", 1, 0);
+            PLC.AddItems("Cfg-DataItem", items);
+            PLC.Read("Cfg-DataItem");
+        }
+
         void RemoteCtrl_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
             this.BeginInvoke(new MethodInvoker(delegate
@@ -151,6 +265,42 @@ namespace MicroDAQ
             }
         }
 
+
+        int updateMeters;
+        int remoteMeters;
+
+        bool readConfig = false;
+        bool getConfig = false;
+        bool createMeters = false;
+        bool metersCreated = false;
+        bool started = false;
+        public void start()
+        {
+            if (!readConfig)
+            {
+                //等OPCSERVER启动
+                Thread.Sleep(Program.waitMillionSecond);
+                ReadConfig();
+                readConfig = true;
+            }
+
+            if (getConfig && !started)
+            {
+
+                CreateMeters();
+
+                started = true;
+                UpdateCycle = new CycleTask();
+                RemoteCtrl = new CycleTask();
+                Program.RemoteCycle = RemoteCtrl;
+                UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
+                RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
+                UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);
+                RemoteCtrl.Run(remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
+                Start.SetExit = true;
+            }
+            Thread.Sleep(200);
+        }
 
 
         private void ni_DoubleClick(object sender, EventArgs e)

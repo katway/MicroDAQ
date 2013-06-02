@@ -32,7 +32,7 @@ namespace MicroDAQ.Gateway
         /// <summary>
         /// 继续
         /// </summary>
-        public abstract void Conntinue();
+        public abstract void Continue();
         /// <summary>
         /// 停止
         /// </summary>
