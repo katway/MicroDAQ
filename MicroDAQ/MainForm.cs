@@ -151,7 +151,7 @@ namespace MicroDAQ
             items = new string[plcCount];
             for (int i = 0; i < plcCount; i++)
             {
-                items[i] = plcConnection[i] + "DB1,W30";
+                items[i] = plcConnection[i] + string.Format("DB{0},W{1}", 1, 30);
             }
             PLC.AddGroup("Cfg", 1, 0);
             PLC.AddItems("Cfg", items);
