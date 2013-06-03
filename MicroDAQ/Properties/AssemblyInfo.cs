@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("MicroDAQ")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("数据刷新时间300ms")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("K")]
 [assembly: AssemblyProduct("MicroDAQ")]
@@ -31,6 +31,6 @@ using System.Runtime.InteropServices;
 //
 // 可以指定所有这些值，也可以使用“内部版本号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”:
-[assembly: AssemblyVersion("1.26.4.1")]
+[assembly: AssemblyVersion("1.26.4.2")]
 //[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.26.4.1")]
+[assembly: AssemblyFileVersion("1.26.4.2")]
