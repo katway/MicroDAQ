@@ -14,7 +14,12 @@ namespace MicroDAQ.Gateway
     public class OpcGateway : GatewayBase
     {
 
-
+        public override void Dispose()
+        {
+            UpdateCycle.Quit();
+            RemoteCtrlCycle.Quit(); 
+        }
+      
         /// <summary>
         /// 使用多个ItemManage创建OpcGateway实例
         /// </summary>
@@ -25,13 +30,18 @@ namespace MicroDAQ.Gateway
 
             UpdateCycle = new CycleTask();
             RemoteCtrlCycle = new CycleTask();
-            UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
-            RemoteCtrlCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
+            UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
+            RemoteCtrlCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrlCycle_WorkStateChanged);
         }
 
+    
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = Enum.GetName(Gateway.RunningState, state.ToString());
+            this.RunningState = (Gateway.RunningState)((int)state);
+        }
+        void RemoteCtrlCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
+        {
+            this.RunningState = (Gateway.RunningState)((int)state);
         }
         /// <summary>
         /// 数据项管理器
@@ -194,9 +204,16 @@ namespace MicroDAQ.Gateway
         }
         #endregion
 
-        public override void Dispose()
+        
+    
+        public override EventHandler  StateChanging()
         {
-
+ 	        throw new NotImplementedException();
         }
-    }
+
+        public override EventHandler  StateChanged()
+        {
+ 	        throw new NotImplementedException();
+        }
+}
 }
