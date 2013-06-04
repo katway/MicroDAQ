@@ -7,11 +7,11 @@ namespace MicroDAQ.Gateway
         ConfigLoading,
         ConfigLoad,
         Ready,
-        Starting,
-        Start,
-        Running,
-        Pausing,
-        Stopping,
-        Stopped
+        Starting = 1,
+        Started = 2,
+        Running = 3 ,
+        Pausing = 4,
+        Stopping = 6,
+        Stopped = 0
     }
 }
