@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MicroDAQ</RootNamespace>
     <AssemblyName>MicroDAQ</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -18,7 +18,8 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -61,34 +62,24 @@
     <StartupObject>MicroDAQ.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Automatic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\JonLibrary\Automatic\bin\Release\Automatic.dll</HintPath>
+    <Reference Include="Automatic">
+      <HintPath>Dynamic\Automatic.dll</HintPath>
     </Reference>
-    <Reference Include="JonLibrary, Version=1.0.4481.29689, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\JonLibrary\JonLibrary\bin\Release\JonLibrary.dll</HintPath>
+    <Reference Include="JonLibrary">
+      <HintPath>Dynamic\JonLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="OpcRcw.Comn, Version=1.10.1.21, Culture=neutral, PublicKeyToken=9a40e993cbface53">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="OpcRcw.Comn">
+      <HintPath>Dynamic\OpcRcw.Comn.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\..\..\JonLibrary\JonLibrary\bin\Release\OpcRcw.Comn.dll</HintPath>
     </Reference>
-    <Reference Include="OpcRcw.Da, Version=3.0.2.22, Culture=neutral, PublicKeyToken=9a40e993cbface53">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="OpcRcw.Da">
+      <HintPath>Dynamic\OpcRcw.Da.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\..\..\JonLibrary\JonLibrary\bin\Release\OpcRcw.Da.dll</HintPath>
+    </Reference>
+    <Reference Include="SysncOpcOperate">
+      <HintPath>Dynamic\SysncOpcOperate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -96,11 +87,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlarmControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AlarmControl.Designer.cs">
+      <DependentUpon>AlarmControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AlertCode.cs" />
     <Compile Include="Controller.cs" />
-    <Compile Include="DatabaseManager.cs" />
-    <Compile Include="DataItem.cs" />
-    <Compile Include="MachineDataItem.cs" />
-    <Compile Include="MachineData.cs" />
+    <Compile Include="Database\DatabaseManage.cs" />
+    <Compile Include="Database\IDatabaseManage.cs" />
+    <Compile Include="DataDisplayForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataDisplayForm.Designer.cs">
+      <DependentUpon>DataDisplayForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataItem\Item.cs" />
+    <Compile Include="DataItem\IDataItemManage.cs" />
+    <Compile Include="FlowAlertManager.cs" />
+    <Compile Include="DataItemManager.cs" />
+    <Compile Include="Gateway\GatewayBase.cs" />
+    <Compile Include="Gateway\IGateway.cs" />
+    <Compile Include="Gateway\RunningState.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,8 +119,23 @@
     <Compile Include="Machine.cs" />
     <Compile Include="MachineManager.cs" />
     <Compile Include="Meter.cs" />
+    <Compile Include="Gateway\OpcGateway.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestAlarm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestAlarm.Designer.cs">
+      <DependentUpon>TestAlarm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PLCStation.cs" />
+    <Compile Include="UI\ItemAddress.cs" />
+    <EmbeddedResource Include="AlarmControl.resx">
+      <DependentUpon>AlarmControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataDisplayForm.resx">
+      <DependentUpon>DataDisplayForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -125,6 +149,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="TestAlarm.resx">
+      <DependentUpon>TestAlarm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="MicroDAQ.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -163,6 +190,8 @@
     <Content Include="Nitrogen Icon 42.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Configuration\" />
+    <Folder Include="Dynamic\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

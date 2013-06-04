@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Data;
 
@@ -64,7 +63,7 @@ namespace MicroDAQ
     {
         正常 = 1,
         仪表故障 = 2,
-        通讯中断 = 4,
+        仪表掉线 = 4,
         已启动 = 8,
         已停止 = 16
     }

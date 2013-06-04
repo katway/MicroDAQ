@@ -1,26 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Data;
+using MicroDAQ.DataItem;
 
 namespace MicroDAQ
 {
-    class MachineData : JonLibrary.OPC.Machine
+    class FlowAlertManager : JonLibrary.OPC.Machine, IDataItemManage
     {
-        public List<DataItem> Items = null;
-        public Dictionary<int, DataItem> ItemPair = null;
-        public MachineData(string name, string[] dataHead, string[] data)
+        public List<Item> Items { get; set; }
+        public Dictionary<int, Item> ItemPair = null;
+        //public FlowAlertManager(string name, string[] dataHead, string[] data)
+        //    : base(name, dataHead, data)
+        //{ }
+
+        public FlowAlertManager(string name, string[] dataHead, string[] data)
             : base()
         {
             this.Name = Name;
             ItemCtrl = dataHead;
             ItemStatus = data;
             int count = (dataHead.Length < data.Length) ? (dataHead.Length) : (data.Length);
-            Items = new List<DataItem>();
-            ItemPair = new Dictionary<int, DataItem>();
+            Items = new List<Item>();
+            ItemPair = new Dictionary<int, Item>();
             for (int i = 0; i < count; i++)
-                Items.Add(new DataItem());
+                Items.Add(new Item());
         }
 
 
@@ -40,13 +44,19 @@ namespace MicroDAQ
         }
 
 
+
+        protected void UpdateItemPair(int key, Item item)
+        {
+            if (!ItemPair.ContainsKey(key))
+            { ItemPair.Add(key, item); }
+            ItemPair[key] = item;
+        }
         protected override void PLC_DataChange(string groupName, int[] item, object[] value, short[] Qualities)
         {
             base.PLC_DataChange(groupName, item, value, Qualities);
             switch (groupName)
             {
                 case GROUP_NAME_CTRL:
-
                     for (int i = 0; i < item.Length; i++)
                     {
                         ushort[] val = null;
@@ -56,6 +66,7 @@ namespace MicroDAQ
                             this.Items[item[i]].ID = val[0];
                             this.Items[item[i]].Type = (DataType)val[1];
                             this.Items[item[i]].State = (DataState)val[2];
+                            this.Items[item[i]].Quality = Qualities[i];
                             UpdateItemPair(this.Items[item[i]].ID, this.Items[item[i]]);
                         }
                     }
@@ -65,19 +76,13 @@ namespace MicroDAQ
                     {
                         if (value[i] != null)
                         {
-                            this.Items[item[i]].Value = (float)value[i];
+                            this.Items[item[i]].Value = ((ushort)value[i] & (ushort)2);
+                            this.Items[item[i]].Quality = Qualities[i];
                         }
                     }
                     break;
             }
             OnStatusChannge();
-        }
-
-        private void UpdateItemPair(int key, DataItem item)
-        {
-            if (!ItemPair.ContainsKey(key))
-            { ItemPair.Add(key, item); }
-            ItemPair[key] = item;
         }
     }
 }

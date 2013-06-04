@@ -1,19 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using JonLibrary.Common;
+using JonLibrary.Automatic;
+using MicroDAQ.Database;
 namespace MicroDAQ
 {
     static class Program
     {
+        public static int waitMillionSecond = 180000;
         public static bool BeQuit;
+        public static CycleTask RemoteCycle;
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
+            #region 处理来自参数的快速启动请求，跳过对OPCSERVER的三分钟等待
+            foreach (string arg in args)
+            {
+                if (arg.Contains("fast"))
+                {
+                    waitMillionSecond = 1000;
+                    break;
+                }
+
+            }
+            #endregion
             bool createNew;
             //try
             //{
@@ -24,20 +38,21 @@ namespace MicroDAQ
                 {
                     IniFile ini = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "MicroDAQ.ini");
 
-                    DatabaseManager = new DatabaseManager(ini.GetValue("Database", "Address"),
+                    DatabaseManager = new DatabaseManage(ini.GetValue("Database", "Address"),
                                                         ini.GetValue("Database", "Port"),
                                                         ini.GetValue("Database", "Database"),
                                                         ini.GetValue("Database", "Username"),
                                                         ini.GetValue("Database", "Password"));
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    MainForm frmMain = null;
 
+                    Form MainForm = null;
                     while (!BeQuit)
                         try
                         {
-                            frmMain = new MainForm();
-                            Application.Run(frmMain);
+                            MainForm = new MainForm();
+                            //frmMain = new TestAlarm();
+                            Application.Run(MainForm);
                         }
                         catch (Exception ex)
                         {
@@ -45,7 +60,7 @@ namespace MicroDAQ
                         }
                         finally
                         {
-                            if (frmMain != null) frmMain.Dispose();
+                            if (MainForm != null) MainForm.Dispose();
                         }
                     Environment.Exit(Environment.ExitCode);
                 }
@@ -62,6 +77,9 @@ namespace MicroDAQ
         }
 
         public static MachineManager MeterManager = new MachineManager();
-        public static DatabaseManager DatabaseManager;// = new DatabaseManager();
+        public static DatabaseManage DatabaseManager;// = new DatabaseManager();
+        public static DataItemManager M;
+        public static FlowAlertManager M_flowAlert;
+
     }
 }

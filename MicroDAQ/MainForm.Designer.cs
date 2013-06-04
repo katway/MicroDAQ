@@ -67,7 +67,6 @@
             this.pcb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pcb.TabIndex = 3;
             this.pcb.TabStop = false;
-       
             // 
             // btnPC
             // 
@@ -115,22 +114,24 @@
             // tsslMeters
             // 
             this.tsslMeters.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.tsslMeters.DoubleClickEnabled = true;
             this.tsslMeters.Name = "tsslMeters";
             this.tsslMeters.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.tsslMeters.Size = new System.Drawing.Size(57, 21);
+            this.tsslMeters.Size = new System.Drawing.Size(60, 21);
             this.tsslMeters.Text = "采集点：";
             this.tsslMeters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.tsslMeters.Click += new System.EventHandler(this.tsslMeters_Click);
             // 
             // tsslUpdate
             // 
             this.tsslUpdate.Name = "tsslUpdate";
-            this.tsslUpdate.Size = new System.Drawing.Size(11, 21);
+            this.tsslUpdate.Size = new System.Drawing.Size(15, 21);
             this.tsslUpdate.Text = "S";
             // 
             // tsslRemote
             // 
             this.tsslRemote.Name = "tsslRemote";
-            this.tsslRemote.Size = new System.Drawing.Size(11, 21);
+            this.tsslRemote.Size = new System.Drawing.Size(15, 21);
             this.tsslRemote.Text = "S";
             // 
             // ni
@@ -145,12 +146,12 @@
             this.cmsNI.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.退出EToolStripMenuItem});
             this.cmsNI.Name = "cmsNI";
-            this.cmsNI.Size = new System.Drawing.Size(113, 26);
+            this.cmsNI.Size = new System.Drawing.Size(117, 26);
             // 
             // 退出EToolStripMenuItem
             // 
             this.退出EToolStripMenuItem.Name = "退出EToolStripMenuItem";
-            this.退出EToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.退出EToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.退出EToolStripMenuItem.Text = "退出(&X)";
             this.退出EToolStripMenuItem.Click += new System.EventHandler(this.退出EToolStripMenuItem_Click);
             // 
