@@ -33,7 +33,7 @@ deploy
 deploy/*
 
 # Exclude ALL DLLs?
-*.dll
+#*.dll
 Test
 *.dat
 
