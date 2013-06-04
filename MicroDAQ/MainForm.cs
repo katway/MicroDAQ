@@ -16,7 +16,6 @@ namespace MicroDAQ
     public partial class MainForm : Form
     {
 
-        int plcCount;
         /// <summary>
         /// 每个PLC中数据项数量
         /// </summary>
@@ -37,12 +36,20 @@ namespace MicroDAQ
         /// 粒子流量报警
         /// </summary>
         public ItemsAddress FlowAlert { get; set; }
+
+
+        private List<PLCStation> PLCs;
         public MainForm()
         {
             InitializeComponent();
             PLC = new AsyncPLC4();
             //PLC.DataChange += new AsyncPLC4.dgtDataChange(PLC_DataChange);
             PLC.ReadComplete += new AsyncPLC4.dgtReadComplete(PLC_ReadComplete);
+
+            PLCs = new List<PLCStation>();
+
+
+
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -58,15 +65,15 @@ namespace MicroDAQ
                 this.tsslProject.Text = "项目代码：" + ini.GetValue("General", "ProjetCode");
                 this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
-
-                plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
-
-                plcConnection = new string[plcCount];
-                meters = new int[plcCount];
-                dataItems = new int[plcCount];
+                int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
+                //meters = new int[plcCount];
+                //dataItems = new int[plcCount];
                 for (int i = 0; i < plcCount; i++)
-                    plcConnection[i] = ini.GetValue(string.Format("PLC{0}", i),
-                                                    "Connection");
+                {
+                    PLCStation plc = new PLCStation();
+                    PLCs.Add(plc);
+                    plc.Connection = ini.GetValue(string.Format("PLC{0}", i), "Connection");
+                }
 
             }
             catch
