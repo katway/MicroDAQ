@@ -31,7 +31,7 @@ namespace MicroDAQ.Gateway
 
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            throw new NotImplementedException();
+            this.RunningState = Enum.GetName(Gateway.RunningState, state.ToString());
         }
         /// <summary>
         /// 数据项管理器

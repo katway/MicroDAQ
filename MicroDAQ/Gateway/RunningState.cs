@@ -3,14 +3,16 @@ namespace MicroDAQ.Gateway
 {
     public enum RunningState
     {
+
         Intilized,
         ConfigLoading,
         ConfigLoad,
         Ready,
         Starting,
-        Start,
+        Started,
         Running,
         Pausing,
+        Paused,
         Stopping,
         Stopped
     }
