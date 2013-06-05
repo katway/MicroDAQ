@@ -62,9 +62,10 @@ namespace MicroDAQ
         /// </summary>
         public ItemsAddress FlowAlert { get; set; }
 
-
+        AsyncPLC4 PLC;
         private List<PLCStation> Plcs;
         private SysncOpcOperate.OPCServer SyncOpc;
+        IniFile ini = null;
 
         public MainForm()
         {
@@ -74,10 +75,8 @@ namespace MicroDAQ
 
             Plcs = new List<PLCStation>();
 
-
-
         }
-        IniFile ini = null;
+      
         private void Form2_Load(object sender, EventArgs e)
         {
             ni.Icon = this.Icon;
@@ -143,17 +142,49 @@ namespace MicroDAQ
                 }
             }
 
-            PLC.Read("Cfg");
-            //    break;
-            //case "M":
-            getConfigItems = new string[plcCount];
+              List<string> listItems = new List<string>();
+            PLC.Connect(opcServerPorgramID, "127.0.0.1");
+
+            # region 读取扩展组数
             for (int i = 0; i < plcCount; i++)
             {
-                getConfigItems[i] = plcConnection[i] + "DB1,W32";
+                listItems.Add(plcConnection[i] + "DB1,W28");
             }
-            PLC.AddGroup("Cfg-DataItem", 1, 0);
-            PLC.AddItems("Cfg-DataItem", getConfigItems);
-            PLC.Read("Cfg-DataItem");
+            PLC.AddGroup("GroupCount", 1, 0);
+            PLC.AddItems("GroupCount", listItems.ToArray());
+            PLC.Read("GroupCount");
+
+            #endregion
+
+            if (readGroupCount)
+            {
+                listItems = new List<string>();
+                for (int i = 0; i < plcCount; i++)
+                {
+                    for (int j = 0; j < groups[i]; j++)
+                    {
+                        listItems.Add(plcConnection[i] + string.Format("DB{0},W{1}", 1, 30 + (j * 4)));
+                    }
+                }
+                PLC.AddGroup("Cfg", 1, 0);
+                PLC.AddItems("Cfg", listItems.ToArray());
+                PLC.Read("Cfg");
+
+                listItems = new List<string>();
+                for (int i = 0; i < plcCount; i++)
+                {
+                    for (int j = 0; j < groups[i]; j++)
+                    {
+                        listItems.Add(plcConnection[i] + string.Format("DB{0},W{1}", 1, 32 + (j * 4)));
+                    }
+                }
+                PLC.AddGroup("Cfg-DataItem", 1, 0);
+                PLC.AddItems("Cfg-DataItem", listItems.ToArray());
+                PLC.Read("Cfg-DataItem");
+
+                readGroupCount = false;
+            }
+        
         }
 
 
@@ -242,7 +273,7 @@ namespace MicroDAQ
             if (getConfig && !started)
             {
 
-                CreateMeters();
+               // CreateMeters(); 1
 
                 started = true;
                 CycleTask UpdateCycle = new CycleTask();
@@ -257,49 +288,7 @@ namespace MicroDAQ
             Thread.Sleep(200);
         }
 
-            List<string> listItems = new List<string>();
-            PLC.Connect(opcServerPorgramID, "127.0.0.1");
-
-            # region 读取扩展组数
-            for (int i = 0; i < plcCount; i++)
-            {
-                listItems.Add(plcConnection[i] + "DB1,W28");
-            }
-            PLC.AddGroup("GroupCount", 1, 0);
-            PLC.AddItems("GroupCount", listItems.ToArray());
-            PLC.Read("GroupCount");
-
-            #endregion
-
-            if (readGroupCount)
-            {
-                listItems = new List<string>();
-                for (int i = 0; i < plcCount; i++)
-                {
-                    for (int j = 0; j < groups[i]; j++)
-                    {
-                        listItems.Add(plcConnection[i] + string.Format("DB{0},W{1}", 1, 30 + (j * 4)));
-                    }
-                }
-                PLC.AddGroup("Cfg", 1, 0);
-                PLC.AddItems("Cfg", listItems.ToArray());
-                PLC.Read("Cfg");
-
-                listItems = new List<string>();
-                for (int i = 0; i < plcCount; i++)
-                {
-                    for (int j = 0; j < groups[i]; j++)
-                    {
-                        listItems.Add(plcConnection[i] + string.Format("DB{0},W{1}", 1, 32 + (j * 4)));
-                    }
-                }
-                PLC.AddGroup("Cfg-DataItem", 1, 0);
-                PLC.AddItems("Cfg-DataItem", listItems.ToArray());
-                PLC.Read("Cfg-DataItem");
-
-                readGroupCount = false;
-            }
-        }
+          
 
         private void CreateMeters()
         {
