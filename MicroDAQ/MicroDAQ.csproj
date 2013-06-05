@@ -132,9 +132,11 @@
     <Compile Include="UI\ItemAddress.cs" />
     <EmbeddedResource Include="AlarmControl.resx">
       <DependentUpon>AlarmControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DataDisplayForm.resx">
       <DependentUpon>DataDisplayForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

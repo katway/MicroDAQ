@@ -15,20 +15,44 @@ namespace MicroDAQ
 {
     public partial class MainForm : Form
     {
-
+        /// <summary>
+        /// PLC数量
+        /// </summary>
         int plcCount;
         /// <summary>
-        /// 每个PLC中数据项数量
+        /// 每个PLC中10字节数据项数量
         /// </summary>
         int[] meters;
+        /// <summary>
+        /// 每个PLC20字节数据项数量
+        /// </summary>
         int[] dataItems;
-        byte[] projectCode = new byte[4];
-        byte[] version = new byte[2];
 
         uint[] ctMeterID;
-        string[] plcConnection;//= string.Empty;
-
-
+        /// <summary>
+        /// OPCServer连接数组
+        /// </summary>
+        string[] plcConnection;
+        /// <summary>
+        /// 使用哪个OPCServer
+        /// </summary>
+        string opcServer = "SimaticNet";
+        /// <summary>
+        /// OPCServer名称
+        /// </summary>
+        string opcServerPorgramID = "OPC.SimaticNet";
+        /// <summary>
+        /// OPCServer地址连接方式
+        /// </summary>
+        string opcServerConnection = "S7:[S7 connection_{0}]";
+        /// <summary>
+        /// 是否读取了扩展组数
+        /// </summary>
+        bool readGroupCount = false;
+        /// <summary>
+        /// 扩展组数
+        /// </summary>
+        int[] groups;
         /// <summary>
         /// 监控数据项
         /// </summary>
@@ -37,11 +61,13 @@ namespace MicroDAQ
         /// 粒子流量报警
         /// </summary>
         public ItemsAddress FlowAlert { get; set; }
+
+        AsyncPLC4 PLC;
+
         public MainForm()
         {
             InitializeComponent();
             PLC = new AsyncPLC4();
-            //PLC.DataChange += new AsyncPLC4.dgtDataChange(PLC_DataChange);
             PLC.ReadComplete += new AsyncPLC4.dgtReadComplete(PLC_ReadComplete);
         }
 
@@ -64,9 +90,14 @@ namespace MicroDAQ
                 plcConnection = new string[plcCount];
                 meters = new int[plcCount];
                 dataItems = new int[plcCount];
+
+                opcServer = ini.GetValue("OPCServer", "Type").Trim();
+                opcServerConnection = ini.GetValue(opcServer, "ConnectionString").Trim();
+                opcServerPorgramID = ini.GetValue(opcServer, "PorgramID").Trim();
                 for (int i = 0; i < plcCount; i++)
-                    plcConnection[i] = ini.GetValue(string.Format("PLC{0}", i),
-                                                    "Connection");
+                {
+                    plcConnection[i] = string.Format(opcServerConnection, i);
+                }
 
             }
             catch
@@ -105,7 +136,13 @@ namespace MicroDAQ
                     }
                     getConfig = true;
                     break;
-                case "CtMeters":
+                case "GroupCount":
+                    for (int i = 0; i < item.Length; i++)
+                    {
+                        if (value[i] == null) continue;
+                        groups[item[i]] = (ushort)value[i];
+                    }
+                    readGroupCount = true;
                     break;
             }
         }
@@ -136,37 +173,145 @@ namespace MicroDAQ
                     break;
             }
         }
-        AsyncPLC4 PLC;
 
-        string Duty = string.Empty;
+        int updateMeters;
+        int remoteMeters;
+
+        bool readConfig = false;
+        bool getConfig = false;
+        bool createMeters = false;
+        bool metersCreated = false;
+        bool started = false;
+        public void start()
+        {
+            if (!readConfig)
+            {
+                //等OPCSERVER启动
+                Thread.Sleep(Program.waitMillionSecond);
+                ReadConfig();
+                readConfig = true;
+            }
+
+            if (getConfig && !started)
+            {
+
+                CreateMeters();
+
+                started = true;
+                CycleTask UpdateCycle = new CycleTask();
+                CycleTask RemoteCtrl = new CycleTask();
+                Program.RemoteCycle = RemoteCtrl;
+                UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
+                RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
+                UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);
+                RemoteCtrl.Run(remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
+                Start.SetExit = true;
+            }
+            Thread.Sleep(200);
+        }
+
         private void ReadConfig()
         {
-            PLC.Connect("OPC.SimaticNET", "127.0.0.1");
-            //配置
+            List<string> listItems = new List<string>();
+            PLC.Connect(opcServerPorgramID, "127.0.0.1");
 
-            string[] items = null;
-            //switch (Duty)
-            //{
-            //    case "E":
-            items = new string[plcCount];
+            # region 读取扩展组数
             for (int i = 0; i < plcCount; i++)
             {
-                items[i] = plcConnection[i] + string.Format("DB{0},W{1}", 1, 30);
+                listItems.Add(plcConnection[i] + "DB1,W28");
             }
-            PLC.AddGroup("Cfg", 1, 0);
-            PLC.AddItems("Cfg", items);
-            PLC.Read("Cfg");
-            //    break;
-            //case "M":
-            items = new string[plcCount];
-            for (int i = 0; i < plcCount; i++)
+            PLC.AddGroup("GroupCount", 1, 0);
+            PLC.AddItems("GroupCount", listItems.ToArray());
+            PLC.Read("GroupCount");
+
+            #endregion
+
+            if (readGroupCount)
             {
-                items[i] = plcConnection[i] + "DB1,W32";
+                listItems = new List<string>();
+                for (int i = 0; i < plcCount; i++)
+                {
+                    for (int j = 0; j < groups[i]; j++)
+                    {
+                        listItems.Add(plcConnection[i] + string.Format("DB{0},W{1}", 1, 30 + (j * 4)));
+                    }
+                }
+                PLC.AddGroup("Cfg", 1, 0);
+                PLC.AddItems("Cfg", listItems.ToArray());
+                PLC.Read("Cfg");
+
+                listItems = new List<string>();
+                for (int i = 0; i < plcCount; i++)
+                {
+                    for (int j = 0; j < groups[i]; j++)
+                    {
+                        listItems.Add(plcConnection[i] + string.Format("DB{0},W{1}", 1, 32 + (j * 4)));
+                    }
+                }
+                PLC.AddGroup("Cfg-DataItem", 1, 0);
+                PLC.AddItems("Cfg-DataItem", listItems.ToArray());
+                PLC.Read("Cfg-DataItem");
+
+                readGroupCount = false;
             }
-            PLC.AddGroup("Cfg-DataItem", 1, 0);
-            PLC.AddItems("Cfg-DataItem", items);
-            PLC.Read("Cfg-DataItem");
         }
+
+        private void CreateMeters()
+        {
+            int count = dataItems.Length;
+
+
+
+            List<string> h = new List<string>();
+            List<string> d = new List<string>();
+
+            List<string> h_flow = new List<string>();
+            List<string> d_flow = new List<string>();
+
+            int meterIndex = 0;
+            for (int plcIndex = 0; plcIndex < plcCount; plcIndex++)
+            {
+                for (int i = 0; i < groups[plcIndex]; i++) 
+                {
+                    for (int j = 0; j < meters[meterIndex]; j++)
+                    {
+                        h.Add(string.Format("{0}DB{1},W{2},3",3+(i*2) ,plcConnection[plcIndex], j * 10 + 0));
+                        d.Add(string.Format("{0}DB{1},REAL{2}",3+(i*2) ,plcConnection[plcIndex],j * 10 + 6));
+                    }
+                    if (meters[meterIndex] > 0)
+                    {
+                        MetersCtrl = new Controller("MetersCtrl",
+                                     new string[] { string.Format(plcConnection[plcIndex] + "DB2,W100,5") },
+                                     new string[] { string.Format(plcConnection[plcIndex] + "DB2,W120,5") });
+                         Program.MeterManager.CTMeters.Add(plcIndex * 10000 + 99, MetersCtrl);
+                         MetersCtrl.Connect("127.0.0.1");
+                    }
+                    meterIndex++;
+                }
+            }
+
+            int itemIndex = 0;
+            for (int plcIndex = 0; plcIndex < plcCount; plcIndex++)
+            {
+                for (int i = 0; i < groups[plcIndex]; i++)
+                {
+                    for (int j = 0; j < dataItems[itemIndex]; j++)
+                    {
+                        h.Add(string.Format("{0}DB{1},W{2},3", 4+(i*2),plcConnection[plcIndex], j * 20));
+                        d.Add(string.Format("{0}DB{1},REAL{2}", 4+(i*2),plcConnection[plcIndex], j * 20 + 10));
+                        h_flow.Add(string.Format("{0}DB{1},W{2},3", 4 + (i * 2), plcConnection[plcIndex], j * 20));
+                        d_flow.Add(string.Format("{0}DB{1},W{2}", 4 + (i * 2), plcConnection[plcIndex], j * 20 + 18));
+                    }
+                    itemIndex++;
+                }
+            }
+
+            Program.M = new DataItemManager("MachineData", h.ToArray(), d.ToArray());
+            Program.M.Connect("127.0.0.1");
+            Program.M_flowAlert = new FlowAlertManager("FlowAlert", h_flow.ToArray(), d_flow.ToArray());
+            Program.M_flowAlert.Connect("127.0.0.1");
+        }
+
 
         void RemoteCtrl_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
@@ -212,7 +357,7 @@ namespace MicroDAQ
             }));
         }
 
-
+        CycleTask Start;
         private void btnStart_Click(object sender, EventArgs e)
         {
             this.btnStart.Enabled = false;
@@ -264,44 +409,6 @@ namespace MicroDAQ
                 this.Close();
             }
         }
-
-
-        int updateMeters;
-        int remoteMeters;
-
-        bool readConfig = false;
-        bool getConfig = false;
-        bool createMeters = false;
-        bool metersCreated = false;
-        bool started = false;
-        public void start()
-        {
-            if (!readConfig)
-            {
-                //等OPCSERVER启动
-                Thread.Sleep(Program.waitMillionSecond);
-                ReadConfig();
-                readConfig = true;
-            }
-
-            if (getConfig && !started)
-            {
-
-                CreateMeters();
-
-                started = true;
-                UpdateCycle = new CycleTask();
-                RemoteCtrl = new CycleTask();
-                Program.RemoteCycle = RemoteCtrl;
-                UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
-                RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
-                UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);
-                RemoteCtrl.Run(remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
-                Start.SetExit = true;
-            }
-            Thread.Sleep(200);
-        }
-
 
         private void ni_DoubleClick(object sender, EventArgs e)
         {
