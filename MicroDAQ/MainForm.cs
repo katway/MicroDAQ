@@ -10,6 +10,7 @@ using JonLibrary.Automatic;
 using JonLibrary.Common;
 using System.Threading;
 using MicroDAQ.UI;
+using SysncOpcOperate;
 
 namespace MicroDAQ
 {
@@ -38,7 +39,9 @@ namespace MicroDAQ
         public ItemsAddress FlowAlert { get; set; }
 
 
-        private List<PLCStation> PLCs;
+        private List<PLCStation> Plcs;
+        private SysncOpcOperate.OPCServer SyncOpc;
+
         public MainForm()
         {
             InitializeComponent();
@@ -46,12 +49,12 @@ namespace MicroDAQ
             //PLC.DataChange += new AsyncPLC4.dgtDataChange(PLC_DataChange);
             PLC.ReadComplete += new AsyncPLC4.dgtReadComplete(PLC_ReadComplete);
 
-            PLCs = new List<PLCStation>();
+            Plcs = new List<PLCStation>();
 
 
 
         }
-
+        IniFile ini = null;
         private void Form2_Load(object sender, EventArgs e)
         {
             ni.Icon = this.Icon;
@@ -60,7 +63,7 @@ namespace MicroDAQ
             bool autoStart = false;
             try
             {
-                IniFile ini = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "MicroDAQ.ini");
+                ini = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "MicroDAQ.ini");
                 this.Text = ini.GetValue("General", "Title");
                 this.tsslProject.Text = "项目代码：" + ini.GetValue("General", "ProjetCode");
                 this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
@@ -71,7 +74,7 @@ namespace MicroDAQ
                 for (int i = 0; i < plcCount; i++)
                 {
                     PLCStation plc = new PLCStation();
-                    PLCs.Add(plc);
+                    Plcs.Add(plc);
                     plc.Connection = ini.GetValue(string.Format("PLC{0}", i), "Connection");
                 }
 
@@ -85,6 +88,47 @@ namespace MicroDAQ
             }
             ni.Text = this.Text;
         }
+
+        private string opcServeType;
+        private void ReadConfig()
+        {
+
+            opcServeType = ini.GetValue("OpcServer", "Type");
+            SyncOpc.Connect(ini.GetValue(opcServeType, "ProgramID"), "127.0.0.1");
+
+            //读取配置监测点数量的Item,每个PLC的DB1,W30,W32
+            string[] getConfigItems = new string[Plcs.Count];
+            string wordItemFormat = ini.GetValue(opcServeType, "WordItemFormat");
+            //生成读取配置监测点数量的Items
+            for (int i = 0; i < Plcs.Count; i++)
+            {
+                getConfigItems[i] = Plcs[i].Connection + string.Format(wordItemFormat, 1, 30);
+            }
+
+
+            if (SyncOpc.AddGroup())
+            {
+                int[] itemsHandle = new int[getConfigItems.Length];
+                if (SyncOpc.AddItems(getConfigItems, itemsHandle))
+                {
+                    SyncOpc.SyncRead(new object[getConfigItems.Length], itemsHandle);
+
+                }
+            }
+
+            PLC.Read("Cfg");
+            //    break;
+            //case "M":
+            getConfigItems = new string[plcCount];
+            for (int i = 0; i < plcCount; i++)
+            {
+                getConfigItems[i] = plcConnection[i] + "DB1,W32";
+            }
+            PLC.AddGroup("Cfg-DataItem", 1, 0);
+            PLC.AddItems("Cfg-DataItem", getConfigItems);
+            PLC.Read("Cfg-DataItem");
+        }
+
 
         void PLC_DataChange(string groupName, int[] item, object[] value, short[] Qualities)
         {
@@ -146,34 +190,7 @@ namespace MicroDAQ
         AsyncPLC4 PLC;
 
         string Duty = string.Empty;
-        private void ReadConfig()
-        {
-            PLC.Connect("OPC.SimaticNET", "127.0.0.1");
-            //配置
 
-            string[] items = null;
-            //switch (Duty)
-            //{
-            //    case "E":
-            items = new string[plcCount];
-            for (int i = 0; i < plcCount; i++)
-            {
-                items[i] = plcConnection[i] + string.Format("DB{0},W{1}", 1, 30);
-            }
-            PLC.AddGroup("Cfg", 1, 0);
-            PLC.AddItems("Cfg", items);
-            PLC.Read("Cfg");
-            //    break;
-            //case "M":
-            items = new string[plcCount];
-            for (int i = 0; i < plcCount; i++)
-            {
-                items[i] = plcConnection[i] + "DB1,W32";
-            }
-            PLC.AddGroup("Cfg-DataItem", 1, 0);
-            PLC.AddItems("Cfg-DataItem", items);
-            PLC.Read("Cfg-DataItem");
-        }
 
         void RemoteCtrl_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
