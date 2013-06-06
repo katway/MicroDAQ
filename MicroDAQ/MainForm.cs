@@ -36,7 +36,7 @@ namespace MicroDAQ
         /// <summary>
         /// 使用哪个OPCServer
         /// </summary>
-        string opcServer = "SimaticNet";
+        string opcServerType = "SimaticNet";
         /// <summary>
         /// OPCServer名称
         /// </summary>
@@ -76,7 +76,7 @@ namespace MicroDAQ
             Plcs = new List<PLCStation>();
 
         }
-      
+
         private void Form2_Load(object sender, EventArgs e)
         {
             ni.Icon = this.Icon;
@@ -91,12 +91,8 @@ namespace MicroDAQ
                 this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
                 int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
-                //meters = new int[plcCount];
-                //dataItems = new int[plcCount];
 
-                opcServer = ini.GetValue("OPCServer", "Type").Trim();
-                opcServerConnection = ini.GetValue(opcServer, "ConnectionString").Trim();
-                opcServerPorgramID = ini.GetValue(opcServer, "PorgramID").Trim();
+                opcServeType = ini.GetValue("OpcServer", "Type").Trim();
                 for (int i = 0; i < plcCount; i++)
                 {
                     PLCStation plc = new PLCStation();
@@ -119,30 +115,77 @@ namespace MicroDAQ
         private void ReadConfig()
         {
 
-            opcServeType = ini.GetValue("OpcServer", "Type");
             SyncOpc.Connect(ini.GetValue(opcServeType, "ProgramID"), "127.0.0.1");
-
-            //读取配置监测点数量的Item,每个PLC的DB1,W30,W32
-            string[] getConfigItems = new string[Plcs.Count];
+            //读取Item地址格式           
+            string[] getPairsConfigItems = new string[Plcs.Count];
             string wordItemFormat = ini.GetValue(opcServeType, "WordItemFormat");
-            //生成读取配置监测点数量的Items
-            for (int i = 0; i < Plcs.Count; i++)
-            {
-                getConfigItems[i] = Plcs[i].Connection + string.Format(wordItemFormat, 1, 30);
-            }
+            string wordArrayItemFormat = ini.GetValue(opcServeType, "WordItemFormat");
 
 
             if (SyncOpc.AddGroup())
             {
-                int[] itemsHandle = new int[getConfigItems.Length];
-                if (SyncOpc.AddItems(getConfigItems, itemsHandle))
+                #region 是否多组,有几组
+                //生成读取是否多组,有几组的Item地址
+                for (int i = 0; i < Plcs.Count; i++)
                 {
-                    SyncOpc.SyncRead(new object[getConfigItems.Length], itemsHandle);
-
+                    getPairsConfigItems[i] = string.Format(wordArrayItemFormat, 1, 26, 2);
                 }
+                //获取是否多组的数据,并转存到PlcStation列表里
+                int[] itemsHandle = new int[Plcs.Count];
+                object[] values = new object[Plcs.Count];
+                if (SyncOpc.AddItems(getPairsConfigItems, itemsHandle))
+                {
+                    SyncOpc.SyncRead(values, itemsHandle);
+                    for (int i = 0; i < Plcs.Count; i++)
+                    {
+                        ushort[] value = (ushort[])values[i];
+                        Plcs[i].MorePair = (value[0] == 2) ? (true) : false;
+                        Plcs[i].PairsNumber = value[1];
+                    }
+                }
+                #endregion
+
+                #region 每个PLC中每个DB组有多少监测点
+                //读取配置监测点数量的Item,每个PLC的DB1,W30,W32|W34,W36|W38....
+                //生成读取配置监测点数量的Items
+                string[][] getItemsNumber = null;   //第一维为PlcStation编号,第二维为数量组的编号
+                for (int i = 0; i < Plcs.Count; i++)
+                {
+                    getItemsNumber[i] = new string[Plcs[i].PairsNumber];
+                    for (int j = 0; j < Plcs[i].PairsNumber; j++)
+                    {
+                        getItemsNumber[i][j] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 30 + j * 2, 2);
+                    }
+                }
+                //获取每个PLC中,每个DB组中存放的监测点数量
+                for (int i = 0; i < Plcs.Count; i++)
+                {
+                    int[] itemsHandle = new int[Plcs[i].PairsNumber];
+                    object[] values = new object[Plcs[i].PairsNumber];
+
+                    if (SyncOpc.AddItems(getItemsNumber[i], itemsHandle))
+                    {
+                        SyncOpc.SyncRead(values, itemsHandle);
+                        //取1个PLC中的每个DB组中存放的监测点数量
+                        for (int j = 0; j < Plcs[i].PairsNumber; j++)
+                        {
+                            ushort[] value = (ushort[])values[j];
+                            Plcs[i].ItemsNumber[j].BigItems = value[0];
+                            Plcs[i].ItemsNumber[j].SmallItems = value[1];
+                        }
+                    }
+                }
+
+                #endregion
             }
 
-              List<string> listItems = new List<string>();
+            
+
+
+
+
+
+            List<string> listItems = new List<string>();
             PLC.Connect(opcServerPorgramID, "127.0.0.1");
 
             # region 读取扩展组数
@@ -184,7 +227,7 @@ namespace MicroDAQ
 
                 readGroupCount = false;
             }
-        
+
         }
 
 
@@ -273,7 +316,7 @@ namespace MicroDAQ
             if (getConfig && !started)
             {
 
-               // CreateMeters(); 1
+                // CreateMeters(); 1
 
                 started = true;
                 CycleTask UpdateCycle = new CycleTask();
@@ -288,7 +331,7 @@ namespace MicroDAQ
             Thread.Sleep(200);
         }
 
-          
+
 
         private void CreateMeters()
         {
@@ -305,20 +348,20 @@ namespace MicroDAQ
             int meterIndex = 0;
             for (int plcIndex = 0; plcIndex < plcCount; plcIndex++)
             {
-                for (int i = 0; i < groups[plcIndex]; i++) 
+                for (int i = 0; i < groups[plcIndex]; i++)
                 {
                     for (int j = 0; j < meters[meterIndex]; j++)
                     {
-                        h.Add(string.Format("{0}DB{1},W{2},3",3+(i*2) ,plcConnection[plcIndex], j * 10 + 0));
-                        d.Add(string.Format("{0}DB{1},REAL{2}",3+(i*2) ,plcConnection[plcIndex],j * 10 + 6));
+                        h.Add(string.Format("{0}DB{1},W{2},3", 3 + (i * 2), plcConnection[plcIndex], j * 10 + 0));
+                        d.Add(string.Format("{0}DB{1},REAL{2}", 3 + (i * 2), plcConnection[plcIndex], j * 10 + 6));
                     }
                     if (meters[meterIndex] > 0)
                     {
                         MetersCtrl = new Controller("MetersCtrl",
                                      new string[] { string.Format(plcConnection[plcIndex] + "DB2,W100,5") },
                                      new string[] { string.Format(plcConnection[plcIndex] + "DB2,W120,5") });
-                         Program.MeterManager.CTMeters.Add(plcIndex * 10000 + 99, MetersCtrl);
-                         MetersCtrl.Connect("127.0.0.1");
+                        Program.MeterManager.CTMeters.Add(plcIndex * 10000 + 99, MetersCtrl);
+                        MetersCtrl.Connect("127.0.0.1");
                     }
                     meterIndex++;
                 }
@@ -331,8 +374,8 @@ namespace MicroDAQ
                 {
                     for (int j = 0; j < dataItems[itemIndex]; j++)
                     {
-                        h.Add(string.Format("{0}DB{1},W{2},3", 4+(i*2),plcConnection[plcIndex], j * 20));
-                        d.Add(string.Format("{0}DB{1},REAL{2}", 4+(i*2),plcConnection[plcIndex], j * 20 + 10));
+                        h.Add(string.Format("{0}DB{1},W{2},3", 4 + (i * 2), plcConnection[plcIndex], j * 20));
+                        d.Add(string.Format("{0}DB{1},REAL{2}", 4 + (i * 2), plcConnection[plcIndex], j * 20 + 10));
                         h_flow.Add(string.Format("{0}DB{1},W{2},3", 4 + (i * 2), plcConnection[plcIndex], j * 20));
                         d_flow.Add(string.Format("{0}DB{1},W{2}", 4 + (i * 2), plcConnection[plcIndex], j * 20 + 18));
                     }
