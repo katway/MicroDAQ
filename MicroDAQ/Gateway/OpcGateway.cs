@@ -17,9 +17,9 @@ namespace MicroDAQ.Gateway
         public override void Dispose()
         {
             UpdateCycle.Quit();
-            RemoteCtrlCycle.Quit(); 
+            RemoteCtrlCycle.Quit();
         }
-      
+
         /// <summary>
         /// 使用多个ItemManage创建OpcGateway实例
         /// </summary>
@@ -34,7 +34,7 @@ namespace MicroDAQ.Gateway
             RemoteCtrlCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrlCycle_WorkStateChanged);
         }
 
-    
+
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
             this.RunningState = (Gateway.RunningState)((int)state);
@@ -97,17 +97,17 @@ namespace MicroDAQ.Gateway
         {
             try
             {
-                DataRow[] Rows = Program.DatabaseManager.GetRemoteControl();
+                DataRow[] Rows = this.DatabaseManagers[0].GetRemoteControl();
                 if (Rows != null)
                     foreach (var row in Rows)
                     {
                         //MessageBox.Show((row["cycle"].ToString() != null).ToString());
                         foreach (var mt in Program.MeterManager.CTMeters.Values)
-                            mt.SetCommand(++running,
-                                                      int.Parse(row["id"].ToString()),
-                                                      int.Parse(row["command"].ToString()),
-                                                      int.Parse((row["cycle"] != null) ? (row["cycle"].ToString()) : ("0"))
-                                                  );
+                            mt.SetCommand(++running % ushort.MaxValue,
+                                          int.Parse(row["id"].ToString()),
+                                          int.Parse(row["command"].ToString()),
+                                          int.Parse((row["cycle"] != null) ? (row["cycle"].ToString()) : ("0"))
+                                          );
                         Thread.Sleep(500);
                     }
                 System.Threading.Thread.Sleep(500);
@@ -204,16 +204,16 @@ namespace MicroDAQ.Gateway
         }
         #endregion
 
-        
-    
-        public override EventHandler  StateChanging()
+
+
+        public override EventHandler StateChanging()
         {
- 	        throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public override EventHandler  StateChanged()
+        public override EventHandler StateChanged()
         {
- 	        throw new NotImplementedException();
+            throw new NotImplementedException();
         }
-}
+    }
 }
