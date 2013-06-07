@@ -62,7 +62,8 @@
     <StartupObject>MicroDAQ.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Automatic">
+    <Reference Include="Automatic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>Dynamic\Automatic.dll</HintPath>
     </Reference>
     <Reference Include="JonLibrary">

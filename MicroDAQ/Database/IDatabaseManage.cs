@@ -11,5 +11,6 @@ namespace MicroDAQ.Database
         SqlConnection UpdateConnection { set; get; }
         SqlConnection GetdataConnection { set; get; }
         bool UpdateItem(MicroDAQ.DataItem.Item item);
+        DataRow[] GetRemoteControl();
     }
 }

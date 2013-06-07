@@ -12,27 +12,13 @@ using System.Threading;
 using MicroDAQ.UI;
 using SysncOpcOperate;
 
+
 namespace MicroDAQ
 {
     public partial class MainForm : Form
     {
-        /// <summary>
-        /// PLC数量
-        /// </summary>
-        /// <summary>
-        /// 每个PLC中10字节数据项数量
-        /// </summary>
-        int[] meters;
-        /// <summary>
-        /// 每个PLC20字节数据项数量
-        /// </summary>
-        int[] dataItems;
 
-        uint[] ctMeterID;
-        /// <summary>
-        /// OPCServer连接数组
-        /// </summary>
-        string[] plcConnection;
+
         /// <summary>
         /// 使用哪个OPCServer
         /// </summary>
@@ -41,39 +27,16 @@ namespace MicroDAQ
         /// OPCServer名称
         /// </summary>
         string opcServerPorgramID = "OPC.SimaticNet";
-        /// <summary>
-        /// OPCServer地址连接方式
-        /// </summary>
-        string opcServerConnection = "S7:[S7 connection_{0}]";
-        /// <summary>
-        /// 是否读取了扩展组数
-        /// </summary>
-        bool readGroupCount = false;
-        /// <summary>
-        /// 扩展组数
-        /// </summary>
-        int[] groups;
-        /// <summary>
-        /// 监控数据项
-        /// </summary>
-        public ItemsAddress DataItem { get; set; }
-        /// <summary>
-        /// 粒子流量报警
-        /// </summary>
-        public ItemsAddress FlowAlert { get; set; }
 
-        AsyncPLC4 PLC;
-        private List<PLCStation> Plcs;
+
+        private List<PLCStationInformation> Plcs;
         private SysncOpcOperate.OPCServer SyncOpc;
         IniFile ini = null;
 
         public MainForm()
         {
             InitializeComponent();
-            PLC = new AsyncPLC4();
-            PLC.ReadComplete += new AsyncPLC4.dgtReadComplete(PLC_ReadComplete);
-
-            Plcs = new List<PLCStation>();
+            Plcs = new List<PLCStationInformation>();
 
         }
 
@@ -95,7 +58,7 @@ namespace MicroDAQ
                 opcServeType = ini.GetValue("OpcServer", "Type").Trim();
                 for (int i = 0; i < plcCount; i++)
                 {
-                    PLCStation plc = new PLCStation();
+                    PLCStationInformation plc = new PLCStationInformation();
                     Plcs.Add(plc);
                     plc.Connection = ini.GetValue(string.Format("PLC{0}", i), "Connection");
                 }
@@ -112,15 +75,22 @@ namespace MicroDAQ
         }
 
         private string opcServeType;
+        private string wordItemFormat;
+        private string wordArrayItemFormat;
+        private string realItemFormat;
+
+        /// <summary>
+        /// 读取配置
+        /// </summary>
         private void ReadConfig()
         {
 
             SyncOpc.Connect(ini.GetValue(opcServeType, "ProgramID"), "127.0.0.1");
             //读取Item地址格式           
             string[] getPairsConfigItems = new string[Plcs.Count];
-            string wordItemFormat = ini.GetValue(opcServeType, "WordItemFormat");
-            string wordArrayItemFormat = ini.GetValue(opcServeType, "WordItemFormat");
-
+            wordItemFormat = ini.GetValue(opcServeType, "WordItemFormat");
+            wordArrayItemFormat = ini.GetValue(opcServeType, "WordItemFormat");
+            realItemFormat = ini.GetValue(opcServeType, "RealItemFormat");
 
             if (SyncOpc.AddGroup())
             {
@@ -160,8 +130,8 @@ namespace MicroDAQ
                 //获取每个PLC中,每个DB组中存放的监测点数量
                 for (int i = 0; i < Plcs.Count; i++)
                 {
-                    int[] itemsHandle = new int[Plcs[i].PairsNumber];
-                    object[] values = new object[Plcs[i].PairsNumber];
+                    itemsHandle = new int[Plcs[i].PairsNumber];
+                    values = new object[Plcs[i].PairsNumber];
 
                     if (SyncOpc.AddItems(getItemsNumber[i], itemsHandle))
                     {
@@ -178,122 +148,41 @@ namespace MicroDAQ
 
                 #endregion
             }
-
-            
-
-
-
-
-
-            List<string> listItems = new List<string>();
-            PLC.Connect(opcServerPorgramID, "127.0.0.1");
-
-            # region 读取扩展组数
-            for (int i = 0; i < plcCount; i++)
-            {
-                listItems.Add(plcConnection[i] + "DB1,W28");
-            }
-            PLC.AddGroup("GroupCount", 1, 0);
-            PLC.AddItems("GroupCount", listItems.ToArray());
-            PLC.Read("GroupCount");
-
-            #endregion
-
-            if (readGroupCount)
-            {
-                listItems = new List<string>();
-                for (int i = 0; i < plcCount; i++)
-                {
-                    for (int j = 0; j < groups[i]; j++)
-                    {
-                        listItems.Add(plcConnection[i] + string.Format("DB{0},W{1}", 1, 30 + (j * 4)));
-                    }
-                }
-                PLC.AddGroup("Cfg", 1, 0);
-                PLC.AddItems("Cfg", listItems.ToArray());
-                PLC.Read("Cfg");
-
-                listItems = new List<string>();
-                for (int i = 0; i < plcCount; i++)
-                {
-                    for (int j = 0; j < groups[i]; j++)
-                    {
-                        listItems.Add(plcConnection[i] + string.Format("DB{0},W{1}", 1, 32 + (j * 4)));
-                    }
-                }
-                PLC.AddGroup("Cfg-DataItem", 1, 0);
-                PLC.AddItems("Cfg-DataItem", listItems.ToArray());
-                PLC.Read("Cfg-DataItem");
-
-                readGroupCount = false;
-            }
-
         }
-
-
-        void PLC_DataChange(string groupName, int[] item, object[] value, short[] Qualities)
+        /// <summary>
+        /// 创建Items项
+        /// </summary>
+        private void CreateItems()
         {
-            bool r = true;
-            foreach (short q in Qualities)
+            //遍历所有PLC
+            for (int i = 0; i < Plcs.Count; i++)
             {
-                r &= (q >= 192) ? (true) : (false);
-            }
-            ConnectionState = (r) ? (ConnectionState.Open) : (ConnectionState.Closed);
+                PLCStationInformation plc = Plcs[i];
 
-            switch (groupName)
-            {
-                case "Cfg":
-                    for (int i = 0; i < item.Length; i++)
+                //遍历PLC中所有DB组
+                for (int j = 0; j < plc.ItemsNumber.Length; j++)
+                {
+                    PLCStationInformation.ConfigItemsNumber num = plc.ItemsNumber[j];
+
+                    //根据20字节监测点数量生成Item地址
+                    for (int k = 0; k < num.BigItems; k++)
                     {
-                        if (value[i] == null) continue;
-                        meters[item[i]] = (ushort)value[i];
+                        plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j, 20 * k, 3));
+                        plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j, 20 * k + 10));
                     }
-                    break;
-                case "Cfg-DataItem":
-                    for (int i = 0; i < item.Length; i++)
+
+                    //根据10字节监测点数量生成Item地址
+                    for (int k = 0; k < num.SmallItems; k++)
                     {
-                        if (value[i] == null) continue;
-                        dataItems[item[i]] = (ushort)value[i];
+                        plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j, 10 * k, 3));
+                        plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j, 10 * k + 6));
                     }
-                    getConfig = true;
-                    break;
-                case "GroupCount":
-                    for (int i = 0; i < item.Length; i++)
-                    {
-                        if (value[i] == null) continue;
-                        groups[item[i]] = (ushort)value[i];
-                    }
-                    readGroupCount = true;
-                    break;
+
+                }
             }
         }
 
-        void PLC_ReadComplete(string groupName, int[] item, object[] value, short[] Qualities)
-        {
-            this.PLC_DataChange(groupName, item, value, Qualities);
-            switch (groupName)
-            {
-                case "Cfg":
-                case "Cfg-DataItem":
-                    this.BeginInvoke(new MethodInvoker(delegate
-                    {
-                        this.tsslMeters.Text = "采集点：";
-                        foreach (int ms in meters)
-                            this.tsslMeters.Text += ms.ToString() + " ";
 
-                        foreach (int ds in dataItems)
-                            this.tsslMeters.Text += ds.ToString() + " ";
-                    }));
-                    break;
-                case "CtMeters":
-                    ctMeterID = (uint[])value[0];
-                    for (int i = 0; i < ctMeterID.Length; i++)
-                    {
-                        ctMeterID[i] = ctMeterID[i] >> 16;
-                    }
-                    break;
-            }
-        }
 
         int updateMeters;
         int remoteMeters;
@@ -324,8 +213,7 @@ namespace MicroDAQ
                 Program.RemoteCycle = RemoteCtrl;
                 UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
                 RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
-                UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);
-                RemoteCtrl.Run(remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
+
                 Start.SetExit = true;
             }
             Thread.Sleep(200);
