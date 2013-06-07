@@ -119,7 +119,7 @@ namespace MicroDAQ
             //读取Item地址格式           
             string[] getPairsConfigItems = new string[Plcs.Count];
             string wordItemFormat = ini.GetValue(opcServeType, "WordItemFormat");
-            string wordArrayItemFormat = ini.GetValue(opcServeType, "WordItemFormat");
+            string wordArrayItemFormat = ini.GetValue(opcServeType, "WordArrayItemFormat");
 
 
             if (SyncOpc.AddGroup())
