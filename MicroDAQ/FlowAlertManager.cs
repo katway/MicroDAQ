@@ -8,7 +8,7 @@ namespace MicroDAQ
 {
     class FlowAlertManager : JonLibrary.OPC.Machine, IDataItemManage
     {
-        public List<Item> Items { get; set; }
+        public IList<Item> Items { get; set; }
         public Dictionary<int, Item> ItemPair = null;
         //public FlowAlertManager(string name, string[] dataHead, string[] data)
         //    : base(name, dataHead, data)

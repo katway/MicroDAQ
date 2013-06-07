@@ -11,7 +11,7 @@ namespace MicroDAQ
     /// </summary>
     class DataItemManager : JonLibrary.OPC.Machine, IDataItemManage
     {
-        public List<Item> Items = null;
+        public IList<Item> Items { get; set; }
         public Dictionary<int, Item> ItemPair = null;
         /// <summary>
         /// 使用由指定的xx建立管理器 

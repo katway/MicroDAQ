@@ -6,6 +6,7 @@ namespace MicroDAQ.DataItem
 {
     public interface IDataItemManage
     {
-        List<Item> Items { get; set; }
+        IList<Item> Items { get; set; }
+        
     }
 }

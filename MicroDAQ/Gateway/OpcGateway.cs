@@ -64,7 +64,7 @@ namespace MicroDAQ.Gateway
         {
             foreach (IDatabaseManage dbMgr in this.DatabaseManagers)
             {
-                foreach (DataItemManager mgr in this.ItemManagers)
+                foreach (IDataItemManage mgr in this.ItemManagers)
                 {
                     foreach (Item item in mgr.Items)
                     {
@@ -143,8 +143,8 @@ namespace MicroDAQ.Gateway
         /// <param name="pauseRemoteCtrl">是否暂停控制</param>
         public void Pasue(bool pauseUpdate, bool pauseRemoteCtrl)
         {
-            this.UpdateCycle.SetPause = pauseUpdate;
-            this.RemoteCtrlCycle.SetPause = pauseRemoteCtrl;
+            if (pauseUpdate) this.UpdateCycle.Pause();
+            if (pauseRemoteCtrl) this.RemoteCtrlCycle.Pause();
         }
         /// <summary>
         /// 暂停参数指定的任务对象
@@ -152,7 +152,7 @@ namespace MicroDAQ.Gateway
         /// <param name="task">要暂停的任务对象</param>
         public void Pause(CycleTask task)
         {
-            task.SetPause = true;
+            task.Pause();
         }
         #endregion
         #region Continue()
@@ -171,7 +171,7 @@ namespace MicroDAQ.Gateway
         /// <param name="task">要继续的任务对象</param>
         public void Continue(CycleTask task)
         {
-            task.SetPause = false;
+            task.Continue();
         }
 
         #endregion
@@ -191,8 +191,8 @@ namespace MicroDAQ.Gateway
         /// <param name="ExitRemoteCtrl">是否暂停控制</param>
         private void Stop(bool ExitUpdate, bool ExitRemoteCtrl)
         {
-            this.UpdateCycle.SetExit = ExitUpdate;
-            this.RemoteCtrlCycle.SetExit = ExitRemoteCtrl;
+            if (ExitUpdate) this.UpdateCycle.Quit();
+            if (ExitRemoteCtrl) this.RemoteCtrlCycle.Quit();
         }
         /// <summary>
         /// 暂停参数指定的任务对象
@@ -200,7 +200,7 @@ namespace MicroDAQ.Gateway
         /// <param name="task">要暂停的任务对象</param>
         private void Stop(CycleTask task)
         {
-            task.SetExit = true;
+            task.Quit();
         }
         #endregion
 
