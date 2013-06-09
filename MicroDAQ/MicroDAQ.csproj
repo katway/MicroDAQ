@@ -69,6 +69,9 @@
     <Reference Include="JonLibrary">
       <HintPath>Dynamic\JonLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>Dynamic\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="OpcRcw.Comn">
       <HintPath>Dynamic\OpcRcw.Comn.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -188,6 +191,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bkg.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="log4net.xml">
+      <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Nitrogen Icon 42.ico" />

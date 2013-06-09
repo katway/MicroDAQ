@@ -14,7 +14,7 @@ using SysncOpcOperate;
 using MicroDAQ.DataItem;
 using MicroDAQ.Database;
 using MicroDAQ.Gateway;
-
+using log4net;
 
 namespace MicroDAQ
 {
@@ -41,8 +41,10 @@ namespace MicroDAQ
         bool boolCreateItems = false;
         bool boolCreateItemManger = false;
 
+        ILog log;
         public MainForm()
         {
+            log = LogManager.GetLogger(this.GetType());
             InitializeComponent();
             Plcs = new List<PLCStationInformation>();
         }
@@ -71,8 +73,10 @@ namespace MicroDAQ
                 }
 
             }
-            catch
-            { }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
             finally
             {
                 if (autoStart)
@@ -84,8 +88,9 @@ namespace MicroDAQ
         /// <summary>
         /// 读取配置
         /// </summary>
-        private void ReadConfig()
+        private bool ReadConfig()
         {
+            bool success = false;
             try
             {
                 SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1");
@@ -149,13 +154,16 @@ namespace MicroDAQ
 
                     #endregion
 
-                    boolReadConfig = true;
+                    //boolReadConfig = true;
+                    success = true;
                 }
             }
             catch (Exception ex)
             {
-                boolReadConfig = false;
+                log.Error(ex);
+                success = false;
             }
+            return success;
         }
         /// <summary>
         /// 创建Items项
@@ -239,12 +247,9 @@ namespace MicroDAQ
 
         public void Start()
         {
-            if (!boolReadConfig)
-            {
-                //等OPCSERVER启动
-                Thread.Sleep(Program.waitMillionSecond);
-                ReadConfig();
-            }
+            Thread.Sleep(Program.waitMillionSecond);
+            ReadConfig();
+
 
             if (boolReadConfig && !boolCreateItems)
             {
@@ -348,8 +353,8 @@ namespace MicroDAQ
             if (MessageBox.Show("这将使数据采集系统退出运行状态，确定要退出吗？", "退出", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                     == System.Windows.Forms.DialogResult.Yes)
             {
-                if (UpdateCycle != null) UpdateCycle.SetExit = true;
-                if (RemoteCtrl != null) RemoteCtrl.SetExit = true;
+                //if (UpdateCycle != null) UpdateCycle.SetExit = true;
+                //if (RemoteCtrl != null) RemoteCtrl.SetExit = true;
                 this.Hide();
                 Program.BeQuit = true;
                 Thread.Sleep(200);

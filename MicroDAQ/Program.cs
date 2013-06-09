@@ -5,6 +5,7 @@ using JonLibrary.Common;
 using JonLibrary.Automatic;
 using MicroDAQ.Database;
 using MicroDAQ.Gateway;
+using log4net;
 namespace MicroDAQ
 {
     static class Program
@@ -18,6 +19,22 @@ namespace MicroDAQ
         [STAThread]
         static void Main(string[] args)
         {
+            ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            //记录错误日志
+            log.Error("error", new Exception("发生了一个异常"));
+            //记录严重错误
+            log.Fatal("fatal", new Exception("发生了一个致命错误"));
+            //记录一般信息
+            log.Info("info");
+            //记录调试信息
+            log.Debug("debug");
+            //记录警告信息
+            log.Warn("warn");
+            Console.WriteLine("日志记录完毕。");
+            Console.Read();
+
+
+
             #region 处理来自参数的快速启动请求，跳过对OPCSERVER的三分钟等待
             foreach (string arg in args)
             {
@@ -37,7 +54,7 @@ namespace MicroDAQ
             {
                 if (createNew)
                 {
-                    
+
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
 
@@ -69,9 +86,12 @@ namespace MicroDAQ
             //{
             //    MessageBox.Show("Only one instance of this application is allowed!");
             //}
+
+
+
         }
 
-       
+
         public static OpcGateway opcGateway = null;
         public static MachineManager MeterManager = new MachineManager();
         public static DatabaseManage DatabaseManager;// = new DatabaseManager();
