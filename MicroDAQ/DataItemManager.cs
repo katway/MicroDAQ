@@ -14,7 +14,7 @@ namespace MicroDAQ
         public IList<Item> Items { get; set; }
         public Dictionary<int, Item> ItemPair = null;
         /// <summary>
-        /// 使用由指定的xx建立管理器 
+        /// 使用由指定的xx建立管理器
         /// </summary>
         /// <param name="name"></param>
         /// <param name="dataHead"></param>

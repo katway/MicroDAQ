@@ -119,6 +119,7 @@ namespace MicroDAQ.Gateway
             }
         }
 
+        #region Start()
         /// <summary>
         /// 启动
         /// </summary>
@@ -127,6 +128,8 @@ namespace MicroDAQ.Gateway
             UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);
             RemoteCtrlCycle.Run(this.remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
         }
+        #endregion
+
         #region Pasue()
         /// <summary>
         /// 暂停更新和控制
@@ -155,6 +158,7 @@ namespace MicroDAQ.Gateway
             task.Pause();
         }
         #endregion
+
         #region Continue()
         /// <summary>
         /// 暂停更新和控制
@@ -175,6 +179,7 @@ namespace MicroDAQ.Gateway
         }
 
         #endregion
+
         #region Stop()
         /// <summary>
         /// 暂停更新和控制
