@@ -37,13 +37,7 @@ namespace MicroDAQ
             {
                 if (createNew)
                 {
-                    IniFile ini = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "MicroDAQ.ini");
-
-                    DatabaseManager = new DatabaseManage(ini.GetValue("Database", "Address"),
-                                                        ini.GetValue("Database", "Port"),
-                                                        ini.GetValue("Database", "Database"),
-                                                        ini.GetValue("Database", "Username"),
-                                                        ini.GetValue("Database", "Password"));
+                    
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
 
@@ -77,7 +71,8 @@ namespace MicroDAQ
             //}
         }
 
-        public static  OpcGateway opcGateway = null;
+       
+        public static OpcGateway opcGateway = null;
         public static MachineManager MeterManager = new MachineManager();
         public static DatabaseManage DatabaseManager;// = new DatabaseManager();
         public static DataItemManager M;

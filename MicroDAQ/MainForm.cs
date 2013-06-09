@@ -227,6 +227,16 @@ namespace MicroDAQ
             }
         }
 
+
+        private void createDBManager()
+        {
+            Program.DatabaseManager = new DatabaseManage(ini.GetValue("Database", "Address"),
+                                                         ini.GetValue("Database", "Port"),
+                                                         ini.GetValue("Database", "Database"),
+                                                         ini.GetValue("Database", "Username"),
+                                                         ini.GetValue("Database", "Password"));
+        }
+
         public void Start()
         {
             if (!boolReadConfig)
