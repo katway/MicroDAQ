@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using JonLibrary.Common;
 using JonLibrary.Automatic;
 using MicroDAQ.Database;
+using MicroDAQ.Gateway;
 namespace MicroDAQ
 {
     static class Program
@@ -76,6 +77,7 @@ namespace MicroDAQ
             //}
         }
 
+        public static  OpcGateway opcGateway = null;
         public static MachineManager MeterManager = new MachineManager();
         public static DatabaseManage DatabaseManager;// = new DatabaseManager();
         public static DataItemManager M;
