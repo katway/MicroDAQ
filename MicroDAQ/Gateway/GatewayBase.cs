@@ -44,23 +44,23 @@ namespace MicroDAQ.Gateway
 
         protected void OnStateChanging()
         {
-            if (StateChanging() != null)
-            { StateChanging(); }
+            if (StateChanging != null)
+            { StateChanging(this, null); }
         }
         protected void OnStateChanged()
         {
-            if (StateChanged() != null)
-            { StateChanged(); }
+            if (StateChanged != null)
+            { StateChanged(this, null); }
         }
         /// <summary>
         /// 运行状态将要发生变化的通知事件
         /// </summary>
         /// <returns></returns>
-        public abstract EventHandler StateChanging();
+        public event EventHandler StateChanging;
         /// <summary>
         /// 运行状态已经发生变化的通知事件 
         /// </summary>
         /// <returns></returns>
-        public abstract EventHandler StateChanged();
+        public event EventHandler StateChanged;
     }
 }

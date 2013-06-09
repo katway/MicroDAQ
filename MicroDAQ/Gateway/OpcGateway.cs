@@ -211,14 +211,6 @@ namespace MicroDAQ.Gateway
 
 
 
-        public override EventHandler StateChanging()
-        {
-            throw new NotImplementedException();
-        }
 
-        public override EventHandler StateChanged()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

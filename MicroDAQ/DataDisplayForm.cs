@@ -58,8 +58,8 @@ namespace MicroDAQ
                     i++;
                     if (lsvItems.Items.Count < i)
                         lsvItems.Items.Add(new ListViewItem(new string[]{
-                                            meter.ID.ToString()                                            ,
-                                            meter.Value .ToString ()                                            ,
+                                            meter.ID.ToString()  ,
+                                            meter.Value .ToString ()   ,
                                             string.Empty,
                                             meter.Type.ToString (),
                                             meter.State .ToString (),

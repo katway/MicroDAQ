@@ -190,13 +190,12 @@ namespace MicroDAQ
 
                     }
                 }
-                createItems = true;
             }
             catch (Exception ex)
             {
-                createItems = false;
+
             }
-            
+
         }
         /// <summary>
         /// 创建数据项管理器
@@ -209,11 +208,11 @@ namespace MicroDAQ
                 IList<IDatabaseManage> listDatabaseManger = new List<IDatabaseManage>();
                 foreach (var plc in Plcs)
                 {
-                    string[] head=new string[plc.ItemsHead.Count];
-                    string[] data=new string[plc.ItemsHead.Count];
-                    plc.ItemsHead.CopyTo(head,0);
-                    plc.ItemsData.CopyTo(data,0);
-                    IDataItemManage dim = new DataItemManager("ItemData", head,data);
+                    string[] head = new string[plc.ItemsHead.Count];
+                    string[] data = new string[plc.ItemsHead.Count];
+                    plc.ItemsHead.CopyTo(head, 0);
+                    plc.ItemsData.CopyTo(data, 0);
+                    IDataItemManage dim = new DataItemManager("ItemData", head, data);
                     DatabaseManage dbm = new DatabaseManage();
                     listDataItemManger.Add(dim);
                     listDatabaseManger.Add(dbm);
@@ -245,7 +244,7 @@ namespace MicroDAQ
             if (boolReadConfig && boolCreateItems && !boolCreateItemManger)
             {
                 CreateItemsManger();
-                
+
                 StartWork.SetExit = true;
             }
             Thread.Sleep(200);
