@@ -229,7 +229,7 @@ namespace MicroDAQ
                 Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
                 Console.WriteLine(item.ToString());
             }
-
+            Thread.Sleep(30000);
         }
         int running;
         public void remoteCtrl()
