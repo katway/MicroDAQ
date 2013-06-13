@@ -282,8 +282,8 @@ namespace MicroDAQ
                 UpdateCycle = new CycleTask();
                 RemoteCtrl = new CycleTask();
                 Program.RemoteCycle = RemoteCtrl;
-                UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
-                RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
+                UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
+                RemoteCtrl.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrl_WorkStateChanged);
                 UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);
                 RemoteCtrl.Run(remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
                 Start.SetExit = true;
