@@ -213,23 +213,89 @@ namespace MicroDAQ
         int remoteMeters;
 
 
+        List<int> dianCiFa1 = new List<int> { 100, 101, 102, 103, 104, 105, 106, 107 };
+        List<int> dianCiFa2 = new List<int> { 108, 109, 110, 111, 112, 113, 114, 115, 116, 117 };
         private void update2()
         {
+            float value100 = 0.0f, value101 = 0.0f, value108 = 0.0f, value109 = 0.0f; //粒子
+            DataState state601=DataState.正常, state602=DataState.正常;               //电磁阀
+            foreach (var item in Program.M.Items)
+            {
+                if (item.ID == 601)
+                    state601 = item.State;
+                if (item.ID == 602)
+                    state602 = item.State;
+            }
+            foreach (var item in Program.M_flowAlert.Items)
+            {
+                if (state601 == DataState.正常 || state601 == DataState.已启动)
+                {
+                    if (item.ID == 100)
+                        value100 = item.Value;
+                    if (item.ID == 101)
+                        value101 = item.Value;
+                }
+                else
+                {
+                    value100 = value101 = 2;
+                }
+                if (state602 == DataState.正常 || state602 == DataState.已启动)
+                {
+                    if (item.ID == 108)
+                        value108 = item.Value;
+                    if (item.ID == 109)
+                        value109 = item.Value;
+                }
+                else
+                {
+                    value108 = value109 = 2;
+                }
+            }
             foreach (var item in Program.M.Items)
             {
                 Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
             }
+
             foreach (var item in Program.M_flowAlert.Items)
             {
                 float t = 0.0f;
-                if ((item.Value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
-                    t = 28.3f;
-                if (item.Value == 2)
-                    t = 0.0f;
+                if (dianCiFa1.Contains(item.ID))
+                {
+                    if (item.ID % 2 == 0)
+                    {
+                        if (value100 == 0 && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                            t = 28.3f;
+                        if (value100 == 2)
+                            t = 0.0f;
+                    }
+                    else
+                    {
+                        if (value101 == 0 && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                            t = 28.3f;
+                        if (value101 == 2)
+                            t = 0.0f;
+                    }
+                }
+                else if (dianCiFa2.Contains(item.ID))
+                {
+                    if (item.ID % 2 == 0)
+                    {
+                        if (value108 == 0 && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                            t = 28.3f;
+                        if (value108 == 2)
+                            t = 0.0f;
+                    }
+                    else
+                    {
+                        if (value109 == 0 && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                            t = 28.3f;
+                        if (value109 == 2)
+                            t = 0.0f;
+                    }
+                }
                 Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
                 Console.WriteLine(item.ToString());
             }
-
         }
         int running;
         public void remoteCtrl()
