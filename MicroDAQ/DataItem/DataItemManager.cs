@@ -4,7 +4,7 @@ using System.Text;
 using System.Data;
 using MicroDAQ.DataItem;
 
-namespace MicroDAQ
+namespace MicroDAQ.DataItem
 {
     /// <summary>
     /// 数量项管理器

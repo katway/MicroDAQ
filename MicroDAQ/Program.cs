@@ -6,6 +6,7 @@ using JonLibrary.Automatic;
 using MicroDAQ.Database;
 using MicroDAQ.Gateway;
 using log4net;
+using MicroDAQ.DataItem;
 namespace MicroDAQ
 {
     static class Program

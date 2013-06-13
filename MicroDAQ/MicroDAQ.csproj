@@ -110,7 +110,7 @@
     <Compile Include="DataItem\Item.cs" />
     <Compile Include="DataItem\IDataItemManage.cs" />
     <Compile Include="FlowAlertManager.cs" />
-    <Compile Include="DataItemManager.cs" />
+    <Compile Include="DataItem\DataItemManager.cs" />
     <Compile Include="Gateway\GatewayBase.cs" />
     <Compile Include="Gateway\IGateway.cs" />
     <Compile Include="Gateway\RunningState.cs" />
