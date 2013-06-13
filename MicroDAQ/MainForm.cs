@@ -23,6 +23,7 @@ namespace MicroDAQ
         int[] dataItems;
         byte[] projectCode = new byte[4];
         byte[] version = new byte[2];
+        int rate = 30000; //更新间隔
 
         uint[] ctMeterID;
         string[] plcConnection;//= string.Empty;
@@ -51,6 +52,7 @@ namespace MicroDAQ
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
                 Duty = ini.GetValue("General", "Duty");
                 plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
+                rate = int.Parse(ini.GetValue("UpdateRate","Rate"));
 
                 plcConnection = new string[plcCount];
                 meters = new int[plcCount];
@@ -296,6 +298,8 @@ namespace MicroDAQ
                 Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
                 Console.WriteLine(item.ToString());
             }
+
+            Thread.Sleep(rate);
         }
         int running;
         public void remoteCtrl()
