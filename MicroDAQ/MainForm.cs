@@ -219,18 +219,19 @@ namespace MicroDAQ
         List<int> dianCiFa2 = new List<int> { 108, 109, 110, 111, 112, 113, 114, 115, 116, 117 };
         private void update2()
         {
+            #region 优科专用
             float value100 = 0.0f, value101 = 0.0f, value108 = 0.0f, value109 = 0.0f; //粒子
-            DataState state601=DataState.正常, state602=DataState.正常;               //电磁阀
+            DataState state603=DataState.正常, state604=DataState.正常;               //电磁阀
             foreach (var item in Program.M.Items)
             {
-                if (item.ID == 601)
-                    state601 = item.State;
-                if (item.ID == 602)
-                    state602 = item.State;
+                if (item.ID == 603)
+                    state603 = item.State;
+                if (item.ID == 604)
+                    state604 = item.State;
             }
             foreach (var item in Program.M_flowAlert.Items)
             {
-                if (state601 == DataState.正常 || state601 == DataState.已启动)
+                if (state603 == DataState.正常 || state604 == DataState.已启动)
                 {
                     if (item.ID == 100)
                         value100 = item.Value;
@@ -241,7 +242,7 @@ namespace MicroDAQ
                 {
                     value100 = value101 = 2;
                 }
-                if (state602 == DataState.正常 || state602 == DataState.已启动)
+                if (state603 == DataState.正常 || state604 == DataState.已启动)
                 {
                     if (item.ID == 108)
                         value108 = item.Value;
@@ -253,6 +254,8 @@ namespace MicroDAQ
                     value108 = value109 = 2;
                 }
             }
+            #endregion
+
             foreach (var item in Program.M.Items)
             {
                 Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
