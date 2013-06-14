@@ -55,11 +55,6 @@ namespace MicroDAQ.Gateway
         public CycleTask RemoteCtrlCycle { get; private set; }
 
 
-
-        Meter meter;
-        Controller MetersCtrl;
-
-
         protected virtual void Update()
         {
             foreach (IDatabaseManage dbMgr in this.DatabaseManagers)
@@ -139,23 +134,15 @@ namespace MicroDAQ.Gateway
             this.Pause(this.UpdateCycle);
             this.Pause(this.RemoteCtrlCycle);
         }
-        /// <summary>
-        /// 根据参数暂停更新任务或控制任务
-        /// </summary>
-        /// <param name="pauseUpdate">是否暂停更新</param>
-        /// <param name="pauseRemoteCtrl">是否暂停控制</param>
-        public void Pasue(bool pauseUpdate, bool pauseRemoteCtrl)
-        {
-            if (pauseUpdate) this.UpdateCycle.Pause();
-            if (pauseRemoteCtrl) this.RemoteCtrlCycle.Pause();
-        }
+
         /// <summary>
         /// 暂停参数指定的任务对象
         /// </summary>
         /// <param name="task">要暂停的任务对象</param>
         public void Pause(CycleTask task)
         {
-            task.Pause();
+            if (task != null)
+                task.Pause();
         }
         #endregion
 
@@ -175,7 +162,8 @@ namespace MicroDAQ.Gateway
         /// <param name="task">要继续的任务对象</param>
         public void Continue(CycleTask task)
         {
-            task.Continue();
+            if (task != null)
+                task.Continue();
         }
 
         #endregion
@@ -189,23 +177,15 @@ namespace MicroDAQ.Gateway
             this.Stop(this.UpdateCycle);
             this.Stop(this.RemoteCtrlCycle);
         }
-        /// <summary>
-        /// 根据参数暂停更新任务或控制任务
-        /// </summary>
-        /// <param name="ExitUpdate">是否暂停更新</param>
-        /// <param name="ExitRemoteCtrl">是否暂停控制</param>
-        private void Stop(bool ExitUpdate, bool ExitRemoteCtrl)
-        {
-            if (ExitUpdate) this.UpdateCycle.Quit();
-            if (ExitRemoteCtrl) this.RemoteCtrlCycle.Quit();
-        }
+
         /// <summary>
         /// 暂停参数指定的任务对象
         /// </summary>
         /// <param name="task">要暂停的任务对象</param>
         private void Stop(CycleTask task)
         {
-            task.Quit();
+            if (task != null)
+                task.Quit();
         }
         #endregion
 

@@ -13,7 +13,7 @@ namespace MicroDAQ
     {
         public static int waitMillionSecond = 180000;
         public static bool BeQuit;
-        public static CycleTask RemoteCycle;
+
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
@@ -21,20 +21,6 @@ namespace MicroDAQ
         static void Main(string[] args)
         {
             ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            //记录错误日志
-            log.Error("error", new Exception("发生了一个异常"));
-            //记录严重错误
-            log.Fatal("fatal", new Exception("发生了一个致命错误"));
-            //记录一般信息
-            log.Info("info");
-            //记录调试信息
-            log.Debug("debug");
-            //记录警告信息
-            log.Warn("warn");
-            Console.WriteLine("日志记录完毕。");
-            Console.Read();
-
-
 
             #region 处理来自参数的快速启动请求，跳过对OPCSERVER的三分钟等待
             foreach (string arg in args)
@@ -69,7 +55,7 @@ namespace MicroDAQ
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("OH. NO!" + ex.ToString());
+                            log.Error(ex);
                         }
                         finally
                         {

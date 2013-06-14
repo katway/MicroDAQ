@@ -58,8 +58,8 @@ namespace MicroDAQ
 
         private void TestAlarm_Load(object sender, EventArgs e)
         {
-            if (Program.RemoteCycle != null)
-                Program.RemoteCycle.SetPause = true;
+            Program.opcGateway.Pause(Program.opcGateway.RemoteCtrlCycle);
+
         }
         int runningNum = 0;
 
@@ -80,8 +80,7 @@ namespace MicroDAQ
 
         private void TestAlarm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Program.RemoteCycle != null)
-                Program.RemoteCycle.SetPause = false;
+            Program.opcGateway.Continue(Program.opcGateway.RemoteCtrlCycle);
         }
 
     }

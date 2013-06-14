@@ -273,7 +273,7 @@ namespace MicroDAQ
         public void Start()
         {
             Thread.Sleep(Program.waitMillionSecond);
-
+            SyncOpc = new OPCServer();
             if (ReadConfig())
             {
                 if (CreateItems())
