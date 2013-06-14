@@ -24,10 +24,6 @@ namespace MicroDAQ
         /// 使用哪个OPCServer
         /// </summary>
         string opcServerType = "SimaticNet";
-        /// <summary>
-        /// OPCServer名称
-        /// </summary>
-        string opcServerPorgramID = "OPC.SimaticNet";
 
         private string wordItemFormat;
         private string wordArrayItemFormat;
@@ -36,10 +32,6 @@ namespace MicroDAQ
         private List<PLCStationInformation> Plcs;
         private SysncOpcOperate.OPCServer SyncOpc;
         IniFile ini = null;
-
-        bool boolReadConfig = false;
-        bool boolCreateItems = false;
-        bool boolCreateItemManger = false;
 
         ILog log;
         public MainForm()
@@ -93,76 +85,69 @@ namespace MicroDAQ
             bool success = false;
             try
             {
-                if (SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1"))
+                //读取Item地址格式           
+                string[] getPairsConfigItems = new string[Plcs.Count];
+                wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
+                wordArrayItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
+                realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
+
+                if (SyncOpc.AddGroup("Groups"))
                 {
-                    //读取Item地址格式           
-                    string[] getPairsConfigItems = new string[Plcs.Count];
-                    wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
-                    wordArrayItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
-                    realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
-
-                    if (SyncOpc.AddGroup("Groups"))
+                    #region 是否多组,有几组
+                    //生成读取是否多组,有几组的Item地址
+                    for (int i = 0; i < Plcs.Count; i++)
                     {
-                        #region 是否多组,有几组
-                        //生成读取是否多组,有几组的Item地址
+                        getPairsConfigItems[i] = string.Format(wordArrayItemFormat, 1, 26, 2);
+                    }
+                    //获取是否多组的数据,并转存到PlcStation列表里
+                    int[] itemHandle = new int[Plcs.Count];
+                    object[] values = new object[Plcs.Count];
+                    if (SyncOpc.AddItems("Groups", getPairsConfigItems, itemHandle))
+                    {
+                        SyncOpc.SyncRead("Groups", values, itemHandle);
                         for (int i = 0; i < Plcs.Count; i++)
                         {
-                            getPairsConfigItems[i] = string.Format(wordArrayItemFormat, 1, 26, 2);
+                            ushort[] value = (ushort[])values[i];
+                            Plcs[i].MorePair = (value[0] == 2) ? (true) : false;
+                            Plcs[i].PairsNumber = value[1];
                         }
-                        //获取是否多组的数据,并转存到PlcStation列表里
-                        object[] values = new object[Plcs.Count];
-                        if (SyncOpc.AddItems("Groups", getPairsConfigItems))
-                        {
-                            SyncOpc.SyncRead("Groups", values);
-                            for (int i = 0; i < Plcs.Count; i++)
-                            {
-                                ushort[] value = (ushort[])values[i];
-                                Plcs[i].MorePair = (value[0] == 2) ? (true) : false;
-                                Plcs[i].PairsNumber = value[1];
-                            }
-                        }
-                        #endregion
+                    }
+                    #endregion
 
-                        #region 每个PLC中每个DB组有多少监测点
-                        //读取配置监测点数量的Item,每个PLC的DB1,W30,W32|W34,W36|W38....
-                        //生成读取配置监测点数量的Items
-                        string[][] getItemsNumber = null;   //第一维为PlcStation编号,第二维为数量组的编号
-                        for (int i = 0; i < Plcs.Count; i++)
+                    #region 每个PLC中每个DB组有多少监测点
+                    //读取配置监测点数量的Item,每个PLC的DB1,W30,W32|W34,W36|W38....
+                    //生成读取配置监测点数量的Items
+                    string[][] getItemsNumber = null;   //第一维为PlcStation编号,第二维为数量组的编号
+                    for (int i = 0; i < Plcs.Count; i++)
+                    {
+                        getItemsNumber[i] = new string[Plcs[i].PairsNumber];
+                        for (int j = 0; j < Plcs[i].PairsNumber; j++)
                         {
-                            getItemsNumber[i] = new string[Plcs[i].PairsNumber];
+                            getItemsNumber[i][j] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 30 + j * 2, 2);
+                        }
+                    }
+                    //获取每个PLC中,每个DB组中存放的监测点数量
+                    for (int i = 0; i < Plcs.Count; i++)
+                    {
+                        itemHandle = new int[Plcs[i].PairsNumber];
+                        values = new object[Plcs[i].PairsNumber];
+                        if (SyncOpc.AddItems("Groups", getItemsNumber[i], itemHandle))
+                        {
+                            SyncOpc.SyncRead("Groups", values, itemHandle);
+                            //取1个PLC中的每个DB组中存放的监测点数量
                             for (int j = 0; j < Plcs[i].PairsNumber; j++)
                             {
-                                getItemsNumber[i][j] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 30 + j * 2, 2);
+                                ushort[] value = (ushort[])values[j];
+                                Plcs[i].ItemsNumber[j].BigItems = value[0];
+                                Plcs[i].ItemsNumber[j].SmallItems = value[1];
                             }
                         }
-                        //获取每个PLC中,每个DB组中存放的监测点数量
-                        for (int i = 0; i < Plcs.Count; i++)
-                        {
-                            values = new object[Plcs[i].PairsNumber];
-
-                            if (SyncOpc.AddItems("Groups", getItemsNumber[i]))
-                            {
-                                SyncOpc.SyncRead("Groups", values);
-                                //取1个PLC中的每个DB组中存放的监测点数量
-                                for (int j = 0; j < Plcs[i].PairsNumber; j++)
-                                {
-                                    ushort[] value = (ushort[])values[j];
-                                    Plcs[i].ItemsNumber[j].BigItems = value[0];
-                                    Plcs[i].ItemsNumber[j].SmallItems = value[1];
-                                }
-                            }
-                        }
-
-                        #endregion
-
-                        //boolReadConfig = true;
-                        success = true;
                     }
+                    #endregion
+                    //boolReadConfig = true;
+                    success = true;
                 }
-                else
-                {
-                    success = false;
-                }
+
             }
             catch (Exception ex)
             {
@@ -274,14 +259,14 @@ namespace MicroDAQ
         {
             Thread.Sleep(Program.waitMillionSecond);
             SyncOpc = new OPCServer();
-            if (ReadConfig())
-            {
-                if (CreateItems())
-                {
-                    Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
-                    Program.opcGateway.Start();
-                }
-            }
+            if (SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1"))
+                if (ReadConfig())
+                    if (CreateItems())
+                    {
+                        Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
+                        Program.opcGateway.Start();
+                    }
+
         }
 
 

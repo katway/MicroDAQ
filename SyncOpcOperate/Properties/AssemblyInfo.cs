@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("SyncOPC")]
+[assembly: AssemblyTitle("SysncOpcOperate")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SyncOPC")]
+[assembly: AssemblyProduct("SysncOpcOperate")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("0f1728de-f218-4916-9960-f603532db9b6")]
+[assembly: Guid("251f2d0b-d107-4ef5-aaa5-33ed49fa516b")]
 
 // 程序集的版本信息由下面四个值组成:
 //

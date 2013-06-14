@@ -80,9 +80,6 @@
       <HintPath>Dynamic\OpcRcw.Da.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="SysncOpcOperate">
-      <HintPath>Dynamic\SysncOpcOperate.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -203,6 +200,12 @@
     <Folder Include="Configuration\" />
     <Folder Include="Dynamic\" />
     <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SyncOpcOperate\SyncOpcOperate.csproj">
+      <Project>{D4092C70-56FE-45CA-AA8C-951BF10C3555}</Project>
+      <Name>SyncOpcOperate</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
