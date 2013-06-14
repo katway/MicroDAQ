@@ -231,7 +231,7 @@ namespace MicroDAQ
             }
             foreach (var item in Program.M_flowAlert.Items)
             {
-                if (state603 == DataState.正常 || state604 == DataState.已启动)
+                if (state603 == DataState.正常 || state603 == DataState.已启动)
                 {
                     if (item.ID == 100)
                         value100 = item.Value;
@@ -242,7 +242,7 @@ namespace MicroDAQ
                 {
                     value100 = value101 = 2;
                 }
-                if (state603 == DataState.正常 || state604 == DataState.已启动)
+                if (state604 == DataState.正常 || state604 == DataState.已启动)
                 {
                     if (item.ID == 108)
                         value108 = item.Value;
