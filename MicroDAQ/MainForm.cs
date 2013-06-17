@@ -253,7 +253,7 @@ namespace MicroDAQ
                 {
                     value108 = value109 = 2;
                 }
-            }
+            }         
             #endregion
 
             foreach (var item in Program.M.Items)
@@ -261,24 +261,23 @@ namespace MicroDAQ
                 Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
             }
 
+            Random random = new Random();
             foreach (var item in Program.M_flowAlert.Items)
             {
-                float t = 0.0f;
+                #region 优科专用
+                float tShow = float.Parse((random.Next(27,29)+random.NextDouble()).ToString());
+                float t = float.Parse(random.NextDouble().ToString());
                 if (dianCiFa1.Contains(item.ID))
                 {
                     if (item.ID % 2 == 0)
                     {
                         if (value100 == 0 && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
-                            t = 28.3f;
-                        if (value100 == 2)
-                            t = 0.0f;
+                            t = tShow;
                     }
                     else
                     {
                         if (value101 == 0 && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
-                            t = 28.3f;
-                        if (value101 == 2)
-                            t = 0.0f;
+                            t = tShow;
                     }
                 }
                 else if (dianCiFa2.Contains(item.ID))
@@ -286,18 +285,15 @@ namespace MicroDAQ
                     if (item.ID % 2 == 0)
                     {
                         if (value108 == 0 && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
-                            t = 28.3f;
-                        if (value108 == 2)
-                            t = 0.0f;
+                            t = tShow;
                     }
                     else
                     {
                         if (value109 == 0 && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
-                            t = 28.3f;
-                        if (value109 == 2)
-                            t = 0.0f;
+                            t = tShow;
                     }
                 }
+                #endregion
                 Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
                 Console.WriteLine(item.ToString());
             }
