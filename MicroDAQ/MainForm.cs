@@ -52,7 +52,7 @@ namespace MicroDAQ
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
                 Duty = ini.GetValue("General", "Duty");
                 plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
-                rate = int.Parse(ini.GetValue("UpdateRate","Rate"));
+                rate = int.Parse(ini.GetValue("UpdateRate", "Rate"));
 
                 plcConnection = new string[plcCount];
                 meters = new int[plcCount];
@@ -221,7 +221,7 @@ namespace MicroDAQ
         {
             #region 优科专用
             float value100 = 0.0f, value101 = 0.0f, value108 = 0.0f, value109 = 0.0f; //粒子
-            DataState state603=DataState.正常, state604=DataState.正常;               //电磁阀
+            DataState state603 = DataState.正常, state604 = DataState.正常;               //电磁阀
             foreach (var item in Program.M.Items)
             {
                 if (item.ID == 603)
@@ -253,7 +253,7 @@ namespace MicroDAQ
                 {
                     value108 = value109 = 2;
                 }
-            }         
+            }
             #endregion
 
             foreach (var item in Program.M.Items)
@@ -265,7 +265,7 @@ namespace MicroDAQ
             foreach (var item in Program.M_flowAlert.Items)
             {
                 #region 优科专用
-                float tShow = float.Parse((random.Next(27,29)+random.NextDouble()).ToString());
+                float tShow = float.Parse((random.Next(27, 29) + random.NextDouble()).ToString());
                 float t = float.Parse(random.NextDouble().ToString());
                 if (dianCiFa1.Contains(item.ID))
                 {
@@ -351,8 +351,8 @@ namespace MicroDAQ
                 UpdateCycle = new CycleTask();
                 RemoteCtrl = new CycleTask();
                 Program.RemoteCycle = RemoteCtrl;
-                UpdateCycle.WorkStateChanged += new CycleTask.dgtWorkStateChange(UpdateCycle_WorkStateChanged);
-                RemoteCtrl.WorkStateChanged += new CycleTask.dgtWorkStateChange(RemoteCtrl_WorkStateChanged);
+                UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
+                RemoteCtrl.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrl_WorkStateChanged);
                 UpdateCycle.Run(update2, System.Threading.ThreadPriority.BelowNormal);
                 RemoteCtrl.Run(remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
                 Start.SetExit = true;
