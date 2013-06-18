@@ -61,7 +61,7 @@ namespace MicroDAQ
                 {
                     PLCStationInformation plc = new PLCStationInformation();
                     Plcs.Add(plc);
-                    plc.Connection = ini.GetValue(string.Format("PLC{0}", i), "Connection");
+                    plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);
                 }
 
             }
@@ -88,7 +88,7 @@ namespace MicroDAQ
                 //读取Item地址格式           
                 string[] getPairsConfigItems = new string[Plcs.Count];
                 wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
-                wordArrayItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
+                wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
                 realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
 
                 if (SyncOpc.AddGroup("Groups"))
@@ -97,7 +97,7 @@ namespace MicroDAQ
                     //生成读取是否多组,有几组的Item地址
                     for (int i = 0; i < Plcs.Count; i++)
                     {
-                        getPairsConfigItems[i] = string.Format(wordArrayItemFormat, 1, 26, 2);
+                        getPairsConfigItems[i] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 26, 2);
                     }
                     //获取是否多组的数据,并转存到PlcStation列表里
                     int[] itemHandle = new int[Plcs.Count];
@@ -118,6 +118,7 @@ namespace MicroDAQ
                     //读取配置监测点数量的Item,每个PLC的DB1,W30,W32|W34,W36|W38....
                     //生成读取配置监测点数量的Items
                     string[][] getItemsNumber = null;   //第一维为PlcStation编号,第二维为数量组的编号
+                    getItemsNumber = new string[Plcs.Count][];
                     for (int i = 0; i < Plcs.Count; i++)
                     {
                         getItemsNumber[i] = new string[Plcs[i].PairsNumber];
@@ -190,6 +191,7 @@ namespace MicroDAQ
 
                     }
                 }
+                success = true;
             }
             catch (Exception ex)
             {
@@ -233,16 +235,20 @@ namespace MicroDAQ
         {
             bool success = false;
             IList<IDatabaseManage> listDatabaseManger = new List<IDatabaseManage>();
+            string[] dbs = ini.GetValue("Database", "Members").Trim().Split(',');
             try
             {
-                DatabaseManage dbm = new DatabaseManage(ini.GetValue("Database", "Address"),
-                                                             ini.GetValue("Database", "Port"),
-                                                             ini.GetValue("Database", "Database"),
-                                                             ini.GetValue("Database", "Username"),
-                                                             ini.GetValue("Database", "Password"));
+                foreach (string dbName in dbs)
+                {
+                    DatabaseManage dbm = new DatabaseManage(ini.GetValue(dbName, "Address"),
+                                                                 ini.GetValue(dbName, "Port"),
+                                                                 ini.GetValue(dbName, "Database"),
+                                                                 ini.GetValue(dbName, "Username"),
+                                                                 ini.GetValue(dbName, "Password"));
 
-                listDatabaseManger.Add(dbm);
-                success = true;
+                    listDatabaseManger.Add(dbm);
+                    success = true;
+                }
             }
             catch (Exception ex)
             {

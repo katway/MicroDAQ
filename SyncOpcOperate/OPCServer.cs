@@ -33,20 +33,21 @@ namespace SysncOpcOperate
         public OPCServer(string name)
         {
             objName = name;
-          
+
         }
-        public OPCServer() {
+        public OPCServer()
+        {
             groups = new Dictionary<string, object>();
             IOPCSyncObjs = new Dictionary<string, IOPCSyncIO>();
         }
         /// <summary>
         /// 建立和OPCServer的连接
         /// </summary>
-        public bool Connect(string progID, string server) 
+        public bool Connect(string progID, string server)
         {
             try
             {
-                Type svrComponenttyp = Type.GetTypeFromProgID(progID, server); 
+                Type svrComponenttyp = Type.GetTypeFromProgID(progID, server);
                 ServerObj = (IOPCServer)Activator.CreateInstance(svrComponenttyp);
                 serverName = progID;
                 isConnected = true;
@@ -54,7 +55,7 @@ namespace SysncOpcOperate
             catch (System.Exception error)
             {
                 isConnected = false;
-               
+
                 throw new Exception("创建OPCServer对象时出错。", error);
             }
             return isConnected;
@@ -80,7 +81,7 @@ namespace SysncOpcOperate
                          hTimeBias.AddrOfPinnedObject(), hDeadband.AddrOfPinnedObject(),
                          LOCALE_ID, out pSvrGroupHandle,
                          out pRevUpdaterate, ref iidRequiredInterface, out GroupObj);
-                
+
                 IOPCSyncObjs.Add(groupName, (IOPCSyncIO)GroupObj);
                 groups.Add(groupName, GroupObj);
                 //IOPCSyncObj = (IOPCSyncIO)GroupObj;//为组同步读写定义句柄
@@ -97,7 +98,7 @@ namespace SysncOpcOperate
                 if (hTimeBias.IsAllocated) hTimeBias.Free();
             }
             return isAddGroup;
-       }
+        }
 
         /// </summary>
         /// <param name="items">添加读写的数据项，Items为读写对象数组</param>
@@ -109,7 +110,7 @@ namespace SysncOpcOperate
             IntPtr pErrors = IntPtr.Zero;
             if (!isAddGroup)
             {
-                if ( !AddGroup(groupName)) return false;  //如果还没有没有添加组，先添加组
+                if (!AddGroup(groupName)) return false;  //如果还没有没有添加组，先添加组
             }
             OPCITEMDEF[] ItemDefArray = new OPCITEMDEF[itemsName.Length];
             for (int i = 0; i < itemsName.Length; i++)
@@ -121,7 +122,7 @@ namespace SysncOpcOperate
                 ItemDefArray[i].hClient = hClientItem; //client handle
                 ItemDefArray[i].dwBlobSize = 0; // blob size
                 ItemDefArray[i].pBlob = IntPtr.Zero; // pointer to blob
-                ItemDefArray[i].vtRequestedDataType =GetRqstDataType(itemsName[i]); //Word数据类型
+                ItemDefArray[i].vtRequestedDataType = GetRqstDataType(itemsName[i]); //Word数据类型
             }
             try
             {
@@ -142,9 +143,7 @@ namespace SysncOpcOperate
                     else
                     {
                         isAddItems = false;
-                        MessageBox.Show(string.Format("添加第{0}个Item对象时出错", i+1), "添加Item对象出错",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        break;
+                        //throw new Exception(string.Format("添加Item对象出错"));
                     }
                 }
             }
@@ -300,7 +299,7 @@ namespace SysncOpcOperate
                     {
                         String pstrError;   //需不需要释放？
                         ServerObj.GetErrorString(errors[i], LOCALE_ID, out pstrError);
-                        MessageBox.Show(string.Format("写入第{0}个数据时出错:{1}", i,pstrError), "写数据出错",
+                        MessageBox.Show(string.Format("写入第{0}个数据时出错:{1}", i, pstrError), "写数据出错",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                         isWrited = false;
                         break;
@@ -314,7 +313,7 @@ namespace SysncOpcOperate
             catch (System.Exception error)
             {
                 isWrited = false;
-                MessageBox.Show(error.Message, "写数据出错", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show(error.Message, "写数据出错", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -350,7 +349,7 @@ namespace SysncOpcOperate
                     if (errors[i] == 0)
                     {
                         pItemState = (OPCITEMSTATE)Marshal.PtrToStructure(pItemValues, typeof(OPCITEMSTATE));
-                        values[i] = pItemState.vDataValue;  
+                        values[i] = pItemState.vDataValue;
                         pItemValues = new IntPtr(pItemValues.ToInt32() + Marshal.SizeOf(typeof(OPCITEMSTATE)));
                         isRead = true;
                     }
@@ -383,9 +382,9 @@ namespace SysncOpcOperate
                     pErrors = IntPtr.Zero;
                 }
             }
-            return isRead; 
+            return isRead;
         }
 
-  
+
     }
 }

@@ -30,7 +30,20 @@ namespace MicroDAQ
         /// <summary>
         /// 配置中声明的DB组数量
         /// </summary>
-        public int PairsNumber { get; set; }
+        public int PairsNumber
+        {
+            get { return pairsNumber; }
+            set
+            {
+                if (MorePair)
+                    pairsNumber = value;
+                else
+                    pairsNumber = 1;
+
+                ItemsNumber = new ConfigItemsNumber[value];
+            }
+        }
+        private int pairsNumber;
         /// <summary>
         /// 配置中声明的监测点数量
         /// </summary>
@@ -44,6 +57,12 @@ namespace MicroDAQ
         /// </summary>
         public IList<string> ItemsData { get; set; }
 
+
+        public PLCStationInformation()
+        {
+            ItemsHead = new List<string>();
+            ItemsData = new List<string>();
+        }
 
 
 

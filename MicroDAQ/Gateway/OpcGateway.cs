@@ -26,7 +26,8 @@ namespace MicroDAQ.Gateway
         /// <param name="itemManager"></param>
         public OpcGateway(IList<MicroDAQ.DataItem.IDataItemManage> itemManager, IList<IDatabaseManage> databaseManager)
         {
-            ItemManagers = itemManager;
+            this.ItemManagers = itemManager;
+            this.DatabaseManagers = databaseManager;
 
             UpdateCycle = new CycleTask();
             RemoteCtrlCycle = new CycleTask();
