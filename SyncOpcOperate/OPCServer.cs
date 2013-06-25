@@ -122,7 +122,7 @@ namespace OpcOperate.Sync
                 ItemDefArray[i].hClient = hClientItem; //client handle
                 ItemDefArray[i].dwBlobSize = 0; // blob size
                 ItemDefArray[i].pBlob = IntPtr.Zero; // pointer to blob
-                ItemDefArray[i].vtRequestedDataType = OPCJudgeType.GetRqstDataType(itemsName[i], serverName); //Word数据类型
+                ItemDefArray[i].vtRequestedDataType = CanonicalType.GetTypeCode(itemsName[i], serverName); //Word数据类型
             }
             try
             {

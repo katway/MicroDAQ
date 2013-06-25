@@ -66,7 +66,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dynamic\Automatic.dll</HintPath>
     </Reference>
-    <Reference Include="JonLibrary, Version=1.0.4924.18137, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="JonLibrary, Version=1.0.4738.17289, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dynamic\JonLibrary.dll</HintPath>
     </Reference>

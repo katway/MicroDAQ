@@ -5,7 +5,7 @@ using OpcRcw.Da;
 using OpcRcw.Comn;
 using System.Runtime.InteropServices;
 
-namespace OpcOperate.Sync
+namespace OpcOperate.ASync
 {
     /// <summary>
     /// 模块编号：AsyncPLC4
@@ -217,7 +217,7 @@ namespace OpcOperate.Sync
                 short[] dataType = new short[itemsName.Length];
                 for (int i = 0; i < itemsName.Length; i++)
                 {
-                    dataType[i] = OPCJudgeType.GetRqstDataType(itemsName[i], serverName);
+                    dataType[i] = CanonicalType.GetTypeCode(itemsName[i], serverName);
                 }
                 return AddItems(groupName, itemsName, dataType);
             }
@@ -226,7 +226,7 @@ namespace OpcOperate.Sync
                 return true;
             }
         }
-      
+
         public bool AddItems(string groupName, string[] itemsName, short[] dataType)
         {
             bool success = true;
@@ -510,12 +510,12 @@ namespace OpcOperate.Sync
         private short GetRqstDataTypeMatrikon(string itemID)//Matrikon的item数据类型判断
         {
             //System.Text.RegularExpressions.Regex R = new System.Text.RegularExpressions.Regex (",",
-            
+
             short value = 0;
-            int first=itemID.IndexOf(':');
+            int first = itemID.IndexOf(':');
             int last = itemID.LastIndexOf(':');
             int mark = itemID.IndexOf('[');
-            string portion = itemID.Substring(first+1, last - first-1);
+            string portion = itemID.Substring(first + 1, last - first - 1);
             portion = (string)System.Text.RegularExpressions.Regex.Match(portion, "^[A-Z]+").ToString();
             if (mark == -1)
             {
@@ -548,7 +548,7 @@ namespace OpcOperate.Sync
                     default: throw new Exception("不被支持的数据类型");
                 }
             }
-           
+
 
             return value;
         }
@@ -601,15 +601,15 @@ namespace OpcOperate.Sync
             switch (serverName)
             {
                 case "Matrikon.OPC.Universal":
-                return GetRqstDataTypeMatrikon(itemID);
-                
-                case"OPC.SimaticNET":
-                return GetRqstDataTypeSiemens(itemID);
-                
+                    return GetRqstDataTypeMatrikon(itemID);
+
+                case "OPC.SimaticNET":
+                    return GetRqstDataTypeSiemens(itemID);
+
                 default: throw new Exception("不被支持的数据类型");
             }
 
-         
+
         }
     }
 }

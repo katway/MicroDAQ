@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OpcOperate.Sync
+namespace OpcOperate
 {
-  static  class  OPCJudgeType
+    static class CanonicalType
     {
 
         private static short GetRqstDataTypeMatrikon(string itemID)//Matrikon的item数据类型判断
@@ -96,7 +96,7 @@ namespace OpcOperate.Sync
             return value;
         }
 
-        public  static short GetRqstDataType(string itemID,string serverName)//判断是西门子的还是Matrikon
+        public static short GetTypeCode(string itemID, string serverName)//判断是西门子的还是Matrikon
         {
             switch (serverName)
             {
@@ -108,8 +108,6 @@ namespace OpcOperate.Sync
 
                 default: throw new Exception("不被支持的数据类型");
             }
-
-
         }
     }
 }

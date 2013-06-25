@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using JonLibrary.Common;
 using JonLibrary.Automatic;
 using MicroDAQ.Database;
 using MicroDAQ.Gateway;
@@ -56,7 +55,7 @@ namespace MicroDAQ
 
             }
             #endregion
-            bool createNew;          
+            bool createNew;
             using (System.Threading.Mutex m = new System.Threading.Mutex(true, "Global\\" + Application.ProductName, out createNew))
             {
                 if (createNew)
@@ -69,7 +68,7 @@ namespace MicroDAQ
                     while (!BeQuit)
                     {
                         try
-                        {                            
+                        {
                             MainForm = new MainForm();
                             Application.Run(MainForm);
                         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
-using JonLibrary.OPC;
+using OpcOperate.ASync;
 using System.Data;
 
 namespace JonLibrary.OPC
@@ -24,7 +24,7 @@ namespace JonLibrary.OPC
         public delegate void dgtStateChange();
         public event dgtStateChange StatusChange;
 
-        protected AsyncPLC4 PLC;
+        protected OpcOperate.ASync.AsyncPLC4 PLC;
         public Rectangle[] Shape;
 
         public int Position
@@ -45,8 +45,8 @@ namespace JonLibrary.OPC
         public Machine()
         {
             ConnectionState = ConnectionState.Closed;
-            PLC = new AsyncPLC4();
-            PLC.DataChange += new AsyncPLC4.dgtDataChange(PLC_DataChange);
+            PLC = new OpcOperate.ASync.AsyncPLC4();
+            PLC.DataChange += new OpcOperate.ASync.AsyncPLC4.dgtDataChange(PLC_DataChange);
         }
 
         protected virtual void PLC_DataChange(string groupName, int[] item, object[] value, short[] Qualities)

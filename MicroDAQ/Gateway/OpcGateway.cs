@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using JonLibrary.OPC;
 using JonLibrary.Automatic;
-using JonLibrary.Common;
 using System.Threading;
 using System.Data;
 using MicroDAQ.Database;

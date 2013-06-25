@@ -43,7 +43,7 @@ namespace MicroDAQ
         }
 
         private void Form2_Load(object sender, EventArgs e)
-        {        
+        {
             ni.Icon = this.Icon;
             ni.Text = this.Text;
 
@@ -55,7 +55,7 @@ namespace MicroDAQ
                 this.tsslProject.Text = "项目代码：" + ini.GetValue("General", "ProjetCode");
                 this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
-                int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));               
+                int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
                 opcServerType = ini.GetValue("OpcServer", "Type").Trim();
                 for (int i = 0; i < plcCount; i++)
                 {
@@ -259,9 +259,9 @@ namespace MicroDAQ
             else
                 return null;
 
-        }      
+        }
         public void Start()
-        {         
+        {
             //Thread.Sleep(Program.waitMillionSecond);
             SyncOpc = new OPCServer();
             string pid = ini.GetValue(opcServerType, "ProgramID");
@@ -389,10 +389,10 @@ namespace MicroDAQ
                 frmDataDisplay.Show();
 
             else
-            {        
-              (frmDataDisplay = new DataDisplayForm()).Show();
+            {
+                (frmDataDisplay = new DataDisplayForm()).Show();
             }
-           
+
         }
 
     }
