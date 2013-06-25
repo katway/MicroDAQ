@@ -7,6 +7,7 @@ using MicroDAQ.Database;
 using MicroDAQ.Gateway;
 using log4net;
 using MicroDAQ.DataItem;
+using System.Data.SqlClient;
 namespace MicroDAQ
 {
     static class Program
@@ -33,10 +34,7 @@ namespace MicroDAQ
 
             }
             #endregion
-            bool createNew;
-            //try
-            //{
-            //Console.WriteLine(Application.ProductName);
+            bool createNew;          
             using (System.Threading.Mutex m = new System.Threading.Mutex(true, "Global\\" + Application.ProductName, out createNew))
             {
                 if (createNew)
@@ -48,7 +46,7 @@ namespace MicroDAQ
                     Form MainForm = null;
                     while (!BeQuit)
                         try
-                        {
+                        {                            
                             MainForm = new MainForm();
                             //frmMain = new TestAlarm();
                             Application.Run(MainForm);
@@ -68,20 +66,11 @@ namespace MicroDAQ
                     MessageBox.Show("程序已经在运行，无法再次启动。", "已启动", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 }
             }
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("Only one instance of this application is allowed!");
-            //}
-
-
-
+           
         }
-
-
         public static OpcGateway opcGateway = null;
         public static MachineManager MeterManager = new MachineManager();
-        public static DatabaseManage DatabaseManager;// = new DatabaseManager();
+        public static DatabaseManage DatabaseManager;//= new DatabaseManager();
         public static DataItemManager M;
         public static FlowAlertManager M_flowAlert;
 

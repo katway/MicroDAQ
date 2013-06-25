@@ -15,6 +15,7 @@ using MicroDAQ.DataItem;
 using MicroDAQ.Database;
 using MicroDAQ.Gateway;
 using log4net;
+using System.Data.SqlClient;
 
 namespace MicroDAQ
 {
@@ -42,7 +43,7 @@ namespace MicroDAQ
         }
 
         private void Form2_Load(object sender, EventArgs e)
-        {
+        {        
             ni.Icon = this.Icon;
             ni.Text = this.Text;
 
@@ -54,8 +55,7 @@ namespace MicroDAQ
                 this.tsslProject.Text = "项目代码：" + ini.GetValue("General", "ProjetCode");
                 this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
-                int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
-
+                int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));               
                 opcServerType = ini.GetValue("OpcServer", "Type").Trim();
                 for (int i = 0; i < plcCount; i++)
                 {
@@ -259,13 +259,14 @@ namespace MicroDAQ
             else
                 return null;
 
-        }
-        // Program.opcGateway = new OpcGateway(listDataItemManger, listDatabaseManger);
+        }      
         public void Start()
-        {
-            Thread.Sleep(Program.waitMillionSecond);
+        {         
+            //Thread.Sleep(Program.waitMillionSecond);
             SyncOpc = new OPCServer();
-            if (SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1"))
+            string pid = ini.GetValue(opcServerType, "ProgramID");
+            //if (SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1"))
+            if (SyncOpc.Connect(pid, "127.0.0.1"))
                 if (ReadConfig())
                     if (CreateItems())
                     {
@@ -386,8 +387,12 @@ namespace MicroDAQ
         {
             if (frmDataDisplay != null && !frmDataDisplay.IsDisposed)
                 frmDataDisplay.Show();
+
             else
-                (frmDataDisplay = new DataDisplayForm()).Show();
+            {        
+              (frmDataDisplay = new DataDisplayForm()).Show();
+            }
+           
         }
 
     }

@@ -7,133 +7,355 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using MicroDAQ.DataItem;
-
+using MicroDAQ.Database;
 namespace MicroDAQ
 {
     public partial class DataDisplayForm : Form
     {
         public DataDisplayForm()
         {
-            InitializeComponent();
-        }
-        SqlConnection connection = new SqlConnection(Program.DatabaseManager.ConnectionString);
-        DataTable dt;
-        private void DataDisplayForm_Load(object sender, EventArgs e)
+            InitializeComponent();            
+        }     
+      
+        SqlConnection connection = new SqlConnection(Program.opcGateway.DatabaseManagers[0].UpdateConnection.ConnectionString);
+        #region PLC与OPCMES即时数据的显示
+        private void btnInstant_Click(object sender, EventArgs e)
         {
+            //显示即时数据
+            ShowItems();
+        }                
+        /// <summary>
+        /// PLC与OPCMES即时数据的显示
+        /// </summary>     
+        DataTable dtItems = null;   
+        public void ShowItems()
+        {            
+            //PLC关闭的情况                  
+            if (Program.opcGateway.ItemManagers[0].ConnectionState == ConnectionState.Closed || Program.opcGateway.ItemManagers == null)
+            {
+                if (connection.State == ConnectionState.Closed)
+                {
+                    MessageBox.Show("PLC连接失败，尚未加载PLC数据！");
+                    return;
+                }
+                else
+                {
+                    return;
+                }
+
+            }
+            else
+            {   //plc打开成功，数据库连接成功的情况         
+                if (connection.State == ConnectionState.Open)
+                {
+                    this.labDBState.BackColor = Color.Green;
+                    this.labDBState.ForeColor = Color.White;
+                    this.labDBState.Text = "通信正常";
+
+                    this.labOPCState.BackColor = Color.Green;
+                    this.labOPCState.ForeColor = Color.White;
+                    this.labOPCState.Text = "通信正常";
+
+                    string sql = @"SELECT v.id AS 参数ID,
+                                       p.name AS 参数名称,
+                                       t.name AS 参数类型,
+                                       v.value1 AS 采集值1,
+                                       v.value2 AS 采集值2,
+                                       v.value3 AS 采集值3,
+                                       p.unit AS 单位,
+                                       v.time AS 刷新时间,
+                                       v.zztime AS 存储点
+                        FROM ProcessItem p 
+                        LEFT JOIN meter_uuid m ON p.id = m.uuid 
+                        LEFT JOIN meter_type t ON p.protocolType = t.protocol 
+                        RIGHT JOIN meters_value v ON m.id = v.id 
+                        ORDER BY v.id ";
+                    SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    dtItems = new DataTable();
+                    dtItems.Columns.AddRange(new DataColumn[]{
+                        new DataColumn("参数ID"),
+                        new DataColumn("参数名称"),
+                        new DataColumn("参数类型"),
+                        new DataColumn("数据采集值1"),
+                        new DataColumn("PLC数据值1"),
+                        new DataColumn("数据采集值2"),
+                        new DataColumn("数据采集值3"),
+                        new DataColumn("单位"),
+                        new DataColumn("刷新时间"),
+                        new DataColumn("存储点"),             
+                        new DataColumn("PLC设备类型"),
+                        new DataColumn("PLC状态"),
+                        new DataColumn("PLC可信度") });
+
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        DataRow row = dtItems.NewRow();
+                        DataRow tmp = dt.Rows[i];
+
+                        row["参数ID"] = tmp[0].ToString();
+                        row["参数名称"] = tmp[1].ToString();
+                        row["参数类型"] = tmp[2].ToString();
+                        row["数据采集值1"] = tmp[3].ToString();
+                        row["数据采集值2"] = tmp[4].ToString();
+                        row["数据采集值3"] = tmp[5].ToString();
+                        row["单位"] = tmp[6].ToString();
+                        row["刷新时间"] = tmp[7].ToString();
+
+                        foreach (IDataItemManage mgr in Program.opcGateway.ItemManagers)
+                        {
+                            foreach (Item item in mgr.Items)
+                            {
+                                Item meter = item;
+                                row["PLC数据值1"] = meter.Value.ToString();
+                                row["PLC设备类型"] = meter.Type.ToString();
+                                row["PLC状态"] = meter.State.ToString();
+                                row["plc可信度"] = meter.Quality.ToString();
+                            }
+                        }
+                        dtItems.Rows.Add(row);
+                        dgvDB.DataSource = dtItems;
+                        dgvDB.Columns["刷新时间"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+                        dgvDB.Columns["存储点"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+
+                        //比较数据是否相等，如果不相等数据背景色改变
+                        for (int j = 0; j < dgvDB.Rows.Count; j++)
+                        {
+                            string a = this.dgvDB.Rows[j].Cells[3].Value.ToString();
+                            string b = this.dgvDB.Rows[j].Cells[4].Value.ToString();
+                            if (a != b)
+                            {
+                                this.dgvDB.Rows[j].Cells[3].Style.BackColor = Color.Red;
+                                this.dgvDB.Rows[j].Cells[4].Style.BackColor = Color.Red;
+                            }
+
+                        }
+                    }
+                    //dtItems.Columns.Clear(); 
+
+                }
+
+                else
+                {//plc打开成功，数据库连接失败的情况
+
+                    this.labOPCState.BackColor = Color.Green;
+                    this.labOPCState.ForeColor = Color.White;
+                    this.labOPCState.Text = "通信正常";
+
+                    this.labDBState.BackColor = Color.Red;
+                    this.labDBState.ForeColor = Color.Yellow;
+                    this.labDBState.Text = "通信错误";
+
+                    DataTable table = new DataTable();
+                    table.Columns.AddRange(new DataColumn[]{
+                            new DataColumn("PLC编号"),
+                            new DataColumn("PLC数据值1"),
+                            new DataColumn("PLC设备类型"),
+                            new DataColumn("PLC状态"),
+                            new DataColumn("PLC可信度")});
+                    if (Program.opcGateway.ItemManagers == null)
+                    {
+                        MessageBox.Show("尚未加载plc数据！");
+                        return;
+                    }
+                    else
+                    {
+                        foreach (IDataItemManage mgr in Program.opcGateway.ItemManagers)
+                        {
+                            foreach (Item item in mgr.Items)
+                            {
+                                DataRow row = table.NewRow();
+                                Item meter = item;
+                                row["plc编号"] = meter.ID.ToString();
+                                row["plc数据值1"] = meter.Value.ToString();
+                                row["plc设备类型"] = meter.Type.ToString();
+                                row["plc状态"] = meter.State.ToString();
+                                row["plc可信度"] = meter.Quality.ToString();
+                                table.Rows.Add(row);
+                            }
+                        }
+                        this.dgvDB.DataSource = table;
+                    }
+
+
+                }
+
+
+            }
+            
+                   
+              
+
+       }
+        #endregion
+        #region 加载form窗体
+        /// <summary>
+        /// 加载form窗体
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>        
+        private void FormDemo_Load(object sender, EventArgs e)
+        {           
+           
+            //数据库连接的情况
+            //connection.Open();
+            //plc连接情况
+            //Program.M.Connect(); 
             bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
             bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
             bkwConnect.RunWorkerAsync();
-        }
 
-        void bkwConnect_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            ShowItems();
-            ShowDB();
-        }
-
+            if (Program.opcGateway != null)
+                Program.opcGateway.Stop();         
+                      
+        }   
+        //打开数据库连接
         void bkwConnect_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
-                connection.Open();
+               connection.Open();
             }
             catch
             { }
+
         }
-        private void ShowItems()
+
+        void bkwConnect_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.btnRefreshData.Enabled = false;
-            try
-            {
-                int i = 0;
-                if (Program.M == null)
-                {
-                    MessageBox.Show("尚未加载PLC数据，请点击‘运行’并稍后重试。");
-                    this.btnRefreshData.Enabled = true;
-                    return;
-                }
 
-                foreach (var item in Program.M.Items)
-                {
-                    Item meter = item as Item;
-                    i++;
-                    if (lsvItems.Items.Count < i)
-                        lsvItems.Items.Add(new ListViewItem(new string[]{
-                                            meter.ID.ToString()  ,
-                                            meter.Value .ToString ()   ,
-                                            string.Empty,
-                                            meter.Type.ToString (),
-                                            meter.State .ToString (),
-                                            meter.Quality.ToString ()}));
-                    else
-                    {
-                        lsvItems.Items[i - 1].SubItems[0].Text = meter.ID.ToString();
-                        lsvItems.Items[i - 1].SubItems[1].Text = meter.Value.ToString();
-                        lsvItems.Items[i - 1].SubItems[3].Text = meter.Type.ToString();
-                        lsvItems.Items[i - 1].SubItems[4].Text = meter.State.ToString();
-                        lsvItems.Items[i - 1].SubItems[5].Text = meter.Quality.ToString();
-                    }
+            ShowItems();
+            ShowDB();
+            GetOder();
 
-                    if (meter.State != DataState.正常 && meter.State != DataState.已启动)
-                        lsvItems.Items[i - 1].BackColor = Color.Gold;
-                    //Console.WriteLine((item as Meter).ID);
-                }
-
-                if (Program.M_flowAlert.Items != null)
-                    foreach (var item in Program.M_flowAlert.Items)
-                    {
-                        Item meter = item as Item;
-                        i++;
-                        if (lsvItems.Items.Count < i)
-                            lsvItems.Items.Add(new ListViewItem(new string[]{
-                                            meter.ID.ToString()  ,
-                                            meter.Value .ToString () ,
-                                            string.Empty,
-                                            "流量",
-                                            meter.State .ToString (),
-                                            meter.Quality.ToString ()}));
-                        else
-                        {
-                            lsvItems.Items[i - 1].SubItems[0].Text = meter.ID.ToString();
-                            lsvItems.Items[i - 1].SubItems[1].Text = meter.Value.ToString();
-                            lsvItems.Items[i - 1].SubItems[3].Text = "流量";
-                            lsvItems.Items[i - 1].SubItems[4].Text = meter.State.ToString();
-                            lsvItems.Items[i - 1].SubItems[5].Text = meter.Quality.ToString();
-                        }
-                    }
-
-
-                switch (Program.M.ConnectionState)
-                {
-                    case ConnectionState.Closed:
-                        this.labOPCState.BackColor = Color.Red;
-                        this.labOPCState.ForeColor = Color.Yellow;
-                        this.labOPCState.Text = "通信错误";
-                        break;
-                    case ConnectionState.Open:
-                        this.labOPCState.BackColor = Color.Green;
-                        this.labOPCState.ForeColor = Color.White;
-                        this.labOPCState.Text = "通信正常";
-                        break;
-
-                }
-            }
-            catch (Exception ex)
-            { MessageBox.Show(ex.ToString()); }
-            this.btnRefreshData.Enabled = true;
         }
-
+        #endregion
+        #region 指令查询
+        /// <summary>
+        /// 指令查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>          
         private void button1_Click(object sender, EventArgs e)
         {
-            ShowItems();
+            GetOder();
+        }
+        /// <summary>
+        /// 指令查询
+        /// </summary>
+        public void GetOder()
+        {
+            if (connection.State == ConnectionState.Open)
+            {
+                this.labDBState2.BackColor = Color.Green;
+                this.labDBState2.ForeColor = Color.White;
+                this.labDBState2.Text = "通信正常";
+                string selectRemoteControl = @"select id as 编号,name as 名称,code as 编码,slave as 控制 ,cycle ,ip as ip地址 ,port as 端口,type as 类型,command as 命令,cmdstate as 命令状态,remainSecond ,state as 状态 from RemoteControl";
+                SqlDataAdapter adapter = new SqlDataAdapter(selectRemoteControl, connection);
+                DataTable dt = new DataTable();
+                adapter.Fill(dt);
+                this.dataGridView3.DataSource = dt;
+            }
+            else
+            {
+                this.labDBState2.BackColor = Color.Red;
+                this.labDBState2.ForeColor = Color.Yellow;
+                this.labDBState2.Text = "通信错误";
+            }
+
+        }
+        #endregion
+        #region 测试报警灯
+        /// <summary>
+        /// 测试报警灯
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private int initSlave = 200;
+        private int alarmIndex = 0;
+        private List<AlarmControl> alarms=new List<AlarmControl>();
+      
+        private AlarmControl AddAlarm(int slave, byte alertCode)
+        {            
+            AlarmControl alarm = new AlarmControl(slave, alertCode);
+            alarms.Add(alarm);            
+            this.tabPage2.Controls.Add(alarm);
+            return alarm;
+        }
+        private void RemoveAlarm()
+        {           
+            AlarmControl alarm = alarms[alarms.Count - 1];            
+            this.tabPage2.Controls.Remove(alarm);
+            alarms.RemoveAt(alarms.Count - 1);
+            alarm.Dispose();
+        }
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            AlarmControl alarm = AddAlarm(alarmIndex++ + initSlave, 0);
+            alarm.Location = new Point(30, 40 + 29 * alarmIndex);           
         }
 
-        private void ShowDB()
+        private void btnRemove_Click(object sender, EventArgs e)
         {
-            this.btnRefreshDB.Enabled = false;
+            RemoveAlarm();
+            alarmIndex--;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            int slave;
+            int.TryParse(this.textBox1.Text, out slave);
+            this.initSlave = slave;
+        }
+        int runningNum = 0;
+        int ctrlIndex = 0;
+        private void tmrRemoteCtrl_Tick(object sender, EventArgs e)
+        {            
+            if (this.alarms.Count > 0)
+            {
+                AlarmControl alarm = this.alarms[ctrlIndex % this.alarms.Count];
+                ctrlIndex++;
+                foreach (var mt in Program.MeterManager.CTMeters.Values)
+                {
+                    runningNum = ++runningNum % ushort.MaxValue;
+                    mt.SetCommand(runningNum, alarm.Slave, 1, (int)alarm.AlertCode);
+                }
+            }
+        }
+        #endregion
+        private void FormDemo_FormClosing(object sender, FormClosingEventArgs e)
+        {           
             try
             {
-                string sql = @"SELECT   m.id AS 参数ID,
+                connection.Close();               
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            if (Program.opcGateway != null)
+                Program.opcGateway.Stop();
+
+        }
+        #region 配置情况
+        /// <summary>
+        /// 配置情况
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        DataTable dt;
+        private void ShowDB()
+        {            
+            try
+            {
+                if (connection.State == ConnectionState.Open)
+                {
+                    this.labDBState1.BackColor = Color.Green;
+                    this.labDBState1.ForeColor = Color.White;
+                    this.labDBState1.Text = "通信正常";
+                    string sql = @"SELECT  m.id AS 参数ID,
                                     p.name AS 参数名称,
                                     t.name AS 参数类型,
                                     p.unit AS 单位,
@@ -147,123 +369,29 @@ namespace MicroDAQ
                         LEFT JOIN meter_type t ON p.protocolType = t.protocol 
                         LEFT JOIN meters_value v ON m.id = v.id 
                         ORDER BY m.id ";
-                SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);              
                 dt = new DataTable();
                 adapter.Fill(dt);
-                this.dgvDB.DataSource = dt;
-
-                switch (connection.State)
-                {
-                    case ConnectionState.Closed:
-                        this.labDBState.BackColor = Color.Red;
-                        this.labDBState.ForeColor = Color.Yellow;
-                        this.labDBState.Text = "通信错误";
-                        break;
-                    case ConnectionState.Open:
-                        this.labDBState.BackColor = Color.Green;
-                        this.labDBState.ForeColor = Color.White;
-                        this.labDBState.Text = "通信正常";
-                        break;
-
+                this.dataGridView2.DataSource = dt;
                 }
+                else 
+                {
+                        this.labDBState1.BackColor = Color.Red;
+                        this.labDBState1.ForeColor = Color.Yellow;
+                        this.labDBState1.Text = "通信错误";
+
+                }             
+
 
             }
             catch
             { };
-
-            this.btnRefreshDB.Enabled = true;
-        }
-
+         
+        }      
         private void btnRefreshDB_Click(object sender, EventArgs e)
         {
-            ShowDB();
+             ShowDB();
         }
-
-        private void DataDisplayForm_SizeChanged(object sender, EventArgs e)
-        {
-            //this.btnRefreshData.Location = new Point(this.Width - 150, 50);
-            //this.btnRefreshDB.Location = new Point(this.btnRefreshData.Location.X, this.Height / 2 + 50);
-            //this.labOPCState.Location = new Point(this.btnRefreshData.Location.X, this.btnRefreshData.Location.Y + 80);
-            //this.labDBState.Location = new Point(this.btnRefreshDB.Location.X, this.btnRefreshDB.Location.Y + 80);
-            //this.label1.Location = new Point(this.labOPCState.Location.X, this.labOPCState.Location.Y - 20);
-            //this.label3.Location = new Point(this.labDBState.Location.X, this.labDBState.Location.Y - 20);
-
-
-            this.lsvItems.Size = new Size(this.Width - 200, this.Height / 2 - 40);
-            this.dgvDB.Size = new Size(this.Width - 200, this.Height / 2 - 40);
-            this.lsvItems.Location = new Point(10, 10);
-            this.dgvDB.Location = new Point(10, this.Height / 2 - 10);
-
-            this.grpItem.Location = new Point(this.Width - 180, this.lsvItems.Location.Y);
-            this.grpDB.Location = new Point(this.Width - 180, this.dgvDB.Location.Y);
-            this.grpItem.Size = new Size(this.grpItem.Width, this.lsvItems.Height);
-            this.grpDB.Size = new Size(this.grpDB.Width, this.dgvDB.Height);
-
-        }
-
-        private void DataDisplayForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            try
-            {
-                connection.Close();
-            }
-            catch
-            { }
-        }
-
-        private void btnInstant_Click(object sender, EventArgs e)
-        {
-            this.btnInstant.Enabled = false;
-            try
-            {
-                string sql = @"SELECT   v.id AS 参数ID,
-                                    p.name AS 参数名称,
-                                    t.name AS 参数类型,
-                                    v.value1 AS 采集值1,
-                                    v.value2 AS 采集值2,
-                                    v.value3 AS 采集值3,
-                                    p.unit AS 单位,
-                                    v.time AS 刷新时间,
-                                    v.zztime AS 存储点
-                        FROM ProcessItem p 
-                        LEFT JOIN meter_uuid m ON p.id = m.uuid 
-                        LEFT JOIN meter_type t ON p.protocolType = t.protocol 
-                        RIGHT JOIN meters_value v ON m.id = v.id 
-                        ORDER BY v.id ";
-                SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
-                dt = new DataTable();
-                adapter.Fill(dt);
-                this.dgvDB.DataSource = dt;
-                dgvDB.Columns["刷新时间"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
-                dgvDB.Columns["存储点"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
-
-                switch (connection.State)
-                {
-                    case ConnectionState.Closed:
-                        this.labDBState.BackColor = Color.Red;
-                        this.labDBState.ForeColor = Color.Yellow;
-                        this.labDBState.Text = "通信错误";
-                        break;
-                    case ConnectionState.Open:
-                        this.labDBState.BackColor = Color.Green;
-                        this.labDBState.ForeColor = Color.White;
-                        this.labDBState.Text = "通信正常";
-                        break;
-                }
-
-            }
-            catch
-            { };
-
-            this.btnInstant.Enabled = true;
-        }
-        Form testAlarm = null;
-        private void btnTestAlarm_Click(object sender, EventArgs e)
-        {
-            if (testAlarm != null && !testAlarm.IsDisposed)
-                testAlarm.Show();
-            else
-                (testAlarm = new TestAlarm()).Show();
-        }
+        #endregion
     }
 }

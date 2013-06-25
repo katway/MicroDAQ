@@ -14,6 +14,8 @@ namespace MicroDAQ
         //    : base(name, dataHead, data)
         //{ }
 
+
+        public ConnectionState ConnectionState { get; set; }
         public FlowAlertManager(string name, string[] dataHead, string[] data)
             : base()
         {

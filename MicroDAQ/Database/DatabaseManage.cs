@@ -10,8 +10,9 @@ namespace MicroDAQ.Database
     {
         static bool instanceFlag = false;
         public DatabaseManage()
-            : this(@"VWINTECH-201\SQL2000", "3306", "opcmes2_bdgk_test", "sa", "")
+            : this(@"VWINTECH-201\SQL2000", "3306", "opcmes3", "sa", "")
         { }
+        //opcmes2_bdgk_test
         public SqlConnection GetdataConnection { get; set; }
         public SqlConnection UpdateConnection { get; set; }
         public string ConnectionString;
