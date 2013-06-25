@@ -33,10 +33,29 @@ namespace MicroDAQ
 
             }
             #endregion
+
+            #region 处理来自参数的调整模式请求，不添加错误捕获和重新启动
+            foreach (string arg in args)
+            {
+                if (arg.Contains("debug"))
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+
+                    Form MainForm = null;
+                    while (!BeQuit)
+                    {
+                        MainForm = new MainForm();
+                        Application.Run(MainForm);
+                        if (MainForm != null) MainForm.Dispose();
+                    }
+                    Environment.Exit(Environment.ExitCode);
+                    break;
+                }
+
+            }
+            #endregion
             bool createNew;
-            //try
-            //{
-            //Console.WriteLine(Application.ProductName);
             using (System.Threading.Mutex m = new System.Threading.Mutex(true, "Global\\" + Application.ProductName, out createNew))
             {
                 if (createNew)
@@ -47,10 +66,10 @@ namespace MicroDAQ
 
                     Form MainForm = null;
                     while (!BeQuit)
+                    {
                         try
                         {
                             MainForm = new MainForm();
-                            //frmMain = new TestAlarm();
                             Application.Run(MainForm);
                         }
                         catch (Exception ex)
@@ -61,6 +80,7 @@ namespace MicroDAQ
                         {
                             if (MainForm != null) MainForm.Dispose();
                         }
+                    }
                     Environment.Exit(Environment.ExitCode);
                 }
                 else
@@ -68,14 +88,6 @@ namespace MicroDAQ
                     MessageBox.Show("程序已经在运行，无法再次启动。", "已启动", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 }
             }
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("Only one instance of this application is allowed!");
-            //}
-
-
-
         }
 
 

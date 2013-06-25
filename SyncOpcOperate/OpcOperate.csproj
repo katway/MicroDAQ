@@ -8,8 +8,8 @@
     <ProjectGuid>{D4092C70-56FE-45CA-AA8C-951BF10C3555}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SysncOpcOperate</RootNamespace>
-    <AssemblyName>SysncOpcOperate</AssemblyName>
+    <RootNamespace>OpcOperate</RootNamespace>
+    <AssemblyName>OpcOperate</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

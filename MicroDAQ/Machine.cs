@@ -58,10 +58,10 @@ namespace JonLibrary.OPC
             }
             ConnectionState = (r) ? (ConnectionState.Open) : (ConnectionState.Closed);
         }
-        internal protected virtual bool Connect(string OPCServerIP)
+        internal protected virtual bool Connect(string OpcServerProgramID, string OPCServerAddress)
         {
             bool success = true;
-            success &= PLC.Connect("OPC.SimaticNET", OPCServerIP);
+            success &= PLC.Connect(OpcServerProgramID, OPCServerAddress);
             success &= PLC.AddGroup(GROUP_NAME_CTRL, 1, 0);
             success &= PLC.AddItems(GROUP_NAME_CTRL, ItemCtrl);
             success &= PLC.AddGroup(GROUP_NAME_STATE, 1, 0);

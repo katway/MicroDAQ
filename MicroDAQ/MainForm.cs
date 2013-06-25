@@ -10,7 +10,7 @@ using JonLibrary.Automatic;
 using JonLibrary.Common;
 using System.Threading;
 using MicroDAQ.UI;
-using SysncOpcOperate;
+using OpcOperate.Sync;
 using MicroDAQ.DataItem;
 using MicroDAQ.Database;
 using MicroDAQ.Gateway;
@@ -30,7 +30,7 @@ namespace MicroDAQ
         private string realItemFormat;
 
         private List<PLCStationInformation> Plcs;
-        private SysncOpcOperate.OPCServer SyncOpc;
+        private OpcOperate.Sync.OPCServer SyncOpc;
         IniFile ini = null;
 
         ILog log;
@@ -178,15 +178,15 @@ namespace MicroDAQ
                         //根据20字节监测点数量生成Item地址
                         for (int k = 0; k < num.BigItems; k++)
                         {
-                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j, 20 * k, 3));
-                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j, 20 * k + 10));
+                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 4 + j * 2, 20 * k, 3));
+                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 4 + j * 2, 20 * k + 10));
                         }
 
                         //根据10字节监测点数量生成Item地址
                         for (int k = 0; k < num.SmallItems; k++)
                         {
-                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j, 10 * k, 3));
-                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j, 10 * k + 6));
+                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j * 2, 10 * k, 3));
+                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j * 2, 10 * k + 6));
                         }
 
                     }

@@ -23,11 +23,11 @@ namespace MicroDAQ.Gateway
         /// <summary>
         /// 使用多个ItemManage创建OpcGateway实例
         /// </summary>
-        /// <param name="itemManager"></param>
-        public OpcGateway(IList<MicroDAQ.DataItem.IDataItemManage> itemManager, IList<IDatabaseManage> databaseManager)
+        /// <param name="itemManagers"></param>
+        public OpcGateway(IList<MicroDAQ.DataItem.IDataItemManage> itemManagers, IList<IDatabaseManage> databaseManagers)
         {
-            this.ItemManagers = itemManager;
-            this.DatabaseManagers = databaseManager;
+            this.ItemManagers = itemManagers;
+            this.DatabaseManagers = databaseManagers;
 
             UpdateCycle = new CycleTask();
             RemoteCtrlCycle = new CycleTask();
@@ -121,6 +121,8 @@ namespace MicroDAQ.Gateway
         /// </summary>
         public override void Start()
         {
+            foreach (var manager in this.ItemManagers)
+                manager.Connect("Matrikon.OPC.Universal", "127.0.0.1");
             UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);
             RemoteCtrlCycle.Run(this.remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
         }

@@ -66,7 +66,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Dynamic\Automatic.dll</HintPath>
     </Reference>
-    <Reference Include="JonLibrary">
+    <Reference Include="JonLibrary, Version=1.0.4924.18137, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>Dynamic\JonLibrary.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
@@ -202,9 +203,9 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SyncOpcOperate\SyncOpcOperate.csproj">
+    <ProjectReference Include="..\SyncOpcOperate\OpcOperate.csproj">
       <Project>{D4092C70-56FE-45CA-AA8C-951BF10C3555}</Project>
-      <Name>SyncOpcOperate</Name>
+      <Name>OpcOperate</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

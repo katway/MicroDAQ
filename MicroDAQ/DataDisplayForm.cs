@@ -103,20 +103,20 @@ namespace MicroDAQ
                     }
 
 
-                switch (Program.M.ConnectionState)
-                {
-                    case ConnectionState.Closed:
-                        this.labOPCState.BackColor = Color.Red;
-                        this.labOPCState.ForeColor = Color.Yellow;
-                        this.labOPCState.Text = "通信错误";
-                        break;
-                    case ConnectionState.Open:
-                        this.labOPCState.BackColor = Color.Green;
-                        this.labOPCState.ForeColor = Color.White;
-                        this.labOPCState.Text = "通信正常";
-                        break;
+                //switch (Program.M.ConnectionState)
+                //{
+                //    case ConnectionState.Closed:
+                //        this.labOPCState.BackColor = Color.Red;
+                //        this.labOPCState.ForeColor = Color.Yellow;
+                //        this.labOPCState.Text = "通信错误";
+                //        break;
+                //    case ConnectionState.Open:
+                //        this.labOPCState.BackColor = Color.Green;
+                //        this.labOPCState.ForeColor = Color.White;
+                //        this.labOPCState.Text = "通信正常";
+                //        break;
 
-                }
+                //}
             }
             catch (Exception ex)
             { MessageBox.Show(ex.ToString()); }

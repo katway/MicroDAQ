@@ -12,7 +12,7 @@ using System.Data;
 using OpcRcw.Da;
 using OpcRcw.Comn;
 
-namespace SysncOpcOperate
+namespace OpcOperate.Sync
 {
     public class OPCServer
     {
