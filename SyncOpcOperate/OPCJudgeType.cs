@@ -28,8 +28,10 @@ namespace OpcOperate
                     case "BYTE": value = 17; break;
                     case "WORD": value = 18; break;
                     case "STRING": value = 8; break;
-                    case "D": value = 3; break;
-                    case "DWORD": value = 3; break;
+                    case "D": value = 19; break;
+                    case "DWORD": value = 19; break;
+                    case "SHORT": value = 2; break;
+                    case "CHAR": value = 16; break;
                     default: throw new Exception("不被支持的数据类型");
                 }
             }
@@ -45,6 +47,7 @@ namespace OpcOperate
                     case "REAL": value = 8196; break;
                     case "DWORD": value = 8211; break;
                     case "D": value = 8211; break;
+                    case "SHORT": value = 8194; break;
                     default: throw new Exception("不被支持的数据类型");
                 }
             }
@@ -72,8 +75,10 @@ namespace OpcOperate
                     case "BYTE": value = 17; break;
                     case "WORD": value = 18; break;
                     case "STRING": value = 8; break;
-                    case "D": value = 3; break;
-                    case "DWORD": value = 3; break;
+                    case "D": value = 19; break;
+                    case "DWORD": value = 19; break;
+                    case "SHORT": value = 2; break;
+                    case "CHAR": value = 16; break;
                     default: throw new Exception("不被支持的数据类型");
                 }
             }
@@ -89,6 +94,7 @@ namespace OpcOperate
                     case "REAL": value = 8196; break;
                     case "DWORD": value = 8211; break;
                     case "D": value = 8211; break;
+                    case "SHORT":value=8194;break;
                     default: throw new Exception("不被支持的数据类型");
                 }
             }
