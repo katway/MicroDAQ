@@ -34,7 +34,7 @@ namespace MicroDAQ
             }
             #endregion
 
-            #region 处理来自参数的调整模式请求，不添加错误捕获和重新启动
+            #region 处理来自参数的调整模式请求，不使用错误捕获和重新启动
             foreach (string arg in args)
             {
                 if (arg.Contains("debug"))
