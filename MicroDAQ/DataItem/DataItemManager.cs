@@ -14,6 +14,7 @@ namespace MicroDAQ.DataItem
     public class DataItemManager : IDataItemManage
     {
         public IList<Item> Items { get; set; }
+        public ConnectionState ConnectionState { get; set; }
         public Dictionary<int, Item> ItemPair = null;
         /// <summary>
         /// 使用由指定的xx建立管理器

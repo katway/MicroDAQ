@@ -7,6 +7,7 @@ using MicroDAQ.Database;
 using MicroDAQ.Gateway;
 using log4net;
 using MicroDAQ.DataItem;
+using System.Data.SqlClient;
 namespace MicroDAQ
 {
     static class Program
@@ -55,7 +56,7 @@ namespace MicroDAQ
 
             }
             #endregion
-            bool createNew;
+            bool createNew;          
             using (System.Threading.Mutex m = new System.Threading.Mutex(true, "Global\\" + Application.ProductName, out createNew))
             {
                 if (createNew)
@@ -68,7 +69,7 @@ namespace MicroDAQ
                     while (!BeQuit)
                     {
                         try
-                        {
+                        {                            
                             MainForm = new MainForm();
                             Application.Run(MainForm);
                         }
@@ -89,11 +90,9 @@ namespace MicroDAQ
                 }
             }
         }
-
-
         public static OpcGateway opcGateway = null;
         public static MachineManager MeterManager = new MachineManager();
-        public static DatabaseManage DatabaseManager;// = new DatabaseManager();
+        public static DatabaseManage DatabaseManager;//= new DatabaseManager();
         public static DataItemManager M;
         public static FlowAlertManager M_flowAlert;
 
