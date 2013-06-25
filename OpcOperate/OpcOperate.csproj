@@ -50,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncPLC4.cs" />
-    <Compile Include="OPCJudgeType.cs" />
+    <Compile Include="CanonicalType.cs" />
     <Compile Include="OPCServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -202,7 +202,7 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SyncOpcOperate\OpcOperate.csproj">
+    <ProjectReference Include="..\OpcOperate\OpcOperate.csproj">
       <Project>{D4092C70-56FE-45CA-AA8C-951BF10C3555}</Project>
       <Name>OpcOperate</Name>
     </ProjectReference>

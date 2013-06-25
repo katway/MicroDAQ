@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroDAQ", "MicroDAQ\MicroD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCalcPaticleCount", "TestCalcPaticleCount\TestCalcPaticleCount.csproj", "{20190B69-2A12-420A-AB01-CD1CF4A7114F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpcOperate", "SyncOpcOperate\OpcOperate.csproj", "{D4092C70-56FE-45CA-AA8C-951BF10C3555}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpcOperate", "OpcOperate\OpcOperate.csproj", "{D4092C70-56FE-45CA-AA8C-951BF10C3555}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
