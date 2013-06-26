@@ -14,10 +14,12 @@ namespace MicroDAQ
     {
         public DataDisplayForm()
         {
-            InitializeComponent();            
-        }     
-      
-        SqlConnection connection = new SqlConnection(Program.opcGateway.DatabaseManagers[0].UpdateConnection.ConnectionString);
+            InitializeComponent();
+            
+        }      
+        
+        SqlConnection connection = null;    
+        ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionStates;    
         #region PLC与OPCMES即时数据的显示
         private void btnInstant_Click(object sender, EventArgs e)
         {
@@ -29,17 +31,34 @@ namespace MicroDAQ
         /// </summary>     
         DataTable dtItems = null;   
         public void ShowItems()
-        {            
-            //PLC关闭的情况                  
-            if (Program.opcGateway.ItemManagers[0].ConnectionState == ConnectionState.Closed || Program.opcGateway.ItemManagers == null)
-            {
+        {
+            //PLC关闭的情况         
+            if (Program.opcGateway.ItemManagers == null )
+            {//Program.opcGateway.ItemManagers[0].ConnectionStates ==ConnectionState.Closed||
+
                 if (connection.State == ConnectionState.Closed)
-                {
-                    MessageBox.Show("PLC连接失败，尚未加载PLC数据！");
+                {                  
+
+                    this.labOPCState.BackColor = Color.Red;
+                    this.labOPCState.ForeColor = Color.Yellow;
+                    this.labOPCState.Text = "通信错误";
+
+                    this.labDBState.BackColor = Color.Red;
+                    this.labDBState.ForeColor = Color.Yellow;
+                    this.labDBState.Text = "通信错误";
+
                     return;
                 }
                 else
                 {
+                    this.labOPCState.BackColor = Color.Red;
+                    this.labOPCState.ForeColor = Color.Yellow;
+                    this.labOPCState.Text = "通信错误";
+
+                    this.labDBState.BackColor = Color.Green;
+                    this.labDBState.ForeColor = Color.White;
+                    this.labDBState.Text = "通信正常";
+
                     return;
                 }
 
@@ -140,7 +159,7 @@ namespace MicroDAQ
                 else
                 {//plc打开成功，数据库连接失败的情况
 
-                    this.labOPCState.BackColor = Color.Green;
+                   this.labOPCState.BackColor = Color.Green;
                     this.labOPCState.ForeColor = Color.White;
                     this.labOPCState.Text = "通信正常";
 
@@ -183,13 +202,13 @@ namespace MicroDAQ
                 }
 
 
-            }
-            
+            }           
                    
               
 
        }
         #endregion
+
         #region 加载form窗体
         /// <summary>
         /// 加载form窗体
@@ -197,18 +216,21 @@ namespace MicroDAQ
         /// <param name="sender"></param>
         /// <param name="e"></param>        
         private void FormDemo_Load(object sender, EventArgs e)
-        {           
+        {
            
-            //数据库连接的情况
-            //connection.Open();
-            //plc连接情况
-            //Program.M.Connect(); 
+            //循环遍历数据库
+            foreach (IDatabaseManage a in Program.opcGateway.DatabaseManagers)
+            {
+                connection = new SqlConnection(a.UpdateConnection.ConnectionString);
+            }         
+            
             bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
             bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
             bkwConnect.RunWorkerAsync();
 
             if (Program.opcGateway != null)
-                Program.opcGateway.Stop();         
+                Program.opcGateway.Stop();    
+            
                       
         }   
         //打开数据库连接
@@ -251,8 +273,8 @@ namespace MicroDAQ
             {
                 this.labDBState2.BackColor = Color.Green;
                 this.labDBState2.ForeColor = Color.White;
-                this.labDBState2.Text = "通信正常";
-                string selectRemoteControl = @"select id as 编号,name as 名称,code as 编码,slave as 控制 ,cycle ,ip as ip地址 ,port as 端口,type as 类型,command as 命令,cmdstate as 命令状态,remainSecond ,state as 状态 from RemoteControl";
+                this.labDBState2.Text = "通信正常";               
+                string selectRemoteControl = "select id as 编号,cycle,command as 命令,cmdstate as 命令状态 from v_remoteControl";
                 SqlDataAdapter adapter = new SqlDataAdapter(selectRemoteControl, connection);
                 DataTable dt = new DataTable();
                 adapter.Fill(dt);
@@ -349,13 +371,13 @@ namespace MicroDAQ
         private void ShowDB()
         {            
             try
-            {
-                if (connection.State == ConnectionState.Open)
-                {
-                    this.labDBState1.BackColor = Color.Green;
-                    this.labDBState1.ForeColor = Color.White;
-                    this.labDBState1.Text = "通信正常";
-                    string sql = @"SELECT  m.id AS 参数ID,
+            {              
+                    if (connection.State == ConnectionState.Open)
+                    {
+                        this.labDBState1.BackColor = Color.Green;
+                        this.labDBState1.ForeColor = Color.White;
+                        this.labDBState1.Text = "通信正常";
+                        string sql = @"SELECT  m.id AS 参数ID,
                                     p.name AS 参数名称,
                                     t.name AS 参数类型,
                                     p.unit AS 单位,
@@ -369,18 +391,19 @@ namespace MicroDAQ
                         LEFT JOIN meter_type t ON p.protocolType = t.protocol 
                         LEFT JOIN meters_value v ON m.id = v.id 
                         ORDER BY m.id ";
-                SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);              
-                dt = new DataTable();
-                adapter.Fill(dt);
-                this.dataGridView2.DataSource = dt;
-                }
-                else 
-                {
+                        SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
+                        dt = new DataTable();
+                        adapter.Fill(dt);
+                        this.dataGridView2.DataSource = dt;
+                    }
+
+                    else
+                    {
                         this.labDBState1.BackColor = Color.Red;
                         this.labDBState1.ForeColor = Color.Yellow;
                         this.labDBState1.Text = "通信错误";
 
-                }             
+                    }        
 
 
             }
