@@ -12,7 +12,7 @@ using System.Data;
 using OpcRcw.Da;
 using OpcRcw.Comn;
 
-namespace SysncOpcOperate
+namespace OpcOperate.Sync
 {
     public class OPCServer
     {
@@ -122,7 +122,7 @@ namespace SysncOpcOperate
                 ItemDefArray[i].hClient = hClientItem; //client handle
                 ItemDefArray[i].dwBlobSize = 0; // blob size
                 ItemDefArray[i].pBlob = IntPtr.Zero; // pointer to blob
-                ItemDefArray[i].vtRequestedDataType = GetRqstDataType(itemsName[i]); //Word数据类型
+                ItemDefArray[i].vtRequestedDataType = CanonicalType.GetTypeCode(itemsName[i], serverName); //Word数据类型
             }
             try
             {
@@ -173,110 +173,6 @@ namespace SysncOpcOperate
         /// </summary>
         /// 
 
-        private short GetRqstDataTypeMatrikon(string itemID)//Matrikon的item数据类型判断
-        {
-            //System.Text.RegularExpressions.Regex R = new System.Text.RegularExpressions.Regex (",",
-
-            short value = 0;
-            int first = itemID.IndexOf(':');
-            int last = itemID.LastIndexOf(':');
-            int mark = itemID.IndexOf('[');
-            string portion = itemID.Substring(first + 1, last - first - 1);
-            portion = (string)System.Text.RegularExpressions.Regex.Match(portion, "^[A-Z]+").ToString();
-            if (mark == -1)
-            {
-                switch (portion)
-                {
-                    case "B": value = 17; break;
-                    case "X": value = 11; break;
-                    case "W": value = 18; break;
-                    case "REAL": value = 4; break;
-                    case "BYTE": value = 17; break;
-                    case "WORD": value = 18; break;
-                    case "STRING": value = 8; break;
-                    case "D": value = 3; break;
-                    case "DWORD": value = 3; break;
-                    default: throw new Exception("不被支持的数据类型");
-                }
-            }
-            else
-            {
-                switch (portion)
-                {
-                    case "X": value = 0; break;
-                    case "B": value = 8209; break;
-                    case "W": value = 8210; break;
-                    case "BYTE": value = 8209; break;
-                    case "WORD": value = 8210; break;
-                    case "REAL": value = 8196; break;
-                    case "DWORD": value = 8211; break;
-                    case "D": value = 8211; break;
-                    default: throw new Exception("不被支持的数据类型");
-                }
-            }
-
-
-            return value;
-        }
-
-        private short GetRqstDataTypeSiemens(string itemID)//西门子item数据类型判断
-        {
-            //System.Text.RegularExpressions.Regex R = new System.Text.RegularExpressions.Regex (",",
-            string[] portions;
-            short value = 0;
-            portions = System.Text.RegularExpressions.Regex.Split(itemID, ",");
-            portions[1] = (string)System.Text.RegularExpressions.Regex.Match(portions[1], "^[A-Z]+").ToString();
-
-            if (portions.Length == 2)
-            {
-                switch (portions[1])
-                {
-                    case "B": value = 17; break;
-                    case "X": value = 11; break;
-                    case "W": value = 18; break;
-                    case "REAL": value = 4; break;
-                    case "BYTE": value = 17; break;
-                    case "WORD": value = 18; break;
-                    case "STRING": value = 8; break;
-                    case "D": value = 3; break;
-                    case "DWORD": value = 3; break;
-                    default: throw new Exception("不被支持的数据类型");
-                }
-            }
-            if (portions.Length == 3)
-            {
-                switch (portions[1])
-                {
-                    case "X": value = 0; break;
-                    case "B": value = 8209; break;
-                    case "W": value = 8210; break;
-                    case "BYTE": value = 8209; break;
-                    case "WORD": value = 8210; break;
-                    case "REAL": value = 8196; break;
-                    case "DWORD": value = 8211; break;
-                    case "D": value = 8211; break;
-                    default: throw new Exception("不被支持的数据类型");
-                }
-            }
-
-            return value;
-        }
-
-        private short GetRqstDataType(string itemID)//判断是西门子的还是Matrikon
-        {
-            switch (serverName)
-            {
-                case "Matrikon.OPC.Universal":
-                    return GetRqstDataTypeMatrikon(itemID);
-
-                case "OPC.SimaticNET":
-                    return GetRqstDataTypeSiemens(itemID);
-
-                default: throw new Exception("不被支持的数据类型");
-            }
-
-
-        }
 
         public bool SyncWrite(string groupName, object[] values, int[] itemHandle) //由编程人员保证，所写数据和添加Item的数据说明相对应
         {

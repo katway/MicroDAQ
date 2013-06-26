@@ -10,7 +10,7 @@ using JonLibrary.Automatic;
 using JonLibrary.Common;
 using System.Threading;
 using MicroDAQ.UI;
-using SysncOpcOperate;
+using OpcOperate.Sync;
 using MicroDAQ.DataItem;
 using MicroDAQ.Database;
 using MicroDAQ.Gateway;
@@ -31,7 +31,7 @@ namespace MicroDAQ
         private string realItemFormat;
 
         private List<PLCStationInformation> Plcs;
-        private SysncOpcOperate.OPCServer SyncOpc;
+        private OpcOperate.Sync.OPCServer SyncOpc;
         IniFile ini = null;
 
         ILog log;
@@ -43,7 +43,7 @@ namespace MicroDAQ
         }
 
         private void Form2_Load(object sender, EventArgs e)
-        {        
+        {
             ni.Icon = this.Icon;
             ni.Text = this.Text;
 
@@ -55,7 +55,7 @@ namespace MicroDAQ
                 this.tsslProject.Text = "项目代码：" + ini.GetValue("General", "ProjetCode");
                 this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
-                int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));               
+                int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
                 opcServerType = ini.GetValue("OpcServer", "Type").Trim();
                 for (int i = 0; i < plcCount; i++)
                 {
@@ -178,15 +178,15 @@ namespace MicroDAQ
                         //根据20字节监测点数量生成Item地址
                         for (int k = 0; k < num.BigItems; k++)
                         {
-                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j, 20 * k, 3));
-                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j, 20 * k + 10));
+                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 4 + j * 2, 20 * k, 3));
+                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 4 + j * 2, 20 * k + 10));
                         }
 
                         //根据10字节监测点数量生成Item地址
                         for (int k = 0; k < num.SmallItems; k++)
                         {
-                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j, 10 * k, 3));
-                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j, 10 * k + 6));
+                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j * 2, 10 * k, 3));
+                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j * 2, 10 * k + 6));
                         }
 
                     }
@@ -259,9 +259,9 @@ namespace MicroDAQ
             else
                 return null;
 
-        }      
+        }
         public void Start()
-        {         
+        {
             //Thread.Sleep(Program.waitMillionSecond);
             SyncOpc = new OPCServer();
             string pid = ini.GetValue(opcServerType, "ProgramID");
@@ -389,10 +389,10 @@ namespace MicroDAQ
                 frmDataDisplay.Show();
 
             else
-            {        
-              (frmDataDisplay = new DataDisplayForm()).Show();
+            {
+                (frmDataDisplay = new DataDisplayForm()).Show();
             }
-           
+
         }
 
     }

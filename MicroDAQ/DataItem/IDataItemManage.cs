@@ -8,5 +8,7 @@ namespace MicroDAQ.DataItem
     {
         IList<Item> Items { get; set; }
         ConnectionState ConnectionState { get;set;}
+        bool Connect(string OpcServerProgramID, string OPCServerIP);
     }
+
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using JonLibrary.Common;
 using JonLibrary.Automatic;
 using MicroDAQ.Database;
 using MicroDAQ.Gateway;
@@ -34,7 +33,29 @@ namespace MicroDAQ
 
             }
             #endregion
-            bool createNew;          
+
+            #region 处理来自参数的调整模式请求，不使用错误捕获和重新启动
+            foreach (string arg in args)
+            {
+                if (arg.Contains("debug"))
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+
+                    Form MainForm = null;
+                    while (!BeQuit)
+                    {
+                        MainForm = new MainForm();
+                        Application.Run(MainForm);
+                        if (MainForm != null) MainForm.Dispose();
+                    }
+                    Environment.Exit(Environment.ExitCode);
+                    break;
+                }
+
+            }
+            #endregion
+            bool createNew;
             using (System.Threading.Mutex m = new System.Threading.Mutex(true, "Global\\" + Application.ProductName, out createNew))
             {
                 if (createNew)
@@ -45,10 +66,10 @@ namespace MicroDAQ
 
                     Form MainForm = null;
                     while (!BeQuit)
+                    {
                         try
-                        {                            
+                        {
                             MainForm = new MainForm();
-                            //frmMain = new TestAlarm();
                             Application.Run(MainForm);
                         }
                         catch (Exception ex)
@@ -59,6 +80,7 @@ namespace MicroDAQ
                         {
                             if (MainForm != null) MainForm.Dispose();
                         }
+                    }
                     Environment.Exit(Environment.ExitCode);
                 }
                 else
@@ -66,7 +88,6 @@ namespace MicroDAQ
                     MessageBox.Show("程序已经在运行，无法再次启动。", "已启动", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 }
             }
-           
         }
         public static OpcGateway opcGateway = null;
         public static MachineManager MeterManager = new MachineManager();
