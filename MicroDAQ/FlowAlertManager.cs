@@ -15,7 +15,7 @@ namespace MicroDAQ
         //{ }
 
 
-        public ConnectionState ConnectionStates { get; set; }
+        public ConnectionState ConnectionState { get; set; }
         public FlowAlertManager(string name, string[] dataHead, string[] data)
             : base()
         {
@@ -41,7 +41,7 @@ namespace MicroDAQ
             success &= PLC.AddItems(GROUP_NAME_STATE, ItemStatus);
             PLC.SetState(GROUP_NAME_CTRL, true);
             PLC.SetState(GROUP_NAME_STATE, true);
-            ConnectionStates = (success) ? (ConnectionState.Open) : (ConnectionState.Closed);
+            ConnectionState = (success) ? (ConnectionState.Open) : (ConnectionState.Closed);
             return success;
         }
 

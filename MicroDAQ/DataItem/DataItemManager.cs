@@ -12,7 +12,7 @@ namespace MicroDAQ.DataItem
     class DataItemManager : JonLibrary.OPC.Machine, IDataItemManage
     {
         public IList<Item> Items { get; set; }
-        public ConnectionState ConnectionStates { get; set; }
+        public ConnectionState ConnectionState { get; set; }
         public Dictionary<int, Item> ItemPair = null;
         /// <summary>
         /// 使用由指定的xx建立管理器
@@ -45,7 +45,7 @@ namespace MicroDAQ.DataItem
             success &= PLC.AddItems(GROUP_NAME_STATE, ItemStatus);
             PLC.SetState(GROUP_NAME_CTRL, true);
             PLC.SetState(GROUP_NAME_STATE, true);
-            ConnectionStates = (success) ? (ConnectionState.Open) : (ConnectionState.Closed);
+            ConnectionState = (success) ? (ConnectionState.Open) : (ConnectionState.Closed);
             return success;
         }
 

@@ -19,7 +19,7 @@ namespace MicroDAQ
         }      
         
         SqlConnection connection = null;    
-        ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionStates;    
+        ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionState;    
         #region PLC与OPCMES即时数据的显示
         private void btnInstant_Click(object sender, EventArgs e)
         {
@@ -32,9 +32,10 @@ namespace MicroDAQ
         DataTable dtItems = null;   
         public void ShowItems()
         {
-            //PLC关闭的情况         
-            if (Program.opcGateway.ItemManagers == null )
-            {//Program.opcGateway.ItemManagers[0].ConnectionStates ==ConnectionState.Closed||
+            //PLC关闭的情况       
+
+            if (aa == ConnectionState.Closed||Program.opcGateway.ItemManagers == null)
+            {
 
                 if (connection.State == ConnectionState.Closed)
                 {                  
@@ -159,7 +160,7 @@ namespace MicroDAQ
                 else
                 {//plc打开成功，数据库连接失败的情况
 
-                   this.labOPCState.BackColor = Color.Green;
+                    this.labOPCState.BackColor = Color.Green;
                     this.labOPCState.ForeColor = Color.White;
                     this.labOPCState.Text = "通信正常";
 
@@ -216,8 +217,7 @@ namespace MicroDAQ
         /// <param name="sender"></param>
         /// <param name="e"></param>        
         private void FormDemo_Load(object sender, EventArgs e)
-        {
-           
+        {           
             //循环遍历数据库
             foreach (IDatabaseManage a in Program.opcGateway.DatabaseManagers)
             {

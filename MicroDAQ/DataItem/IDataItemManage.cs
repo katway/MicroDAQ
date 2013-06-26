@@ -7,6 +7,6 @@ namespace MicroDAQ.DataItem
     public interface IDataItemManage 
     {
         IList<Item> Items { get; set; }
-        ConnectionState ConnectionStates { get;set;}
+        ConnectionState ConnectionState { get;set;}
     }
 }
