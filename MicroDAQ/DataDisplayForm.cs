@@ -36,7 +36,6 @@ namespace MicroDAQ
 
             if (aa == ConnectionState.Closed||Program.opcGateway.ItemManagers == null)
             {
-
                 if (connection.State == ConnectionState.Closed)
                 {                  
 
