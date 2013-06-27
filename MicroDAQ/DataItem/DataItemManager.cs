@@ -45,6 +45,7 @@ namespace MicroDAQ.DataItem
             public DataItem(DataItemManager manager, string name, string[] dataHead, string[] data)
                 : base()
             {
+                this.Manager = manager;
                 this.Name = Name;
                 ItemCtrl = dataHead;
                 ItemStatus = data;
