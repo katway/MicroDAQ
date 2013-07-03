@@ -16,9 +16,9 @@ namespace MicroDAQ
         {
             InitializeComponent();
             
-        }      
+        }  
         
-        SqlConnection connection = null;    
+        SqlConnection connection = null;      
         ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionState;    
         #region PLC与OPCMES即时数据的显示
         private void btnInstant_Click(object sender, EventArgs e)
@@ -34,9 +34,8 @@ namespace MicroDAQ
         {
             //PLC关闭的情况       
 
-            if (aa == ConnectionState.Closed||Program.opcGateway.ItemManagers == null)
+            if (Program.opcGateway.ItemManagers == null)
             {
-
                 if (connection.State == ConnectionState.Closed)
                 {                  
 
@@ -219,17 +218,24 @@ namespace MicroDAQ
         private void FormDemo_Load(object sender, EventArgs e)
         {           
             //循环遍历数据库
+            List<SqlConnection> sqlcon = new List<SqlConnection>();
             foreach (IDatabaseManage a in Program.opcGateway.DatabaseManagers)
             {
-                connection = new SqlConnection(a.UpdateConnection.ConnectionString);
-            }         
+                SqlConnection conn = new SqlConnection(a.UpdateConnection.ConnectionString);
+                sqlcon.Add(conn);
+            }
+            for (int i = 0; i < sqlcon.Count;i++ )
+            {
+                connection=sqlcon[0];           
+               
+            }      
             
             bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
             bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
             bkwConnect.RunWorkerAsync();
 
             if (Program.opcGateway != null)
-                Program.opcGateway.Stop();    
+                Program.opcGateway.Stop();   
             
                       
         }   
@@ -416,5 +422,10 @@ namespace MicroDAQ
              ShowDB();
         }
         #endregion
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ShowItems();
+        }
     }
 }
