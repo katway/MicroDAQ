@@ -57,18 +57,11 @@ namespace MicroDAQ
         /// </summary>
         public IList<string> ItemsData { get; set; }
 
-
         public PLCStationInformation()
         {
             ItemsHead = new List<string>();
             ItemsData = new List<string>();
         }
-
-
-
-
-
-
 
         /// <summary>
         /// 监测点数量结构

@@ -16,7 +16,7 @@ namespace MicroDAQ
         {
             InitializeComponent();
             
-        }  
+        } 
         
         SqlConnection connection = null;      
         ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionState;    

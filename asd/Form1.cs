@@ -24,13 +24,32 @@ namespace asd
             {              
                 b.Add(a);               
             }
-            this.listBox1.DataSource = b;          
+            //this.listBox1.DataSource = b;          
             //for (int i = 0; i < b.Count; i++)
             //{
             //    this.textBox1.Text = b[0].ToString();
-            //}
-            
+            //}            
 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ToolStripDropDownButton dropBtn = new ToolStripDropDownButton();
+            dropBtn.DropDownItems.Add("000");
+            dropBtn.DropDownItems.Add("111");
+
+            foreach (ToolStripItem ts in dropBtn.DropDownItems)
+            {
+                ToolStripMenuItem item = ts as ToolStripMenuItem;
+                if (item != null && item.Text == "000")
+                {
+                    item.DropDownItems.Add("000-1");
+                    item.DropDownItems.Add("000-2");
+                    item.DropDownItems.Add("000-3");
+                    item.DropDownItems.Add("000-4");
+                    break;
+                }
+            }
         }
     }
 }

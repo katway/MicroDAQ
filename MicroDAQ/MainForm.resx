@@ -123,6 +123,17 @@
   <metadata name="stspMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>194, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="tssddbPLC.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABMAAAAQCAYAAAD0xERiAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAL9JREFUOE+tlMEN
+        wjAMRcsw7NJd2IVBuHFjAiboBLAAygKG1+pXrgM4lWLJB1ffL3Yc92AfG3oZsF42RND0Mjtecj/d6xI2
+        MEDjzez6yP08mUXgChMIkYSIv3nUqMYK5pNJwjiI7zGWNoUpUbAYA+JKfKubyrj4KFBVOl3XgS6FcVIp
+        ZXaBfCxIMwwIzlSB+zg+m79tqlUPoIpfwBS2B9gEW4HPpV0fM1m12wzbu1bVOnlAnJyfYHwW89+n56K/
+        AcaB4TEc+O+YAAAAAElFTkSuQmCC
+</value>
+  </data>
   <metadata name="ni.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>61, 17</value>
   </metadata>
@@ -132,7 +143,6 @@
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>41</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAIAICAAAAAAAACoCAAAJgAAACAgAAAAAAAAqAwAAM4IAAAoAAAAIAAAAEAAAAABAAgAAAAAAIAE
