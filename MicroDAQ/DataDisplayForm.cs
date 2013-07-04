@@ -19,7 +19,7 @@ namespace MicroDAQ
         } 
         
         SqlConnection connection = null;      
-        ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionState;    
+        //ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionState;    
         #region PLC与OPCMES即时数据的显示
         private void btnInstant_Click(object sender, EventArgs e)
         {
@@ -226,9 +226,9 @@ namespace MicroDAQ
             }
             for (int i = 0; i < sqlcon.Count;i++ )
             {
-                connection=sqlcon[0];           
+                connection=sqlcon[0];          
                
-            }      
+            }     
             
             bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
             bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
