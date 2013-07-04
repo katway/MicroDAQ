@@ -272,7 +272,11 @@ namespace MicroDAQ
                     {
                         Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
                         Program.opcGateway.Start();
+                        //ModbusGateway modbus = new ModbusGateway(createDBManagers());
+                        //modbus.Start();
                     }
+            ModbusGateway modbus = new ModbusGateway(createDBManagers());
+            modbus.Start();
 
         }
 

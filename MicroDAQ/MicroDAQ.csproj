@@ -73,6 +73,10 @@
     <Reference Include="log4net">
       <HintPath>Dynamic\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Modbus, Version=1.11.0.0, Culture=neutral, PublicKeyToken=b5aba55fcbc8d946, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dynamic\Modbus.dll</HintPath>
+    </Reference>
     <Reference Include="OpcRcw.Comn">
       <HintPath>Dynamic\OpcRcw.Comn.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -101,6 +105,7 @@
     <Compile Include="Database\IDatabaseManage.cs" />
     <Compile Include="DataItem\Item.cs" />
     <Compile Include="DataItem\IDataItemManage.cs" />
+    <Compile Include="DataItem\ModbusDataItemManager.cs" />
     <Compile Include="FlowAlertManager.cs" />
     <Compile Include="DataItem\DataItemManager.cs" />
     <Compile Include="DataDisplayForm.cs">
@@ -111,6 +116,7 @@
     </Compile>
     <Compile Include="Gateway\GatewayBase.cs" />
     <Compile Include="Gateway\IGateway.cs" />
+    <Compile Include="Gateway\ModbusGateway.cs" />
     <Compile Include="Gateway\RunningState.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -122,6 +128,31 @@
     <Compile Include="MachineManager.cs" />
     <Compile Include="Meter.cs" />
     <Compile Include="Gateway\OpcGateway.cs" />
+    <Compile Include="ModbusOperate\IModbus.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="ModbusOperate\ModbusRtu.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ModbusOperate\ModbusRtu.designer.cs">
+      <DependentUpon>ModbusRtu.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="ModbusOperate\NModbusAscii.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ModbusOperate\NModbusAscii.designer.cs">
+      <DependentUpon>NModbusAscii.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="ModbusOperate\NModbusOperate.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ModbusOperate\NModbusOperate.designer.cs">
+      <DependentUpon>NModbusOperate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAlarm.cs">
@@ -156,6 +187,7 @@
       <DependentUpon>TestAlarm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="MicroDAQ.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -190,6 +222,9 @@
     <Content Include="bkg.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Dynamic\Modbus.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="log4net.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -198,7 +233,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configuration\" />
-    <Folder Include="Dynamic\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
