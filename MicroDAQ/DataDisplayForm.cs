@@ -127,11 +127,11 @@ namespace MicroDAQ
                         {
                             foreach (Item item in mgr.Items)
                             {
-                                Item meter = item;
+                                Item meter = item;                                
                                 row["PLC数据值1"] = meter.Value.ToString();
                                 row["PLC设备类型"] = meter.Type.ToString();
                                 row["PLC状态"] = meter.State.ToString();
-                                row["plc可信度"] = meter.Quality.ToString();
+                                row["PLC可信度"] = meter.Quality.ToString();
                             }
                         }
                         dtItems.Rows.Add(row);
