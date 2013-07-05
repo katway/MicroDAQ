@@ -73,10 +73,6 @@
     <Reference Include="log4net">
       <HintPath>Dynamic\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Modbus, Version=1.11.0.0, Culture=neutral, PublicKeyToken=b5aba55fcbc8d946, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dynamic\Modbus.dll</HintPath>
-    </Reference>
     <Reference Include="OpcRcw.Comn">
       <HintPath>Dynamic\OpcRcw.Comn.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -128,31 +124,6 @@
     <Compile Include="MachineManager.cs" />
     <Compile Include="Meter.cs" />
     <Compile Include="Gateway\OpcGateway.cs" />
-    <Compile Include="ModbusOperate\IModbus.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="ModbusOperate\ModbusRtu.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ModbusOperate\ModbusRtu.designer.cs">
-      <DependentUpon>ModbusRtu.cs</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="ModbusOperate\NModbusAscii.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ModbusOperate\NModbusAscii.designer.cs">
-      <DependentUpon>NModbusAscii.cs</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="ModbusOperate\NModbusOperate.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ModbusOperate\NModbusOperate.designer.cs">
-      <DependentUpon>NModbusOperate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAlarm.cs">
@@ -236,9 +207,17 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ModbusLibrary\ModbusLibrary.csproj">
+      <Project>{8C1B7762-323A-44E8-A3B0-E1E3F6DF404D}</Project>
+      <Name>ModbusLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpcOperate\OpcOperate.csproj">
       <Project>{D4092C70-56FE-45CA-AA8C-951BF10C3555}</Project>
       <Name>OpcOperate</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\Mandel\Desktop\NModbus_net-2.0_1.11.0.0-source\source\src\Modbus\Modbus.csproj">
+      <Project>{FF96B252-2B24-44A1-A09C-6401B5D7ED23}</Project>
+      <Name>Modbus</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

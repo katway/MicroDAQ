@@ -1,6 +1,6 @@
-﻿namespace ModbusOperate
+﻿namespace ModbusLibrary
 {
-    partial class ModbusRtu
+    partial class ModMdiaC2000
     {
         /// <summary>
         /// 必需的设计器变量。

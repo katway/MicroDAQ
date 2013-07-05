@@ -14,7 +14,7 @@ namespace MicroDAQ.Gateway
         /// <summary>
         /// 数据项管理器
         /// </summary>
-        public IList<IDataItemManage> ItemManagers { get; private set; }
+        public List<IDataItemManage> ItemManagers;
         /// <summary>
         /// 数据库管理器
         /// </summary>
@@ -31,6 +31,7 @@ namespace MicroDAQ.Gateway
             modbusName = new List<string>();
             slaveID = new List<byte>();
             dic = new Dictionary<byte, Dictionary<int, string>>();
+            ItemManagers = new List<IDataItemManage>();
             #endregion
             ReadXml();       //读xml文件
             CreateItemsMangers(CreatePort());
@@ -108,7 +109,7 @@ namespace MicroDAQ.Gateway
 
         #region 遍历数据项管理器
         public void ErgodicManagers()
-        {
+            {
             foreach (ModbusDataItemManager manager in this.ItemManagers)
                 manager.ModbusReadData();     
         }
@@ -137,6 +138,7 @@ namespace MicroDAQ.Gateway
         /// </summary>
         public override void Start()
         {
+           
             UpdateCycle.Run(this.ErgodicManagers, System.Threading.ThreadPriority.BelowNormal);
             UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);
           

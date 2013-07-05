@@ -1,6 +1,6 @@
-﻿namespace ModbusOperate
+﻿namespace ModbusLibrary
 {
-    partial class NModbusAscii
+    partial class ModMote5104
     {
         /// <summary>
         /// 必需的设计器变量。

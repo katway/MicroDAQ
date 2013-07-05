@@ -5,27 +5,26 @@ using System.Diagnostics;
 using System.Text;
 using Modbus.Device;
 using System.IO.Ports;
-using System.Windows.Forms;
 
-namespace ModbusOperate
+namespace ModbusLibrary
 {
     /// <summary>
     /// 使用方法：ConnectionPort()连接-->slaveAdress离子器地址赋值-->ReadData()-->读取属性值
     /// </summary>
-    public partial class NModbusAscii : Component, IModbus
+    public partial class ModMote5104 : Component, IModbusOperate
     {
        #region 全局变量和构造函数
-        IModbusSerialMaster master;
+        ModbusSerialMaster master;
       
          public void ConnectionPort(SerialPort ports)
          {   
                  master = ModbusSerialMaster.CreateAscii(ports);                     
          }
-         public NModbusAscii()
+         public ModMote5104()
          {
              InitializeComponent();
          }
-         public NModbusAscii(IContainer container)
+         public ModMote5104(IContainer container)
         {          
             container.Add(this);
             InitializeComponent();

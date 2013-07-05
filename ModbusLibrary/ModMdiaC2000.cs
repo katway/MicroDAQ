@@ -5,11 +5,11 @@ using System.Diagnostics;
 using System.Text;
 using Modbus.Device;
 using System.IO.Ports;
-using System.Windows.Forms;
 
-namespace ModbusOperate
+
+namespace ModbusLibrary
 {
-    public partial class ModbusRtu :UserControl ,IModbus
+    public partial class ModMdiaC2000 : Component, IModbusOperate
     {
         IModbusSerialMaster master;
 
@@ -17,12 +17,12 @@ namespace ModbusOperate
         {
             master = ModbusSerialMaster.CreateRtu(ports);
         }
-        public ModbusRtu()
+        public ModMdiaC2000()
         {
             InitializeComponent();
         }
 
-        public ModbusRtu(IContainer container)
+        public ModMdiaC2000(IContainer container)
         {
             container.Add(this);
 
@@ -59,12 +59,20 @@ namespace ModbusOperate
         /// </summary>
         public float[] channelFloatData = new float[8];
 
+        //测试
+        private ushort name;
 
+        public ushort Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
 
         public void ReadData()
         {
             //设备虚拟器代码
             channelRawData = master.ReadHoldingRegisters(1, 0, 8);
+            name = channelRawData[0];
 
             ////通道初始值的读取
             //channelRawData = master.ReadHoldingRegisters(1, 0x0511, 8);

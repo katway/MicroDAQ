@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO.Ports;
 
-namespace ModbusOperate
+namespace ModbusLibrary
 {
-  public  interface IModbus
+  public  interface IModbusOperate
     {
          void ConnectionPort(SerialPort ports);
          void ReadData();
