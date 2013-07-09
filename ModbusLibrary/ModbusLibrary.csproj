@@ -34,6 +34,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -56,7 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\Mandel\Desktop\NModbus_net-2.0_1.11.0.0-source\source\src\Modbus\Modbus.csproj">
+    <ProjectReference Include="..\Modbus\Modbus.csproj">
       <Project>{FF96B252-2B24-44A1-A09C-6401B5D7ED23}</Project>
       <Name>Modbus</Name>
     </ProjectReference>

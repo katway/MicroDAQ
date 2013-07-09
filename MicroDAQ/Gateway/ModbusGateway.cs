@@ -14,12 +14,13 @@ namespace MicroDAQ.Gateway
         /// <summary>
         /// 数据项管理器
         /// </summary>
-        public List<IDataItemManage> ItemManagers;
+        public List<ModbusDataItemManager> ItemManagers;
         /// <summary>
         /// 数据库管理器
         /// </summary>
         public IList<IDatabaseManage> DatabaseManagers { get; set; }
         public CycleTask UpdateCycle { get; private set; }
+        public CycleTask ModbusCycle { get; private set; }
         int count;
         List<string> modbusName;
         List<byte> slaveID;
@@ -31,18 +32,24 @@ namespace MicroDAQ.Gateway
             modbusName = new List<string>();
             slaveID = new List<byte>();
             dic = new Dictionary<byte, Dictionary<int, string>>();
-            ItemManagers = new List<IDataItemManage>();
+            ItemManagers = new List<ModbusDataItemManager>();
             #endregion
             ReadXml();       //读xml文件
             CreateItemsMangers(CreatePort());
             this.DatabaseManagers = databaseManagers;
             UpdateCycle = new CycleTask();
             UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
+            ModbusCycle = new CycleTask();
+            ModbusCycle.WorkStateChanged+=new CycleTask.WorkStateChangeEventHandle(ModbusCycle_WorkStateChanged);
         }
         #endregion
 
         #region 状态改变
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
+        {
+            this.RunningState = (Gateway.RunningState)((int)state);
+        }
+        void ModbusCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
             this.RunningState = (Gateway.RunningState)((int)state);
         }
@@ -57,7 +64,7 @@ namespace MicroDAQ.Gateway
            
             for (int i = 0; i < count; i++)
             {
-                IDataItemManage data = new ModbusDataItemManager(modbusName[i], slaveID[i], dic[slaveID[i]], port);
+                ModbusDataItemManager data = new ModbusDataItemManager(modbusName[i], slaveID[i], dic[slaveID[i]], port);
                 ItemManagers.Add(data);
             }
            
@@ -138,8 +145,8 @@ namespace MicroDAQ.Gateway
         /// </summary>
         public override void Start()
         {
-           
-            UpdateCycle.Run(this.ErgodicManagers, System.Threading.ThreadPriority.BelowNormal);
+
+            ModbusCycle.Run(this.ErgodicManagers, System.Threading.ThreadPriority.BelowNormal);
             UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);
           
         }

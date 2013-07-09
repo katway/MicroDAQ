@@ -5,7 +5,7 @@ using System.Data;
 using ModbusLibrary;
 using System.IO.Ports;
 using System.Reflection;
-using Modbus.Device;
+
 
 namespace MicroDAQ.DataItem
 {
@@ -15,6 +15,8 @@ namespace MicroDAQ.DataItem
         public IList<Item> Items { get; set; }
         public ConnectionState ConnectionState { get; set; }
         IModbusOperate Imodbus;
+        private SerialPort serialPort;
+        string type;
         Dictionary<int, string> modbusProperty;  //要读取的属性名字和ID
         /// <summary>
         /// 构造函数
@@ -24,26 +26,31 @@ namespace MicroDAQ.DataItem
         /// <param name="dic">id和属性名称</param>
        public ModbusDataItemManager(string ModbusType, byte slave, Dictionary<int, string> dic, SerialPort port)
         {
+            serialPort = port;
+            type = ModbusType;
+            ConnectionState = ConnectionState.Closed;
             #region 添加属性item
             Items = new List<Item>();
             for (int i = 0; i < dic.Count; i++)
             {
                 Items.Add(new Item());
             }
-                modbusProperty = dic;
+            modbusProperty = dic;
             #endregion
 
             #region 设置波特率
-                if (ModbusType == "ModMote5104")
-                { port.BaudRate = 19200; }
-                else
-                { port.BaudRate = 9600; }
+            //if (ModbusType == "ModMote5104")
+            //{ port.BaudRate = 19200; }
+            //else
+            //{ port.BaudRate = 9600; }
+            //serialPort = new SerialPort();
+            //serialPort = port;
                 #endregion
 
             #region 反射
-                Imodbus = (IModbusOperate)Assembly.Load("ModbusLibrary").CreateInstance("ModbusLibrary." + ModbusType);
-            Imodbus.ConnectionPort(port);
+            Imodbus = (IModbusOperate)Assembly.Load("ModbusLibrary").CreateInstance("ModbusLibrary." + ModbusType);
             Imodbus.GetType().GetProperty("SlaveAdress").SetValue(Imodbus, slave, null);
+            ConnectionState = ConnectionState.Open;
             #endregion
         }
        /// <summary>
@@ -51,7 +58,26 @@ namespace MicroDAQ.DataItem
        /// </summary>
        public void ModbusReadData()
         {
-            Imodbus.ReadData();   //读取属性值
+            if (type == "ModMdiaC2000")
+            {
+                serialPort.BaudRate = 9600;
+            }
+            else
+            {
+                serialPort.BaudRate = 19200;
+            }
+            Imodbus.ConnectionPort(serialPort);
+           
+            try
+            { Imodbus.ReadData(); }
+            catch
+            {
+               ConnectionState= ConnectionState.Broken;
+               return;
+
+            }
+             
+              //读取属性值
             int i = 0;
             foreach (var  dic in modbusProperty)      //遍历要读取的属性
             {
