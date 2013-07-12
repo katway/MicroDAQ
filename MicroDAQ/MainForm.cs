@@ -204,8 +204,11 @@ namespace MicroDAQ
 
             Program.M = new DataItemManager("MachineData", h.ToArray(), d.ToArray());
             Program.M.Connect("127.0.0.1");
-            Program.M_flowAlert = new FlowAlertManager("FlowAlert", h_flow.ToArray(), d_flow.ToArray());
-            Program.M_flowAlert.Connect("127.0.0.1");
+            if (h_flow.Count > 0)
+            {
+                Program.M_flowAlert = new FlowAlertManager("FlowAlert", h_flow.ToArray(), d_flow.ToArray());
+                Program.M_flowAlert.Connect("127.0.0.1");
+            }
         }
 
 
@@ -215,21 +218,30 @@ namespace MicroDAQ
 
         private void update2()
         {
-            foreach (var item in Program.M.Items)
+            try
             {
-                Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
+                foreach (var item in Program.M.Items)
+                {
+                    Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
+                }
+                if (Program.M_flowAlert != null)
+                    foreach (var item in Program.M_flowAlert.Items)
+                    {
+                        float t = 0.0f;
+                        if ((item.Value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                            t = 28.3f;
+                        if (item.Value == 2)
+                            t = 0.0f;
+                        Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
+                        Console.WriteLine(item.ToString());
+                    }
             }
-            foreach (var item in Program.M_flowAlert.Items)
+            catch
+            { }
+            finally
             {
-                float t = 0.0f;
-                if ((item.Value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
-                    t = 28.3f;
-                if (item.Value == 2)
-                    t = 0.0f;
-                Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
-                Console.WriteLine(item.ToString());
+                Thread.Sleep(30000);
             }
-            Thread.Sleep(30000);
         }
         int running;
         public void remoteCtrl()

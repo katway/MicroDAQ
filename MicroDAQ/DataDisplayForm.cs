@@ -77,29 +77,29 @@ namespace MicroDAQ
                         lsvItems.Items[i - 1].BackColor = Color.Gold;
                     //Console.WriteLine((item as Meter).ID);
                 }
-
-                if (Program.M_flowAlert.Items != null)
-                    foreach (var item in Program.M_flowAlert.Items)
-                    {
-                        DataItem meter = item as DataItem;
-                        i++;
-                        if (lsvItems.Items.Count < i)
-                            lsvItems.Items.Add(new ListViewItem(new string[]{
+                if (Program.M_flowAlert != null)
+                    if (Program.M_flowAlert.Items != null)
+                        foreach (var item in Program.M_flowAlert.Items)
+                        {
+                            DataItem meter = item as DataItem;
+                            i++;
+                            if (lsvItems.Items.Count < i)
+                                lsvItems.Items.Add(new ListViewItem(new string[]{
                                             meter.ID.ToString()  ,
                                             meter.Value .ToString () ,
                                             string.Empty,
                                             "粒子计数器流量",
                                             meter.State .ToString (),
                                             meter.Quality.ToString ()}));
-                        else
-                        {
-                            lsvItems.Items[i - 1].SubItems[0].Text = meter.ID.ToString();
-                            lsvItems.Items[i - 1].SubItems[1].Text = meter.Value.ToString();
-                            lsvItems.Items[i - 1].SubItems[3].Text = "粒子计数器流量";
-                            lsvItems.Items[i - 1].SubItems[4].Text = meter.State.ToString();
-                            lsvItems.Items[i - 1].SubItems[5].Text = meter.Quality.ToString();
+                            else
+                            {
+                                lsvItems.Items[i - 1].SubItems[0].Text = meter.ID.ToString();
+                                lsvItems.Items[i - 1].SubItems[1].Text = meter.Value.ToString();
+                                lsvItems.Items[i - 1].SubItems[3].Text = "粒子计数器流量";
+                                lsvItems.Items[i - 1].SubItems[4].Text = meter.State.ToString();
+                                lsvItems.Items[i - 1].SubItems[5].Text = meter.Quality.ToString();
+                            }
                         }
-                    }
 
 
                 switch (Program.M.ConnectionState)
