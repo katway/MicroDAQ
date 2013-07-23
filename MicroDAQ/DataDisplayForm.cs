@@ -16,10 +16,10 @@ namespace MicroDAQ
         {
             InitializeComponent();
             
-        }  
+        } 
         
         SqlConnection connection = null;      
-        ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionState;    
+        //ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionState;    
         #region PLC与OPCMES即时数据的显示
         private void btnInstant_Click(object sender, EventArgs e)
         {
@@ -127,11 +127,11 @@ namespace MicroDAQ
                         {
                             foreach (Item item in mgr.Items)
                             {
-                                Item meter = item;
+                                Item meter = item;                                
                                 row["PLC数据值1"] = meter.Value.ToString();
                                 row["PLC设备类型"] = meter.Type.ToString();
                                 row["PLC状态"] = meter.State.ToString();
-                                row["plc可信度"] = meter.Quality.ToString();
+                                row["PLC可信度"] = meter.Quality.ToString();
                             }
                         }
                         dtItems.Rows.Add(row);
@@ -226,9 +226,9 @@ namespace MicroDAQ
             }
             for (int i = 0; i < sqlcon.Count;i++ )
             {
-                connection=sqlcon[0];           
+                connection=sqlcon[0];          
                
-            }      
+            }     
             
             bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
             bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);

@@ -61,9 +61,13 @@ namespace MicroDAQ
                 {
                     PLCStationInformation plc = new PLCStationInformation();
                     Plcs.Add(plc);
-                    plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);
-                }
+                    plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);                 
 
+                }       
+    
+                
+
+             
             }
             catch (Exception ex)
             {
@@ -90,7 +94,6 @@ namespace MicroDAQ
                 wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
                 wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
                 realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
-
                 if (SyncOpc.AddGroup("Groups"))
                 {
                     #region 是否多组,有几组
@@ -131,7 +134,8 @@ namespace MicroDAQ
                     for (int i = 0; i < Plcs.Count; i++)
                     {
                         itemHandle = new int[Plcs[i].PairsNumber];
-                        values = new object[Plcs[i].PairsNumber];
+                        values = new object[Plcs[i].PairsNumber];                  
+
                         if (SyncOpc.AddItems("Groups", getItemsNumber[i], itemHandle))
                         {
                             SyncOpc.SyncRead("Groups", values, itemHandle);
@@ -141,6 +145,24 @@ namespace MicroDAQ
                                 ushort[] value = (ushort[])values[j];
                                 Plcs[i].ItemsNumber[j].BigItems = value[0];
                                 Plcs[i].ItemsNumber[j].SmallItems = value[1];
+
+                                //新添加状态栏内容
+                                tssddbPLC.DropDownItems.Add(Plcs[i].Connection);
+
+                                foreach(ToolStripItem tsiItem in tssddbPLC.DropDownItems)
+                                {
+                                    ToolStripMenuItem ti = tsiItem as ToolStripMenuItem;
+                                    if (ti != null && ti.Text == Plcs[i].Connection)
+                                    {
+                                        ti.DropDownItems.Add("20字节监测点数量： "+value[0].ToString());
+                                        ti.DropDownItems.Add("10字节检测点数量： "+value[1].ToString());
+                                    }
+
+                                }
+
+
+
+
                             }
                         }
                     }
@@ -169,7 +191,6 @@ namespace MicroDAQ
                 for (int i = 0; i < Plcs.Count; i++)
                 {
                     PLCStationInformation plc = Plcs[i];
-
                     //遍历PLC中所有DB组
                     for (int j = 0; j < plc.ItemsNumber.Length; j++)
                     {
@@ -265,7 +286,7 @@ namespace MicroDAQ
             //Thread.Sleep(Program.waitMillionSecond);
             SyncOpc = new OPCServer();
             string pid = ini.GetValue(opcServerType, "ProgramID");
-            //if (SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1"))
+            //if(SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1"))
             if (SyncOpc.Connect(pid, "127.0.0.1"))
                 if (ReadConfig())
                     if (CreateItems())
@@ -393,7 +414,8 @@ namespace MicroDAQ
                 (frmDataDisplay = new DataDisplayForm()).Show();
             }
 
-        }
+        }        
+       
 
     }
 
