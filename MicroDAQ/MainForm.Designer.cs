@@ -41,13 +41,13 @@
             this.tsslUpdate = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslRemote = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslPLC = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tssddbPLC = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ni = new System.Windows.Forms.NotifyIcon(this.components);
             this.cmsNI = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.退出EToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.splitter2 = new System.Windows.Forms.Splitter();
-            this.tssddbPLC = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pcb)).BeginInit();
             this.stspMain.SuspendLayout();
             this.cmsNI.SuspendLayout();
@@ -148,6 +148,22 @@
             this.tsslPLC.Size = new System.Drawing.Size(71, 17);
             this.tsslPLC.Text = "PLC的数量：";
             // 
+            // tssddbPLC
+            // 
+            this.tssddbPLC.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tssddbPLC.Image = ((System.Drawing.Image)(resources.GetObject("tssddbPLC.Image")));
+            this.tssddbPLC.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tssddbPLC.Name = "tssddbPLC";
+            this.tssddbPLC.Size = new System.Drawing.Size(29, 20);
+            this.tssddbPLC.Text = "PLC的显示数量";           
+
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(131, 12);
+            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            // 
             // ni
             // 
             this.ni.ContextMenuStrip = this.cmsNI;
@@ -184,21 +200,6 @@
             this.splitter2.Size = new System.Drawing.Size(3, 257);
             this.splitter2.TabIndex = 9;
             this.splitter2.TabStop = false;
-            // 
-            // tssddbPLC
-            // 
-            this.tssddbPLC.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tssddbPLC.Image = ((System.Drawing.Image)(resources.GetObject("tssddbPLC.Image")));
-            this.tssddbPLC.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tssddbPLC.Name = "tssddbPLC";
-            this.tssddbPLC.Size = new System.Drawing.Size(29, 20);
-            this.tssddbPLC.Text = "PLC的显示数量";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(131, 12);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
             // MainForm
             // 

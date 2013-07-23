@@ -12,6 +12,10 @@ namespace MicroDAQ.Database
         public DatabaseManage()
             : this(@"VWINTECH-201\SQL2000", "3306", "opcmes3", "sa", "")
         { }
+        ~DatabaseManage()
+        {
+            Console.WriteLine();
+        }
         //opcmes2_bdgk_test
         public SqlConnection GetdataConnection { get; set; }
         public SqlConnection UpdateConnection { get; set; }

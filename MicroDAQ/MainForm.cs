@@ -61,12 +61,10 @@ namespace MicroDAQ
                 {
                     PLCStationInformation plc = new PLCStationInformation();
                     Plcs.Add(plc);
-                    plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);                 
+                    plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);               
 
-                }       
-    
-                
-
+                }           
+                              
              
             }
             catch (Exception ex)
@@ -102,7 +100,7 @@ namespace MicroDAQ
                     {
                         getPairsConfigItems[i] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 26, 2);
                     }
-                    //获取是否多组的数据,并转存到PlcStation列表里
+                   //获取是否多组的数据,并转存到PlcStation列表里
                     int[] itemHandle = new int[Plcs.Count];
                     object[] values = new object[Plcs.Count];
                     if (SyncOpc.AddItems("Groups", getPairsConfigItems, itemHandle))
@@ -144,30 +142,12 @@ namespace MicroDAQ
                             {
                                 ushort[] value = (ushort[])values[j];
                                 Plcs[i].ItemsNumber[j].BigItems = value[0];
-                                Plcs[i].ItemsNumber[j].SmallItems = value[1];
-
-                                //新添加状态栏内容
-                                tssddbPLC.DropDownItems.Add(Plcs[i].Connection);
-
-                                foreach(ToolStripItem tsiItem in tssddbPLC.DropDownItems)
-                                {
-                                    ToolStripMenuItem ti = tsiItem as ToolStripMenuItem;
-                                    if (ti != null && ti.Text == Plcs[i].Connection)
-                                    {
-                                        ti.DropDownItems.Add("20字节监测点数量： "+value[0].ToString());
-                                        ti.DropDownItems.Add("10字节检测点数量： "+value[1].ToString());
-                                    }
-
-                                }
-
-
-
+                                Plcs[i].ItemsNumber[j].SmallItems = value[1];                            
 
                             }
                         }
                     }
-                    #endregion
-                    //boolReadConfig = true;
+                    #endregion               
                     success = true;
                 }
 
@@ -285,15 +265,42 @@ namespace MicroDAQ
         {
             //Thread.Sleep(Program.waitMillionSecond);
             SyncOpc = new OPCServer();
-            string pid = ini.GetValue(opcServerType, "ProgramID");
-            //if(SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1"))
+            string pid = ini.GetValue(opcServerType, "ProgramID");           
             if (SyncOpc.Connect(pid, "127.0.0.1"))
                 if (ReadConfig())
                     if (CreateItems())
                     {
                         Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
                         Program.opcGateway.Start();
-                    }
+
+                        //添加获取采集点的数量
+                        for (int i = 0; i < Plcs.Count; i++)
+                        {
+                            PLCStationInformation plc = Plcs[i];
+                            for (int j = 0; j < plc.ItemsNumber.Length; j++)
+                            {
+                                PLCStationInformation.ConfigItemsNumber num = plc.ItemsNumber[j];
+
+                                tssddbPLC.DropDownItems.Add(Plcs[i].Connection);
+                                foreach (ToolStripItem tsiItem in tssddbPLC.DropDownItems)
+                                {
+                                    ToolStripMenuItem ti = tsiItem as ToolStripMenuItem;
+                                    if (ti != null && ti.Text == Plcs[i].Connection)
+                                    {
+                                        ti.DropDownItems.Add("20字节监测点数量： " + num.BigItems.ToString());
+                                        ti.DropDownItems.Add("10字节检测点数量： " + num.SmallItems.ToString());
+                                       
+                                    }
+
+                                }
+
+                            }
+
+
+                        }
+
+                       
+                }
 
         }
 
@@ -363,7 +370,6 @@ namespace MicroDAQ
             }
         }
 
-
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
             switch (this.WindowState)
@@ -381,9 +387,7 @@ namespace MicroDAQ
         {
             if (MessageBox.Show("这将使数据采集系统退出运行状态，确定要退出吗？", "退出", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                     == System.Windows.Forms.DialogResult.Yes)
-            {
-                //if (UpdateCycle != null) UpdateCycle.SetExit = true;
-                //if (RemoteCtrl != null) RemoteCtrl.SetExit = true;
+            {                
                 this.Hide();
                 Program.BeQuit = true;
                 Thread.Sleep(200);
@@ -403,19 +407,20 @@ namespace MicroDAQ
                     break;
             }
         }
+
         Form frmDataDisplay = null;
         private void tsslMeters_Click(object sender, EventArgs e)
         {
             if (frmDataDisplay != null && !frmDataDisplay.IsDisposed)
                 frmDataDisplay.Show();
-
             else
             {
                 (frmDataDisplay = new DataDisplayForm()).Show();
             }
 
-        }        
-       
+        }   
+        
+
 
     }
 
