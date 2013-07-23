@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tmrRemoteCtrl = new System.Windows.Forms.Timer(this.components);
             this.bkwConnect = new System.ComponentModel.BackgroundWorker();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -82,9 +82,9 @@
             this.tabPage4.Controls.Add(this.label6);
             this.tabPage4.Controls.Add(this.dataGridView3);
             this.tabPage4.Controls.Add(this.button1);
-            this.tabPage4.Location = new System.Drawing.Point(4, 21);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(932, 547);
+            this.tabPage4.Size = new System.Drawing.Size(932, 546);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "指令查询";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -115,8 +115,8 @@
             this.dataGridView3.AllowUserToAddRows = false;
             this.dataGridView3.AllowUserToDeleteRows = false;
             this.dataGridView3.AllowUserToResizeRows = false;
-            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.dataGridView3.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.dataGridView3.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView3.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.dataGridView3.BackgroundColor = System.Drawing.SystemColors.Control;
@@ -129,8 +129,8 @@
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dataGridView3.RowHeadersVisible = false;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.dataGridView3.RowsDefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.dataGridView3.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView3.RowTemplate.Height = 23;
             this.dataGridView3.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView3.Size = new System.Drawing.Size(731, 547);
@@ -152,9 +152,9 @@
             this.tabPage3.Controls.Add(this.label5);
             this.tabPage3.Controls.Add(this.btnRefreshDB);
             this.tabPage3.Controls.Add(this.dataGridView2);
-            this.tabPage3.Location = new System.Drawing.Point(4, 21);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(932, 547);
+            this.tabPage3.Size = new System.Drawing.Size(932, 546);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "配置情况";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -195,8 +195,8 @@
             this.dataGridView2.AllowUserToAddRows = false;
             this.dataGridView2.AllowUserToDeleteRows = false;
             this.dataGridView2.AllowUserToResizeRows = false;
-            dataGridViewCellStyle15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.dataGridView2.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.dataGridView2.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView2.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.dataGridView2.BackgroundColor = System.Drawing.SystemColors.Control;
@@ -209,8 +209,8 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dataGridView2.RowHeadersVisible = false;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.dataGridView2.RowsDefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.dataGridView2.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView2.RowTemplate.Height = 23;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView2.Size = new System.Drawing.Size(734, 547);
@@ -222,10 +222,10 @@
             this.tabPage2.Controls.Add(this.btnAdd);
             this.tabPage2.Controls.Add(this.textBox1);
             this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 21);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(932, 547);
+            this.tabPage2.Size = new System.Drawing.Size(932, 546);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "测试报警灯";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -278,10 +278,10 @@
             this.tabPage1.Controls.Add(this.labOPCState);
             this.tabPage1.Controls.Add(this.btnInstant);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 21);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(932, 547);
+            this.tabPage1.Size = new System.Drawing.Size(932, 546);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "数据查询";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -291,8 +291,8 @@
             this.dgvDB.AllowUserToAddRows = false;
             this.dgvDB.AllowUserToDeleteRows = false;
             this.dgvDB.AllowUserToResizeRows = false;
-            dataGridViewCellStyle17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.dgvDB.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.dgvDB.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.dgvDB.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgvDB.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
             this.dgvDB.BackgroundColor = System.Drawing.SystemColors.Control;
@@ -305,11 +305,11 @@
             this.dgvDB.Name = "dgvDB";
             this.dgvDB.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dgvDB.RowHeadersVisible = false;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.dgvDB.RowsDefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.dgvDB.RowsDefaultCellStyle = dataGridViewCellStyle6;
             this.dgvDB.RowTemplate.Height = 23;
             this.dgvDB.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDB.Size = new System.Drawing.Size(732, 541);
+            this.dgvDB.Size = new System.Drawing.Size(732, 540);
             this.dgvDB.TabIndex = 51;
             // 
             // labDBState
