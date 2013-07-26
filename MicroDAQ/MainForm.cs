@@ -46,7 +46,7 @@ namespace MicroDAQ
         {
             ni.Icon = this.Icon;
             ni.Text = this.Text;
-
+            
             bool autoStart = false;
             try
             {
@@ -61,9 +61,9 @@ namespace MicroDAQ
                 {
                     PLCStationInformation plc = new PLCStationInformation();
                     Plcs.Add(plc);
-                    plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);               
+                    plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);            
 
-                }           
+                }          
                               
              
             }
