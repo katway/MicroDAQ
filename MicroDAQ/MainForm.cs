@@ -224,7 +224,25 @@ namespace MicroDAQ
                 {
                     Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
                 }
-                if (Program.M_flowAlert != null)
+
+            #region 瑞阳304 122,123点
+            float value124 = 0, value125 = 0;
+            foreach (var item in Program.M_flowAlert.Items)
+            {
+                if (item.ID == 124)
+                    value124 = item.Value;
+                if (item.ID == 125)
+                    value125 = item.Value;
+            }
+            for (int i = 0; i < Program.M_flowAlert.Items.Count; i++)
+            {
+                if (Program.M_flowAlert.Items[i].ID == 122)
+                    Program.M_flowAlert.Items[i].Value = value124;
+                if (Program.M_flowAlert.Items[i].ID == 123)
+                    Program.M_flowAlert.Items[i].Value = value125;
+            }
+            #endregion
+
                     foreach (var item in Program.M_flowAlert.Items)
                     {
                         float t = 0.0f;
