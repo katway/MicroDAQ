@@ -61,11 +61,11 @@ namespace MicroDAQ
                 {
                     PLCStationInformation plc = new PLCStationInformation();
                     Plcs.Add(plc);
-                    plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);               
+                    plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);
 
-                }           
-                              
-             
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -100,7 +100,7 @@ namespace MicroDAQ
                     {
                         getPairsConfigItems[i] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 26, 2);
                     }
-                   //获取是否多组的数据,并转存到PlcStation列表里
+                    //获取是否多组的数据,并转存到PlcStation列表里
                     int[] itemHandle = new int[Plcs.Count];
                     object[] values = new object[Plcs.Count];
                     if (SyncOpc.AddItems("Groups", getPairsConfigItems, itemHandle))
@@ -132,7 +132,7 @@ namespace MicroDAQ
                     for (int i = 0; i < Plcs.Count; i++)
                     {
                         itemHandle = new int[Plcs[i].PairsNumber];
-                        values = new object[Plcs[i].PairsNumber];                  
+                        values = new object[Plcs[i].PairsNumber];
 
                         if (SyncOpc.AddItems("Groups", getItemsNumber[i], itemHandle))
                         {
@@ -142,12 +142,12 @@ namespace MicroDAQ
                             {
                                 ushort[] value = (ushort[])values[j];
                                 Plcs[i].ItemsNumber[j].BigItems = value[0];
-                                Plcs[i].ItemsNumber[j].SmallItems = value[1];                            
+                                Plcs[i].ItemsNumber[j].SmallItems = value[1];
 
                             }
                         }
                     }
-                    #endregion               
+                    #endregion
                     success = true;
                 }
 
@@ -242,7 +242,7 @@ namespace MicroDAQ
                 foreach (string dbName in dbs)
                 {
                     DatabaseManage dbm = new DatabaseManage(ini.GetValue(dbName, "Address"),
-                                                                 ini.GetValue(dbName, "Port"),
+                                                                 ini.GetValue(dbName, "PersistSecurityInfo"),
                                                                  ini.GetValue(dbName, "Database"),
                                                                  ini.GetValue(dbName, "Username"),
                                                                  ini.GetValue(dbName, "Password"));
@@ -265,7 +265,7 @@ namespace MicroDAQ
         {
             //Thread.Sleep(Program.waitMillionSecond);
             SyncOpc = new OPCServer();
-            string pid = ini.GetValue(opcServerType, "ProgramID");           
+            string pid = ini.GetValue(opcServerType, "ProgramID");
             if (SyncOpc.Connect(pid, "127.0.0.1"))
                 if (ReadConfig())
                     if (CreateItems())
@@ -289,7 +289,7 @@ namespace MicroDAQ
                                     {
                                         ti.DropDownItems.Add("20字节监测点数量： " + num.BigItems.ToString());
                                         ti.DropDownItems.Add("10字节检测点数量： " + num.SmallItems.ToString());
-                                       
+
                                     }
 
                                 }
@@ -299,8 +299,8 @@ namespace MicroDAQ
 
                         }
 
-                       
-                }
+
+                    }
 
         }
 
@@ -387,7 +387,7 @@ namespace MicroDAQ
         {
             if (MessageBox.Show("这将使数据采集系统退出运行状态，确定要退出吗？", "退出", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                     == System.Windows.Forms.DialogResult.Yes)
-            {                
+            {
                 this.Hide();
                 Program.BeQuit = true;
                 Thread.Sleep(200);
@@ -418,8 +418,8 @@ namespace MicroDAQ
                 (frmDataDisplay = new DataDisplayForm()).Show();
             }
 
-        }   
-        
+        }
+
 
 
     }

@@ -240,9 +240,7 @@ namespace MicroDAQ
             bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
             bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
             bkwConnect.RunWorkerAsync();
-
-            if (Program.opcGateway != null)
-                Program.opcGateway.Stop();             
+     
                       
         }   
         //打开数据库连接

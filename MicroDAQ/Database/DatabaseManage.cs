@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace MicroDAQ.Database
 {
@@ -20,16 +21,32 @@ namespace MicroDAQ.Database
         public SqlConnection GetdataConnection { get; set; }
         public SqlConnection UpdateConnection { get; set; }
         public string ConnectionString;
-        public DatabaseManage(string svrAddress, string port, string dbName, string dbUser, string dbUserPassword)
+        public DatabaseManage(string svrAddress, string persistSecurityInfo, string dbName, string dbUser, string dbUserPassword)
         {
             if (instanceFlag)
             { throw new Exception("不允许创建多实例"); }
             else
             {
-                ConnectionString = string.Format("Data Source={0};Initial Catalog={2};User Id={3};Password={4};", svrAddress, port, dbName, dbUser, dbUserPassword);
+                SqlConnectionStringBuilder bldr = new SqlConnectionStringBuilder();
+
+                var csb = typeof(SqlConnectionStringBuilder).GetProperty("DataSource");
+                csb.GetSetMethod().Invoke(bldr, new object[] { svrAddress });
+                csb = typeof(SqlConnectionStringBuilder).GetProperty("InitialCatalog");
+                csb.GetSetMethod().Invoke(bldr, new object[] { dbName });
+
+                csb = typeof(SqlConnectionStringBuilder).GetProperty("UserID");
+                csb.GetSetMethod().Invoke(bldr, new object[] { dbUser });
+
+                csb = typeof(SqlConnectionStringBuilder).GetProperty("Password");
+                csb.GetSetMethod().Invoke(bldr, new object[] { dbUserPassword });
+                bldr.PersistSecurityInfo = bool.Parse(persistSecurityInfo);
+
+                ConnectionString = string.Format("Data Source={0};PersistSecurityInfo={1};Initial Catalog={2};User Id={3};Password={4};", svrAddress, persistSecurityInfo, dbName, dbUser, dbUserPassword);
                 //ConnectionString = string.Format("server={0};port={1};database={2};uid={3};pwd={4};charset=utf8;", svrAddress, port, dbName, dbUser, dbUserPassword);
                 GetdataConnection = new SqlConnection(ConnectionString);
+                GetdataConnection = new SqlConnection(bldr.ConnectionString);
                 UpdateConnection = new SqlConnection(ConnectionString);
+                UpdateConnection = new SqlConnection(bldr.ConnectionString);
                 getRemoteAdapter = new SqlDataAdapter("SELECT * FROM v_remotecontrol WITH(nolock) WHERE cmdstate=1 AND ID IS NOT NULL AND cycle is not null", GetdataConnection);
                 getRemoteControl = new SqlCommand();
 
