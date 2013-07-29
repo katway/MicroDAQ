@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("MicroDAQ")]
-[assembly: AssemblyDescription("数据刷新时间300ms")]
+[assembly: AssemblyDescription("瑞阳304车间专用")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("K")]
+[assembly: AssemblyCompany("维远泰克科技有限公司")]
 [assembly: AssemblyProduct("MicroDAQ")]
 [assembly: AssemblyCopyright("Copyright © K 2012")]
 [assembly: AssemblyTrademark("")]
