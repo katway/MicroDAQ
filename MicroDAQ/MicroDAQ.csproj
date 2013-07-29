@@ -62,23 +62,19 @@
     <StartupObject>MicroDAQ.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Automatic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\Automatic.dll</HintPath>
+    <Reference Include="Automatic">
+      <HintPath>..\..\..\Project\JonLibrary\Automatic\bin\Release\Automatic.dll</HintPath>
     </Reference>
-    <Reference Include="JonLibrary, Version=1.0.4546.17827, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Release\JonLibrary.dll</HintPath>
+    <Reference Include="JonLibrary">
+      <HintPath>..\..\..\Project\JonLibrary\JonLibrary\bin\Release\JonLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="OpcRcw.Comn, Version=1.10.1.21, Culture=neutral, PublicKeyToken=9a40e993cbface53">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="OpcRcw.Comn">
+      <HintPath>..\..\..\Project\JonLibrary\JonLibrary\bin\Release\OpcRcw.Comn.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>bin\Release\OpcRcw.Comn.dll</HintPath>
     </Reference>
-    <Reference Include="OpcRcw.Da, Version=3.0.2.22, Culture=neutral, PublicKeyToken=9a40e993cbface53">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="OpcRcw.Da">
+      <HintPath>..\..\..\Project\JonLibrary\JonLibrary\bin\Release\OpcRcw.Da.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>bin\Release\OpcRcw.Da.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

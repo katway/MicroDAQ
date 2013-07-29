@@ -27,6 +27,28 @@ namespace MicroDAQ
 
             }
             #endregion
+
+            #region 处理来自参数的调整模式请求，不使用错误捕获和重新启动
+            foreach (string arg in args)
+            {
+                if (arg.Contains("debug"))
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+
+                    Form MainForm = null;
+                    while (!BeQuit)
+                    {
+                        MainForm = new MainForm();
+                        Application.Run(MainForm);
+                        if (MainForm != null) MainForm.Dispose();
+                    }
+                    Environment.Exit(Environment.ExitCode);
+                    break;
+                }
+
+            }
+            #endregion
             bool createNew;
             //try
             //{
