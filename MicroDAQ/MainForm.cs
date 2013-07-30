@@ -225,34 +225,37 @@ namespace MicroDAQ
                     Program.DatabaseManager.UpdateMeterValue(item.ID, (int)item.Type, (int)item.State, (float)item.Value, 0.0f, 0.0f, item.Quality);
                 }
 
-            #region 瑞阳304 122,123点
-            float value124 = 0, value125 = 0;
-            foreach (var item in Program.M_flowAlert.Items)
-            {
-                if (item.ID == 124)
-                    value124 = item.Value;
-                if (item.ID == 125)
-                    value125 = item.Value;
-            }
-            for (int i = 0; i < Program.M_flowAlert.Items.Count; i++)
-            {
-                if (Program.M_flowAlert.Items[i].ID == 122)
-                    Program.M_flowAlert.Items[i].Value = value124;
-                if (Program.M_flowAlert.Items[i].ID == 123)
-                    Program.M_flowAlert.Items[i].Value = value125;
-            }
-            #endregion
+                #region 瑞阳304 122,123点
+                DataItem item124 = null;
+                DataItem item120 = null;
+                foreach (var item in Program.M_flowAlert.Items)
+                {
+                    if (item.ID == 120)
+                        item120 = item;
+                    if (item.ID == 124)
+                        item124 = item;
+                }
 
-                    foreach (var item in Program.M_flowAlert.Items)
-                    {
-                        float t = 0.0f;
-                        if ((item.Value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
-                            t = 28.3f;
-                        if (item.Value == 2)
-                            t = 0.0f;
-                        Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
-                        Console.WriteLine(item.ToString());
-                    }
+                foreach (var item in Program.M_flowAlert.Items)
+                {
+                    float value = item.Value;
+                    
+                    if ((item.ID == 122) | (item.ID == 123))
+                        if (item124 != null) value = item124.Value;
+                    if ((item.ID >= 126) & (item.ID <= 129))
+                        if (item120 != null) value = item120.Value;
+
+                    float flow = 0.0f;
+                    if ((value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                        flow = 28.3f;
+                    if (value == 2)
+                        flow = 0.0f;
+                    Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, flow, 0.0f, 0.0f, item.Quality);
+                    Console.WriteLine(item.ToString());
+                }
+
+               
+                #endregion
             }
             catch
             { }
