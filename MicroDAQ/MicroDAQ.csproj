@@ -101,7 +101,9 @@
     <Compile Include="Database\IDatabaseManage.cs" />
     <Compile Include="DataItem\Item.cs" />
     <Compile Include="DataItem\IDataItemManage.cs" />
-    <Compile Include="DataItem\ModbusDataItemManager.cs" />
+    <Compile Include="DataItem\IPMasterManager.cs" />
+    <Compile Include="DataItem\PackageDataItemManager.cs" />
+    <Compile Include="DataItem\SerialPortMasterManager.cs" />
     <Compile Include="FlowAlertManager.cs" />
     <Compile Include="DataItem\DataItemManager.cs" />
     <Compile Include="DataDisplayForm.cs">
@@ -113,6 +115,7 @@
     <Compile Include="Gateway\GatewayBase.cs" />
     <Compile Include="Gateway\IGateway.cs" />
     <Compile Include="Gateway\ModbusGateway.cs" />
+    <Compile Include="Gateway\PackageGateway.cs" />
     <Compile Include="Gateway\RunningState.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -210,6 +213,10 @@
     <ProjectReference Include="..\ModbusLibrary\ModbusLibrary.csproj">
       <Project>{8C1B7762-323A-44E8-A3B0-E1E3F6DF404D}</Project>
       <Name>ModbusLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Modbus\Modbus.csproj">
+      <Project>{FF96B252-2B24-44A1-A09C-6401B5D7ED23}</Project>
+      <Name>Modbus</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpcOperate\OpcOperate.csproj">
       <Project>{D4092C70-56FE-45CA-AA8C-951BF10C3555}</Project>

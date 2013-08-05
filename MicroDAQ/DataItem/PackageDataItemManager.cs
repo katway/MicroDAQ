@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace MicroDAQ.DataItem
 {
-   public class ModbusDataItemManager:IDataItemManage
+   public class PackageDataItemManager:IDataItemManage
     {
 
         public IList<Item> Items { get; set; }
@@ -24,7 +24,7 @@ namespace MicroDAQ.DataItem
         /// <param name="ModbusType">组件类型</param>
         /// <param name="slave">地址</param>
         /// <param name="dic">id和属性名称</param>
-       public ModbusDataItemManager(string ModbusType, byte slave, Dictionary<int, string> dic, SerialPort port)
+       public PackageDataItemManager(string ModbusType, byte slave, Dictionary<int, string> dic, SerialPort port)
         {
             serialPort = port;
             type = ModbusType;
