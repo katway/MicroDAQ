@@ -105,7 +105,8 @@ namespace MicroDAQ.DataItem
         }
         private int ProCommandState(int serialID,string state)
         {
-            SqlCommand command = new SqlCommand("RecordCommandLog", Connection);
+            SqlCommand command = new SqlCommand("proc_RecordCommandLog", Connection);
+            Connection.Open();
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@serialID ", SqlDbType.Int));
             command.Parameters.Add(new SqlParameter("@State ", SqlDbType.VarChar, 10));
@@ -113,6 +114,7 @@ namespace MicroDAQ.DataItem
             command.Parameters["@serialID "].Value = serialID;
             command.Parameters["@State "].Value = state;
             int i = command.ExecuteNonQuery();
+            Connection.Close();
             return i;
 
         }

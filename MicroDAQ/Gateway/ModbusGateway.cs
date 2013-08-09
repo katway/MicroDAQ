@@ -36,7 +36,7 @@ namespace MicroDAQ.Gateway
         public CycleTask ModbusCycle { get; private set; }
         public ModbusGateway(IList<IDatabaseManage> databaseManagers)
         {
-            string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
+            string ConnectionString = "server=VWINTECH-201\\SQL2000;database=opcmes3;uid=sa;pwd=";
             Connection = new SqlConnection(ConnectionString);
             this.DatabaseManagers = databaseManagers;
             UpdateCycle = new CycleTask();
@@ -58,9 +58,11 @@ namespace MicroDAQ.Gateway
         public DataTable GetIPMasterDevice()
         {
             string sqlStr = "select a.SerialID,b.IP,b.Port,a.TransferType,a.slave from ModbusSlave a left join IPSetting b on a.IPSetting_SerialID=b.SerialID where a.Type='IP' order by a.TransferType,a.IPSetting_SerialID ";
+            Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr,Connection);
             DataSet ds = new DataSet();
             da.Fill(ds);
+            Connection.Close();
             return ds.Tables[0];
            
         }
@@ -70,10 +72,13 @@ namespace MicroDAQ.Gateway
         /// <returns></returns>
         public DataTable GetSerialMasterDevice()
         {
-            string sqlStr = "select a.SerialID,b.BaudRate,b.Databits,b.Parity,b.Stopbits,c.PortName,a.TransferType,a.slave from ModbusSlave a left join SerialPortSetting b on a.SerialPortSetting_SerialID=b.SerialID left join SerialPort c on a.SerialPort_SerialID=c.SerialID where a.Type='serialPort' order by a.TransferType,a.IPSetting_SerialID  ";
+           
+            string sqlStr = "select a.SerialID,b.BaudRate,b.Databits,b.Parity,b.Stopbits,c.PortName,a.TransferType,a.slave from ModbusSlave a left join SerialPortSetting b on a.SerialPortSetting_SerialID=b.SerialID left join SerialPort c on a.SerialPort_SerialID=c.SerialID where a.Type='serialPort' order by a.TransferType,a.SerialPortSetting_SerialID,c.SerialID  ";
+            Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();
             da.Fill(ds);
+            Connection.Close();
             return ds.Tables[0];
         }
         /// <summary>
@@ -83,9 +88,11 @@ namespace MicroDAQ.Gateway
         public DataTable IPMasterGroupCount()
         {
             string sqlStr = "select COUNT(*) count from ModbusSlave a left join IPSetting b on a.IPSetting_SerialID=b.SerialID where a.Type='IP' group by a.TransferType,a.IPSetting_SerialID order by  a.TransferType,a.IPSetting_SerialID ";
+            Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();
             da.Fill(ds);
+            Connection.Close();
             return ds.Tables[0];
         }
         /// <summary>
@@ -94,10 +101,12 @@ namespace MicroDAQ.Gateway
         /// <returns></returns>
         public DataTable SerialMasterGroupCount()
         {
-            string sqlStr = "select COUNT(*) count from ModbusSlave a left join SerialPortSetting b on a.SerialPortSetting_SerialID=b.SerialID left join SerialPort c on a.SerialPort_SerialID=c.SerialID where a.Type='SerialPort' group by a.TransferType,a.IPSetting_SerialID order by  a.TransferType,a.IPSetting_SerialID ";
+            string sqlStr = "select COUNT(*) count from ModbusSlave a left join SerialPortSetting b on a.SerialPortSetting_SerialID=b.SerialID left join SerialPort c on a.SerialPort_SerialID=c.SerialID where a.Type='SerialPort' group by a.TransferType,a.SerialPortSetting_SerialID,c.SerialID order by  a.TransferType,a.SerialPortSetting_SerialID,c.SerialID ";
+            Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();
             da.Fill(ds);
+            Connection.Close();
             return ds.Tables[0];
 
         }
@@ -116,9 +125,11 @@ namespace MicroDAQ.Gateway
         private DataTable GetCommandsByID(int deviceID)
         {
             string sqlStr = "select * from  ModbusCommands a left join RegisterType b on a.RegisterType=b.SerialID  where a.ModbusSlave_SerialID=" + deviceID;
+            Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();
             da.Fill(ds);
+            Connection.Close();
             return ds.Tables[0];
         }
         /// <summary>
@@ -140,9 +151,11 @@ namespace MicroDAQ.Gateway
                     sqlStr += Convert.ToInt32(dt.Rows[i]["SerialID"]) + ")";
                 }
             }
+            Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();
             da.Fill(ds);
+            Connection.Close();
             return ds.Tables[0];
         }
         #endregion
@@ -495,6 +508,7 @@ namespace MicroDAQ.Gateway
         }
         #endregion
 
+        #region 日志存储过程
         private int ProCommandState(int serialID)
         {
             SqlCommand command = new SqlCommand("RecordCommandLogByDeviceID", Connection);
@@ -508,5 +522,6 @@ namespace MicroDAQ.Gateway
             return i;
 
         }
+        #endregion
     }
 }

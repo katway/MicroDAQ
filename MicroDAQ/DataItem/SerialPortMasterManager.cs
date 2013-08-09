@@ -42,7 +42,7 @@ namespace MicroDAQ.DataItem
                 ushort adress = Convert.ToUInt16(dtCommands.Rows[i]["RegesiterAddress"]);
                 ushort length = Convert.ToUInt16(dtCommands.Rows[i]["Length"]);
                 int serialID = Convert.ToInt32(dtCommands.Rows[i]["SerialID"]);
-                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + serialID,"Address ASC");
+                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + serialID,"Address ASC");//一条命令所对应的原始数据表数据
                 ushort[] values = new ushort[length];
                 int index=0;//values 索引
                 try
@@ -52,12 +52,12 @@ namespace MicroDAQ.DataItem
                     else
                     { values = SerialMaster.ReadInputRegisters(slaveAddress, adress, length); }
                     //存储过程
-                    ProCommandState(serialID, "true");
+                   // ProCommandState(serialID, "true");
                 }
                 catch
                 {
                     //存储过程
-                    ProCommandState(serialID, "false");
+                   // ProCommandState(serialID, "false");
                     return;
                 }
                 for (int j = 0; j < rows.Length; j++)
