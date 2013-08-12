@@ -78,7 +78,8 @@ namespace MicroDAQ
             }
             ni.Text = this.Text;
         }
-
+         
+        #region 旧版
         /// <summary>
         /// 读取配置
         /// </summary>
@@ -148,6 +149,7 @@ namespace MicroDAQ
                         }
                     }
                     #endregion
+                    //boolReadConfig = true;
                     success = true;
                 }
 
@@ -160,8 +162,9 @@ namespace MicroDAQ
             return success;
         }
         /// <summary>
-        /// 创建Items项
+        /// 创建Item
         /// </summary>
+        /// <returns></returns>
         private bool CreateItems()
         {
             bool success = false;
@@ -171,6 +174,7 @@ namespace MicroDAQ
                 for (int i = 0; i < Plcs.Count; i++)
                 {
                     PLCStationInformation plc = Plcs[i];
+
                     //遍历PLC中所有DB组
                     for (int j = 0; j < plc.ItemsNumber.Length; j++)
                     {
@@ -200,6 +204,77 @@ namespace MicroDAQ
             }
             return success;
         }
+        #endregion
+
+        //#region 新添加的
+        ///// <summary>
+        ///// 创建监测点的Item
+        ///// </summary>
+        ///// <returns></returns>
+        //private bool CreateItems()
+        //{
+        //    wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
+        //    wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
+        //    realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
+        //    bool success = false;
+        //    try
+        //    {
+        //        DataTable dtDBWord = GetDBWord();
+        //        DataTable dtDBReal = GetDBReal();
+        //        for (int i = 0; i < Plcs.Count; i++)
+        //        {
+        //            PLCStationInformation plc = Plcs[i];
+        //            DataRow[] wordRows = dtDBWord.Select("link_id=" + i);
+        //            DataRow[] realRows = dtDBReal.Select("link_id=" + i);
+        //            for (int j = 0; j < wordRows.Length; j++)
+        //            {
+        //                plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, wordRows[j]["DB"], wordRows[j]["Word"], wordRows[j]["Length"]));
+        //            }
+        //            for (int j = 0; j < realRows.Length; j++)
+        //            {
+        //                plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, realRows[j]["DB"], realRows[j]["Real"]));
+        //            }
+        //        }
+        //        success = true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.Error(ex);
+        //    }
+        //    return success;
+        //}
+
+        ///// <summary>
+        ///// 从数据库读取DB块
+        ///// </summary>
+        ///// <returns></returns>
+        //private DataTable GetDBWord()
+        //{
+        //    string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
+        //    SqlConnection Connection = new SqlConnection(ConnectionString);
+        //    string sqlWord = "select * from DBWord ";
+        //    Connection.Open();
+        //    SqlDataAdapter daWord = new SqlDataAdapter(sqlWord, Connection);
+        //    DataSet dsWord = new DataSet();
+        //    daWord.Fill(dsWord);
+        //    Connection.Close();
+        //    return dsWord.Tables[0];
+        //}
+        //private DataTable GetDBReal()
+        //{
+        //    string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
+        //    SqlConnection Connection = new SqlConnection(ConnectionString);
+        //    string sqlReal = "select * from DBReal ";
+        //    Connection.Open();
+        //    SqlDataAdapter daReal = new SqlDataAdapter(sqlReal, Connection);
+        //    DataSet dsReal = new DataSet();
+        //    daReal.Fill(dsReal);
+        //    Connection.Close();
+        //    return dsReal.Tables[0];
+        //}
+
+        //#endregion
+
         /// <summary>
         /// 创建数据项管理器
         /// </summary>
@@ -226,7 +301,7 @@ namespace MicroDAQ
                 log.Error(ex);
             }
             if (success)
-                return listDataItemManger;
+                return listDataItemManger;          
             else
                 return null;
         }
@@ -266,12 +341,13 @@ namespace MicroDAQ
             //Thread.Sleep(Program.waitMillionSecond);
             SyncOpc = new OPCServer();
             string pid = ini.GetValue(opcServerType, "ProgramID");
-            if (SyncOpc.Connect(pid, "127.0.0.1"))
-                if (ReadConfig())
-                    if (CreateItems())
-                    {
-                        Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
-                        Program.opcGateway.Start();
+            //if (SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1"))
+                if (SyncOpc.Connect(pid, "127.0.0.1"))
+                    if (ReadConfig())
+                        if (CreateItems())
+                        {
+                            Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
+                            Program.opcGateway.Start();
 
                         //添加获取采集点的数量
                         for (int i = 0; i < Plcs.Count; i++)
@@ -300,7 +376,11 @@ namespace MicroDAQ
                         }
 
 
-                    }
+                        }
+            //PackageGateway modbus = new PackageGateway(createDBManagers());
+            //modbus.Start();
+            ModbusGateway modbus = new ModbusGateway(createDBManagers());
+            modbus.Start();
 
         }
 
@@ -309,7 +389,7 @@ namespace MicroDAQ
         {
             this.BeginInvoke(new MethodInvoker(delegate
             {
-                switch (state)
+                switch (state) 
                 {
                     case JonLibrary.Automatic.RunningState.Paused:
                         this.tsslRemote.Text = "P";
@@ -370,6 +450,7 @@ namespace MicroDAQ
             }
         }
 
+
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
             switch (this.WindowState)
@@ -388,6 +469,8 @@ namespace MicroDAQ
             if (MessageBox.Show("这将使数据采集系统退出运行状态，确定要退出吗？", "退出", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                     == System.Windows.Forms.DialogResult.Yes)
             {
+                //if (UpdateCycle != null) UpdateCycle.SetExit = true;
+                //if (RemoteCtrl != null) RemoteCtrl.SetExit = true;
                 this.Hide();
                 Program.BeQuit = true;
                 Thread.Sleep(200);
@@ -413,6 +496,7 @@ namespace MicroDAQ
         {
             if (frmDataDisplay != null && !frmDataDisplay.IsDisposed)
                 frmDataDisplay.Show();
+
             else
             {
                 (frmDataDisplay = new DataDisplayForm()).Show();

@@ -24,23 +24,30 @@ namespace MicroDAQ.Gateway
         /// <summary>
         /// 启动
         /// </summary>
-        public abstract void Start();
+        public virtual void Start()
+        { }
         /// <summary>
         /// 暂停
         /// </summary>
-        public abstract void Pause();
+        public virtual void Pause()
+        { }
         /// <summary>
         /// 继续
         /// </summary>
-        public abstract void Continue();
+        public virtual void Continue()
+        { }
         /// <summary>
         /// 停止
         /// </summary>
-        public abstract void Stop();
+        public virtual void Stop()
+        {
+
+        }
         /// <summary>
         /// 销毁并释放资源
         /// </summary>
-        public abstract void Dispose();
+        public virtual void Dispose()
+        { }
 
         protected void OnStateChanging()
         {
