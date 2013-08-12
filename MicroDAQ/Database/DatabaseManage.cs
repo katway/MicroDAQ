@@ -18,10 +18,10 @@ namespace MicroDAQ.Database
         public string ConnectionString;
         public DatabaseManage(string svrAddress, string port, string dbName, string dbUser, string dbUserPassword)
         {
-            if (instanceFlag)
-            { throw new Exception("不允许创建多实例"); }
-            else
-            {
+            //if (instanceFlag)
+            //{ throw new Exception("不允许创建多实例"); }
+            //else
+            //{
                 ConnectionString = string.Format("Data Source={0};Initial Catalog={2};User Id={3};Password={4};", svrAddress, port, dbName, dbUser, dbUserPassword);
                 //ConnectionString = string.Format("server={0};port={1};database={2};uid={3};pwd={4};charset=utf8;", svrAddress, port, dbName, dbUser, dbUserPassword);
                 GetdataConnection = new SqlConnection(ConnectionString);
@@ -31,7 +31,7 @@ namespace MicroDAQ.Database
 
                 GetdataConnection.StateChange += new StateChangeEventHandler(Connection_StateChange);
                 instanceFlag = true;
-            }
+            //}
         }
         SqlCommand getRemoteControl;
         void Connection_StateChange(object sender, StateChangeEventArgs e)

@@ -41,8 +41,8 @@ namespace MicroDAQ.DataItem
                 string regesiter = dtCommands.Rows[i]["RegisterName"].ToString();
                 ushort adress = Convert.ToUInt16(dtCommands.Rows[i]["RegesiterAddress"]);
                 ushort length = Convert.ToUInt16(dtCommands.Rows[i]["Length"]);
-                int serialID = Convert.ToInt32(dtCommands.Rows[i]["SerialID"]);
-                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + serialID,"Address ASC");//一条命令所对应的原始数据表数据
+                string serialID = dtCommands.Rows[i]["SerialID"].ToString();
+                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + "'"+serialID+"'","Address ASC");//一条命令所对应的原始数据表数据
                 ushort[] values = new ushort[length];
                 int index=0;//values 索引
                 try
