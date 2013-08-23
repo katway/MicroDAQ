@@ -38,7 +38,10 @@ Test
 *.dat
 
 *.exe
+#KDiff
 *.orig
+*~HEAD
 *.BASE
 *.LOCAL
 *.REMOTE
+
