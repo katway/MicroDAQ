@@ -240,7 +240,7 @@ namespace MicroDAQ
             { }
             finally
             {
-                Thread.Sleep(30000);
+                //Thread.Sleep(30000);
             }
         }
         int running;
