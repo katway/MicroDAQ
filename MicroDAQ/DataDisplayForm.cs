@@ -140,6 +140,60 @@ namespace MicroDAQ
                                 }
 
                             }
+                            foreach (SerialPortMasterManager mgr in Program.MobusGateway.SerialManagers)
+                            {
+                                foreach (Item meter in mgr.Items)
+                                {
+                                    if (tmp[0].ToString() == meter.ID.ToString())
+                                    {
+                                        DataRow row = NewTable.NewRow();
+                                        row["参数ID"] = tmp[0].ToString();
+                                        row["参数名称"] = tmp[1].ToString();
+                                        row["参数类型"] = tmp[2].ToString();
+                                        row["数据采集值1"] = tmp[3].ToString();
+                                        row["数据采集值2"] = tmp[4].ToString();
+                                        row["数据采集值3"] = tmp[5].ToString();
+                                        row["单位"] = tmp[6].ToString();
+                                        row["刷新时间"] = tmp[7].ToString();
+                                        row["存储点"] = tmp[8].ToString();
+
+                                        row["PLC的编号ID"] = meter.ID.ToString();
+                                        row["PLC数据值1"] = meter.Value.ToString();
+                                        row["PLC设备类型"] = meter.Type.ToString();
+                                        row["PLC状态"] = meter.State.ToString();
+                                        row["PLC可信度"] = meter.Quality.ToString();
+                                        NewTable.Rows.Add(row);
+                                    }
+                                }
+
+                            }
+                            foreach (IPMasterManager mgr in Program.MobusGateway.IPManagers)
+                            {
+                                foreach (Item meter in mgr.Items)
+                                {
+                                    if (tmp[0].ToString() == meter.ID.ToString())
+                                    {
+                                        DataRow row = NewTable.NewRow();
+                                        row["参数ID"] = tmp[0].ToString();
+                                        row["参数名称"] = tmp[1].ToString();
+                                        row["参数类型"] = tmp[2].ToString();
+                                        row["数据采集值1"] = tmp[3].ToString();
+                                        row["数据采集值2"] = tmp[4].ToString();
+                                        row["数据采集值3"] = tmp[5].ToString();
+                                        row["单位"] = tmp[6].ToString();
+                                        row["刷新时间"] = tmp[7].ToString();
+                                        row["存储点"] = tmp[8].ToString();
+
+                                        row["PLC的编号ID"] = meter.ID.ToString();
+                                        row["PLC数据值1"] = meter.Value.ToString();
+                                        row["PLC设备类型"] = meter.Type.ToString();
+                                        row["PLC状态"] = meter.State.ToString();
+                                        row["PLC可信度"] = meter.Quality.ToString();
+                                        NewTable.Rows.Add(row);
+                                    }
+                                }
+
+                            }
 
                         }              
                       
@@ -202,6 +256,8 @@ namespace MicroDAQ
                                 table.Rows.Add(row);
                             }
                         }
+                 
+
                         this.dgvDB.DataSource = table;
                     }
 

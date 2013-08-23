@@ -206,10 +206,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Nitrogen Icon 42.ico" />
+    <None Include="Resources\Icon1.ico" />
+    <None Include="Resources\Image1.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configuration\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ModbusLibrary\ModbusLibrary.csproj">

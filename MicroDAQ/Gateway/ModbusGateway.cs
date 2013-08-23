@@ -36,7 +36,7 @@ namespace MicroDAQ.Gateway
         public CycleTask ModbusCycle { get; private set; }
         public ModbusGateway(IList<IDatabaseManage> databaseManagers)
         {
-            string ConnectionString = "server=VWINTECH-201\\SQL2000;database=opcmes3;uid=sa;pwd=";
+            string ConnectionString = "server=.\\SQLEXPRESS;database=Modbusdb;uid=sa;pwd=sa";
             Connection = new SqlConnection(ConnectionString);
             this.DatabaseManagers = databaseManagers;
             UpdateCycle = new CycleTask();
@@ -305,9 +305,16 @@ namespace MicroDAQ.Gateway
                                 string deviceID = IPMasterDevice.Rows[row]["SerialID"].ToString();
                                 int slave = Convert.ToInt32(IPMasterDevice.Rows[row]["Slave"]);
                                 DataTable commandData = GetCommandsByID(deviceID);
-                                DataTable metaData = GetMetaByID(commandData);
-                                IPMasterManager manager = new IPMasterManager(master,slave, commandData, metaData);
-                                IPManagers.Add(manager);
+                                if (commandData.Rows.Count != 0)
+                                {
+                                    DataTable metaData = GetMetaByID(commandData);
+                                    IPMasterManager manager = new IPMasterManager(master, slave, commandData, metaData);
+                                    IPManagers.Add(manager);
+                                }
+                                else
+                                {
+                                    return;
+                                }
                                 row = row + 1;
                             }
                         }
@@ -317,6 +324,8 @@ namespace MicroDAQ.Gateway
                             {
                                 string deviceID = IPMasterDevice.Rows[row]["SerialID"].ToString();
                                // ProCommandState(deviceID);
+                                // row=row+1;
+                                 
                             }
                             row += count;
                         }
@@ -331,9 +340,13 @@ namespace MicroDAQ.Gateway
                                 string deviceID =IPMasterDevice.Rows[row]["SerialID"].ToString();
                                 int slave = Convert.ToInt32(IPMasterDevice.Rows[row]["Slave"]);
                                 DataTable commandData = GetCommandsByID(deviceID);
-                                DataTable metaData = GetMetaByID(commandData);
-                                SerialPortMasterManager manager = new SerialPortMasterManager(master,slave, commandData, metaData);
-                                SerialManagers.Add(manager);
+                                if (commandData.Rows.Count != 0)
+                                {
+                                    DataTable metaData = GetMetaByID(commandData);
+                                    SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData);
+                                    SerialManagers.Add(manager);
+                                }
+                                else { return; }
                                 row = row + 1;
                             }
                         }
@@ -370,9 +383,13 @@ namespace MicroDAQ.Gateway
                         string deviceID =SerialMasterDevice.Rows[row]["SerialID"].ToString();
                         int slave = Convert.ToInt32(SerialMasterDevice.Rows[row]["Slave"]);
                         DataTable commandData = GetCommandsByID(deviceID);
-                        DataTable metaData = GetMetaByID(commandData);
-                        SerialPortMasterManager manager = new SerialPortMasterManager(master,slave, commandData, metaData);
-                        SerialManagers.Add(manager);
+                        if (commandData.Rows.Count != 0)
+                        {
+                            DataTable metaData = GetMetaByID(commandData);
+                            SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData);
+                            SerialManagers.Add(manager);
+                        }
+                        else { return; }
                         row = row + 1;
                     }
                 }

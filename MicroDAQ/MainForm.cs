@@ -25,7 +25,7 @@ namespace MicroDAQ
         /// 使用哪个OPCServer
         /// </summary>
         string opcServerType = "SimaticNet";
-
+        string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
         private string wordItemFormat;
         private string wordArrayItemFormat;
         private string realItemFormat;
@@ -79,160 +79,121 @@ namespace MicroDAQ
             ni.Text = this.Text;
         }
          
-        #region 旧版
-        /// <summary>
-        /// 读取配置
-        /// </summary>
-        private bool ReadConfig()
-        {
-            bool success = false;
-            try
-            {
-                //读取Item地址格式           
-                string[] getPairsConfigItems = new string[Plcs.Count];
-                wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
-                wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
-                realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
-                if (SyncOpc.AddGroup("Groups"))
-                {
-                    #region 是否多组,有几组
-                    //生成读取是否多组,有几组的Item地址
-                    for (int i = 0; i < Plcs.Count; i++)
-                    {
-                        getPairsConfigItems[i] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 26, 2);
-                    }
-                    //获取是否多组的数据,并转存到PlcStation列表里
-                    int[] itemHandle = new int[Plcs.Count];
-                    object[] values = new object[Plcs.Count];
-                    if (SyncOpc.AddItems("Groups", getPairsConfigItems, itemHandle))
-                    {
-                        SyncOpc.SyncRead("Groups", values, itemHandle);
-                        for (int i = 0; i < Plcs.Count; i++)
-                        {
-                            ushort[] value = (ushort[])values[i];
-                            Plcs[i].MorePair = (value[0] == 2) ? (true) : false;
-                            Plcs[i].PairsNumber = value[1];
-                        }
-                    }
-                    #endregion
-
-                    #region 每个PLC中每个DB组有多少监测点
-                    //读取配置监测点数量的Item,每个PLC的DB1,W30,W32|W34,W36|W38....
-                    //生成读取配置监测点数量的Items
-                    string[][] getItemsNumber = null;   //第一维为PlcStation编号,第二维为数量组的编号
-                    getItemsNumber = new string[Plcs.Count][];
-                    for (int i = 0; i < Plcs.Count; i++)
-                    {
-                        getItemsNumber[i] = new string[Plcs[i].PairsNumber];
-                        for (int j = 0; j < Plcs[i].PairsNumber; j++)
-                        {
-                            getItemsNumber[i][j] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 30 + j * 2, 2);
-                        }
-                    }
-                    //获取每个PLC中,每个DB组中存放的监测点数量
-                    for (int i = 0; i < Plcs.Count; i++)
-                    {
-                        itemHandle = new int[Plcs[i].PairsNumber];
-                        values = new object[Plcs[i].PairsNumber];
-
-                        if (SyncOpc.AddItems("Groups", getItemsNumber[i], itemHandle))
-                        {
-                            SyncOpc.SyncRead("Groups", values, itemHandle);
-                            //取1个PLC中的每个DB组中存放的监测点数量
-                            for (int j = 0; j < Plcs[i].PairsNumber; j++)
-                            {
-                                ushort[] value = (ushort[])values[j];
-                                Plcs[i].ItemsNumber[j].BigItems = value[0];
-                                Plcs[i].ItemsNumber[j].SmallItems = value[1];
-
-                            }
-                        }
-                    }
-                    #endregion
-                    //boolReadConfig = true;
-                    success = true;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                success = false;
-            }
-            return success;
-        }
-        /// <summary>
-        /// 创建Item
-        /// </summary>
-        /// <returns></returns>
-        private bool CreateItems()
-        {
-            bool success = false;
-            try
-            {
-                //遍历所有PLC
-                for (int i = 0; i < Plcs.Count; i++)
-                {
-                    PLCStationInformation plc = Plcs[i];
-
-                    //遍历PLC中所有DB组
-                    for (int j = 0; j < plc.ItemsNumber.Length; j++)
-                    {
-                        PLCStationInformation.ConfigItemsNumber num = plc.ItemsNumber[j];
-
-                        //根据20字节监测点数量生成Item地址
-                        for (int k = 0; k < num.BigItems; k++)
-                        {
-                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 4 + j * 2, 20 * k, 3));
-                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 4 + j * 2, 20 * k + 10));
-                        }
-
-                        //根据10字节监测点数量生成Item地址
-                        for (int k = 0; k < num.SmallItems; k++)
-                        {
-                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j * 2, 10 * k, 3));
-                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j * 2, 10 * k + 6));
-                        }
-
-                    }
-                }
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-            }
-            return success;
-        }
-        #endregion
-
-        //#region 新添加的
-        ///// <summary>
-        ///// 创建监测点的Item
-        ///// </summary>
-        ///// <returns></returns>
-        //private bool CreateItems()
+        //#region 旧版
+        // <summary>
+        // 读取配置
+        // </summary>
+        //private bool ReadConfig()
         //{
-        //    wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
-        //    wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
-        //    realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
         //    bool success = false;
         //    try
         //    {
-        //        DataTable dtDBWord = GetDBWord();
-        //        DataTable dtDBReal = GetDBReal();
+        //        读取Item地址格式           
+        //        string[] getPairsConfigItems = new string[Plcs.Count];
+        //        wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
+        //        wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
+        //        realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
+        //        if (SyncOpc.AddGroup("Groups"))
+        //        {
+        //            #region 是否多组,有几组
+        //            生成读取是否多组,有几组的Item地址
+        //            for (int i = 0; i < Plcs.Count; i++)
+        //            {
+        //                getPairsConfigItems[i] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 26, 2);
+        //            }
+        //            获取是否多组的数据,并转存到PlcStation列表里
+        //            int[] itemHandle = new int[Plcs.Count];
+        //            object[] values = new object[Plcs.Count];
+        //            if (SyncOpc.AddItems("Groups", getPairsConfigItems, itemHandle))
+        //            {
+        //                SyncOpc.SyncRead("Groups", values, itemHandle);
+        //                for (int i = 0; i < Plcs.Count; i++)
+        //                {
+        //                    ushort[] value = (ushort[])values[i];
+        //                    Plcs[i].MorePair = (value[0] == 2) ? (true) : false;
+        //                    Plcs[i].PairsNumber = value[1];
+        //                }
+        //            }
+        //            #endregion
+
+        //            #region 每个PLC中每个DB组有多少监测点
+        //            读取配置监测点数量的Item,每个PLC的DB1,W30,W32|W34,W36|W38....
+        //            生成读取配置监测点数量的Items
+        //            string[][] getItemsNumber = null;   //第一维为PlcStation编号,第二维为数量组的编号
+        //            getItemsNumber = new string[Plcs.Count][];
+        //            for (int i = 0; i < Plcs.Count; i++)
+        //            {
+        //                getItemsNumber[i] = new string[Plcs[i].PairsNumber];
+        //                for (int j = 0; j < Plcs[i].PairsNumber; j++)
+        //                {
+        //                    getItemsNumber[i][j] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 30 + j * 2, 2);
+        //                }
+        //            }
+        //            获取每个PLC中,每个DB组中存放的监测点数量
+        //            for (int i = 0; i < Plcs.Count; i++)
+        //            {
+        //                itemHandle = new int[Plcs[i].PairsNumber];
+        //                values = new object[Plcs[i].PairsNumber];
+
+        //                if (SyncOpc.AddItems("Groups", getItemsNumber[i], itemHandle))
+        //                {
+        //                    SyncOpc.SyncRead("Groups", values, itemHandle);
+        //                    取1个PLC中的每个DB组中存放的监测点数量
+        //                    for (int j = 0; j < Plcs[i].PairsNumber; j++)
+        //                    {
+        //                        ushort[] value = (ushort[])values[j];
+        //                        Plcs[i].ItemsNumber[j].BigItems = value[0];
+        //                        Plcs[i].ItemsNumber[j].SmallItems = value[1];
+
+        //                    }
+        //                }
+        //            }
+        //            #endregion
+        //            boolReadConfig = true;
+        //            success = true;
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.Error(ex);
+        //        success = false;
+        //    }
+        //    return success;
+        //}
+        // <summary>
+        // 创建Item
+        // </summary>
+        // <returns></returns>
+        //private bool CreateItems()
+        //{
+        //    bool success = false;
+        //    try
+        //    {
+        //        遍历所有PLC
         //        for (int i = 0; i < Plcs.Count; i++)
         //        {
         //            PLCStationInformation plc = Plcs[i];
-        //            DataRow[] wordRows = dtDBWord.Select("link_id=" + i);
-        //            DataRow[] realRows = dtDBReal.Select("link_id=" + i);
-        //            for (int j = 0; j < wordRows.Length; j++)
+
+        //            遍历PLC中所有DB组
+        //            for (int j = 0; j < plc.ItemsNumber.Length; j++)
         //            {
-        //                plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, wordRows[j]["DB"], wordRows[j]["Word"], wordRows[j]["Length"]));
-        //            }
-        //            for (int j = 0; j < realRows.Length; j++)
-        //            {
-        //                plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, realRows[j]["DB"], realRows[j]["Real"]));
+        //                PLCStationInformation.ConfigItemsNumber num = plc.ItemsNumber[j];
+
+        //                根据20字节监测点数量生成Item地址
+        //                for (int k = 0; k < num.BigItems; k++)
+        //                {
+        //                    plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 4 + j * 2, 20 * k, 3));
+        //                    plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 4 + j * 2, 20 * k + 10));
+        //                }
+
+        //                根据10字节监测点数量生成Item地址
+        //                for (int k = 0; k < num.SmallItems; k++)
+        //                {
+        //                    plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j * 2, 10 * k, 3));
+        //                    plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j * 2, 10 * k + 6));
+        //                }
+
         //            }
         //        }
         //        success = true;
@@ -243,37 +204,74 @@ namespace MicroDAQ
         //    }
         //    return success;
         //}
-
-        ///// <summary>
-        ///// 从数据库读取DB块
-        ///// </summary>
-        ///// <returns></returns>
-        //private DataTable GetDBWord()
-        //{
-        //    string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
-        //    SqlConnection Connection = new SqlConnection(ConnectionString);
-        //    string sqlWord = "select * from DBWord ";
-        //    Connection.Open();
-        //    SqlDataAdapter daWord = new SqlDataAdapter(sqlWord, Connection);
-        //    DataSet dsWord = new DataSet();
-        //    daWord.Fill(dsWord);
-        //    Connection.Close();
-        //    return dsWord.Tables[0];
-        //}
-        //private DataTable GetDBReal()
-        //{
-        //    string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
-        //    SqlConnection Connection = new SqlConnection(ConnectionString);
-        //    string sqlReal = "select * from DBReal ";
-        //    Connection.Open();
-        //    SqlDataAdapter daReal = new SqlDataAdapter(sqlReal, Connection);
-        //    DataSet dsReal = new DataSet();
-        //    daReal.Fill(dsReal);
-        //    Connection.Close();
-        //    return dsReal.Tables[0];
-        //}
-
         //#endregion
+
+        #region 新添加的
+        /// <summary>
+        /// 创建监测点的Item
+        /// </summary>
+        /// <returns></returns>
+        private bool CreateItems()
+        {
+            wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
+            wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
+            realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
+            bool success = false;
+            try
+            {
+                DataTable dtDBWord = GetDBWord();
+                DataTable dtDBReal = GetDBReal();
+                for (int i = 0; i < Plcs.Count; i++)
+                {
+                    PLCStationInformation plc = Plcs[i];
+                    DataRow[] wordRows = dtDBWord.Select("Link_Id = " + i," id Asc ");
+                    DataRow[] realRows = dtDBReal.Select("Link_Id = " + i, " id Asc ");
+                    for (int j = 0; j < wordRows.Length; j++)
+                    {
+                        plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, wordRows[j]["DB"], wordRows[j]["Word"], wordRows[j]["Length"]));
+                    }
+                    for (int j = 0; j < realRows.Length; j++)
+                    {
+                        plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, realRows[j]["DB"], realRows[j]["Real"]));
+                    }
+                }
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+            return success;
+        }
+
+        /// <summary>
+        /// 从数据库读取DB块
+        /// </summary>
+        /// <returns></returns>
+        private DataTable GetDBWord()
+        {
+            SqlConnection Connection = new SqlConnection(ConnectionString);
+            string sqlWord = "select * from DBWord ";
+            Connection.Open();
+            SqlDataAdapter daWord = new SqlDataAdapter(sqlWord, Connection);
+            DataSet dsWord = new DataSet();
+            daWord.Fill(dsWord);
+            Connection.Close();
+            return dsWord.Tables[0];
+        }
+        private DataTable GetDBReal()
+        {
+            SqlConnection Connection = new SqlConnection(ConnectionString);
+            string sqlReal = "select * from DBReal ";
+            Connection.Open();
+            SqlDataAdapter daReal = new SqlDataAdapter(sqlReal, Connection);
+            DataSet dsReal = new DataSet();
+            daReal.Fill(dsReal);
+            Connection.Close();
+            return dsReal.Tables[0];
+        }
+
+        #endregion
 
         /// <summary>
         /// 创建数据项管理器
@@ -287,7 +285,7 @@ namespace MicroDAQ
                 foreach (var plc in Plcs)
                 {
                     string[] head = new string[plc.ItemsHead.Count];
-                    string[] data = new string[plc.ItemsHead.Count];
+                    string[] data = new string[plc.ItemsData.Count];
                     plc.ItemsHead.CopyTo(head, 0);
                     plc.ItemsData.CopyTo(data, 0);
                     IDataItemManage dim = new DataItemManager("ItemData", head, data);
@@ -343,44 +341,44 @@ namespace MicroDAQ
             string pid = ini.GetValue(opcServerType, "ProgramID");
             //if (SyncOpc.Connect(ini.GetValue(opcServerType, "ProgramID"), "127.0.0.1"))
                 if (SyncOpc.Connect(pid, "127.0.0.1"))
-                    if (ReadConfig())
+                    //if (ReadConfig())
                         if (CreateItems())
                         {
                             Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
                             Program.opcGateway.Start();
 
                         //添加获取采集点的数量
-                        for (int i = 0; i < Plcs.Count; i++)
-                        {
-                            PLCStationInformation plc = Plcs[i];
-                            for (int j = 0; j < plc.ItemsNumber.Length; j++)
-                            {
-                                PLCStationInformation.ConfigItemsNumber num = plc.ItemsNumber[j];
+                        //for (int i = 0; i < Plcs.Count; i++)
+                        //{
+                        //    PLCStationInformation plc = Plcs[i];
+                        //    for (int j = 0; j < plc.ItemsNumber.Length; j++)
+                        //    {
+                        //        PLCStationInformation.ConfigItemsNumber num = plc.ItemsNumber[j];
 
-                                tssddbPLC.DropDownItems.Add(Plcs[i].Connection);
-                                foreach (ToolStripItem tsiItem in tssddbPLC.DropDownItems)
-                                {
-                                    ToolStripMenuItem ti = tsiItem as ToolStripMenuItem;
-                                    if (ti != null && ti.Text == Plcs[i].Connection)
-                                    {
-                                        ti.DropDownItems.Add("20字节监测点数量： " + num.BigItems.ToString());
-                                        ti.DropDownItems.Add("10字节检测点数量： " + num.SmallItems.ToString());
+                        //        tssddbPLC.DropDownItems.Add(Plcs[i].Connection);
+                        //        foreach (ToolStripItem tsiItem in tssddbPLC.DropDownItems)
+                        //        {
+                        //            ToolStripMenuItem ti = tsiItem as ToolStripMenuItem;
+                        //            if (ti != null && ti.Text == Plcs[i].Connection)
+                        //            {
+                        //                ti.DropDownItems.Add("20字节监测点数量： " + num.BigItems.ToString());
+                        //                ti.DropDownItems.Add("10字节检测点数量： " + num.SmallItems.ToString());
 
-                                    }
+                        //            }
 
-                                }
+                        //        }
 
-                            }
+                        //    }
 
 
-                        }
+                        //}
 
 
                         }
             //PackageGateway modbus = new PackageGateway(createDBManagers());
             //modbus.Start();
-            ModbusGateway modbus = new ModbusGateway(createDBManagers());
-            modbus.Start();
+            Program.MobusGateway = new ModbusGateway(createDBManagers());
+            Program.MobusGateway.Start();
 
         }
 

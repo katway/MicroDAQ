@@ -72,7 +72,7 @@ namespace MicroDAQ.DataItem
                     {
                          ushort high;
                          ushort low;
-                         if (rows[j]["Arithmetic"].ToString() == "高")
+                         if (rows[j]["Arithmetic"].ToString().ToLower() == "getfloatmsb")
                          {
                              high = values[index];
                              low = values[index + 1];

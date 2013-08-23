@@ -79,7 +79,7 @@ namespace MicroDAQ.DataItem
                             if (value[i] != null)
                             {
                                 val = (ushort[])value[i];
-                                Manager.Items[item[i]].ID = val[0];
+                                 Manager.Items[item[i]].ID = val[0];
                                 Manager.Items[item[i]].Type = (DataType)val[1];
                                 Manager.Items[item[i]].State = (DataState)val[2];
                                 Manager.Items[item[i]].Quality = Qualities[i];
