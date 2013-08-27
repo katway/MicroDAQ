@@ -38,10 +38,15 @@ Test
 *.dat
 
 *.exe
-#KDiff
+
+#KDiff临时文件
 *.orig
 *~HEAD
 *.BASE
 *.LOCAL
 *.REMOTE
 
+#VS升级文件
+_UpgradeReport_Files
+Backup
+UpgradeLog
