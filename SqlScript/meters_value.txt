@@ -1,0 +1,20 @@
+﻿IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[meters_value]') AND type in (N'U'))
+DROP TABLE [dbo].[meters_value]
+GO
+
+CREATE TABLE [dbo].[meters_value](
+	[id] [int] NOT NULL,
+	[time] [datetime] NULL,
+	[value1] [float] NULL,
+	[value2] [float] NULL,
+	[value3] [float] NULL,
+	[type] [int] NULL,
+	[state] [int] NULL,
+	[zzTime] [datetime] NULL,
+	[alertTime] [datetime] NULL,
+	[alert] [int] NULL,
+	[quality] [int] NULL,
+	[alertRecord] [varchar](32) NULL
+) ON [PRIMARY]
+
+GO

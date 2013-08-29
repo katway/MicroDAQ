@@ -40,6 +40,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="meters.txt" />
+    <Content Include="meters_value.txt" />
+    <Content Include="meter_type.txt" />
+    <Content Include="meter_uuid.txt" />
     <Content Include="v_remotecontrol.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
