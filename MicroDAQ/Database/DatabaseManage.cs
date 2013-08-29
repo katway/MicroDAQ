@@ -23,10 +23,7 @@ namespace MicroDAQ.Database
         public string ConnectionString;
         public DatabaseManage(string svrAddress, string persistSecurityInfo, string dbName, string dbUser, string dbUserPassword)
         {
-            //if (instanceFlag)
-            //{ throw new Exception("不允许创建多实例"); }
-            //else
-            //{
+           
                 SqlConnectionStringBuilder bldr = new SqlConnectionStringBuilder();
 
                 var csb = typeof(SqlConnectionStringBuilder).GetProperty("DataSource");

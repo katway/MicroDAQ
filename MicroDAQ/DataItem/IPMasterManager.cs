@@ -41,7 +41,7 @@ namespace MicroDAQ.DataItem
                 ushort adress = Convert.ToUInt16(dtCommands.Rows[i]["RegesiterAddress"]);
                 ushort length = Convert.ToUInt16(dtCommands.Rows[i]["Length"]);
                 string serialID = dtCommands.Rows[i]["SerialID"].ToString();
-                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + serialID,"Address ASC");
+                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID='" + serialID+"'","Address ASC");
                 ushort[] values = new ushort[length];
                 int index=0;//values 索引
                 try
