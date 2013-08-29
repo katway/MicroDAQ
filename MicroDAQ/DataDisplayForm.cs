@@ -16,7 +16,7 @@ namespace MicroDAQ
         {
             InitializeComponent();
             
-        } 
+        }
         
         SqlConnection connection = null;    
         #region PLC与OPCMES即时数据的显示
@@ -31,37 +31,46 @@ namespace MicroDAQ
         DataTable NewTable = null;   
         public void ShowItems()
         {
-            //PLC关闭的情况       
+            //PLC关闭的情况
            
             if (Program.opcGateway.ItemManagers == null)
             {
-                if (connection.State == ConnectionState.Closed)
-                {                  
-
-                    this.labOPCState.BackColor = Color.Red;
-                    this.labOPCState.ForeColor = Color.Yellow;
-                    this.labOPCState.Text = "通信错误";
-
-                    this.labDBState.BackColor = Color.Red;
-                    this.labDBState.ForeColor = Color.Yellow;
-                    this.labDBState.Text = "通信错误";
-
-                    return;
-                }
-                else
+                try
                 {
-                    this.labOPCState.BackColor = Color.Red;
-                    this.labOPCState.ForeColor = Color.Yellow;
-                    this.labOPCState.Text = "通信错误";
+                    if (connection.State == ConnectionState.Closed)
+                    {
 
-                    this.labDBState.BackColor = Color.Green;
-                    this.labDBState.ForeColor = Color.White;
-                    this.labDBState.Text = "通信正常";
+                        this.labOPCState.BackColor = Color.Red;
+                        this.labOPCState.ForeColor = Color.Yellow;
+                        this.labOPCState.Text = "通信错误";
 
-                    return;
+                        this.labDBState.BackColor = Color.Red;
+                        this.labDBState.ForeColor = Color.Yellow;
+                        this.labDBState.Text = "通信错误";
+                        return;
+
+                    }
+                    else
+                    {
+                        this.labOPCState.BackColor = Color.Red;
+                        this.labOPCState.ForeColor = Color.Yellow;
+                        this.labOPCState.Text = "通信错误";
+
+                        this.labDBState.BackColor = Color.Green;
+                        this.labDBState.ForeColor = Color.White;
+                        this.labDBState.Text = "通信正常";
+                        return;
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
 
             }
+            
+            
             else
             {    
                   //plc打开成功，数据库连接成功的情况 
@@ -431,13 +440,22 @@ namespace MicroDAQ
             ShowItems();
         }
 
+        //清除meter-value里面的数据：
         private void btnDelete_Click(object sender, EventArgs e)
         {
             string deleteData = "delete from meters_value";
-            SqlDataAdapter adapter = new SqlDataAdapter(deleteData, connection);
-            DataSet ds = new DataSet();
-            adapter.Fill(ds);
-            MessageBox.Show("数据清除成功！");                   
+            if (connection.State == ConnectionState.Open)
+            {
+                SqlDataAdapter adapter = new SqlDataAdapter(deleteData, connection);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+                MessageBox.Show("数据清除成功！");   
+            }
+            else 
+            {
+                this.btnDelete.Enabled = false;
+                MessageBox.Show("数据库连接不成功，没有数据可清除！");
+            }
         }
     }
 }

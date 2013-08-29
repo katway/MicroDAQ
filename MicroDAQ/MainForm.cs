@@ -46,7 +46,7 @@ namespace MicroDAQ
         {
             ni.Icon = this.Icon;
             ni.Text = this.Text;
-
+            
             bool autoStart = false;
             try
             {
