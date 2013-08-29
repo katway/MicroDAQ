@@ -23,7 +23,10 @@ namespace MicroDAQ.Database
         public string ConnectionString;
         public DatabaseManage(string svrAddress, string persistSecurityInfo, string dbName, string dbUser, string dbUserPassword)
         {
-           
+            if (instanceFlag)
+            { throw new Exception("不允许创建多实例"); }
+            else
+            {
                 SqlConnectionStringBuilder bldr = new SqlConnectionStringBuilder();
 
                 var csb = typeof(SqlConnectionStringBuilder).GetProperty("DataSource");
@@ -49,7 +52,7 @@ namespace MicroDAQ.Database
 
                 GetdataConnection.StateChange += new StateChangeEventHandler(Connection_StateChange);
                 instanceFlag = true;
-            //}
+            }
         }
         SqlCommand getRemoteControl;
         void Connection_StateChange(object sender, StateChangeEventArgs e)

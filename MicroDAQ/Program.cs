@@ -90,6 +90,7 @@ namespace MicroDAQ
             }
         }
         public static OpcGateway opcGateway = null;
+        public static ModbusGateway MobusGateway = null;
         public static MachineManager MeterManager = new MachineManager();
         public static DatabaseManage DatabaseManager;//= new DatabaseManager();
         public static DataItemManager M;

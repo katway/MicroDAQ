@@ -7,12 +7,13 @@ using System.Threading;
 using System.Data;
 using MicroDAQ.Database;
 using MicroDAQ.DataItem;
+using log4net;
 
 namespace MicroDAQ.Gateway
 {
     public class OpcGateway : GatewayBase
     {
-
+        ILog log;
         public override void Dispose()
         {
             UpdateCycle.Quit();
@@ -25,6 +26,7 @@ namespace MicroDAQ.Gateway
         /// <param name="itemManagers"></param>
         public OpcGateway(IList<MicroDAQ.DataItem.IDataItemManage> itemManagers, IList<IDatabaseManage> databaseManagers)
         {
+            log = LogManager.GetLogger(this.GetType());
             this.ItemManagers = itemManagers;
             this.DatabaseManagers = databaseManagers;
 
@@ -57,17 +59,25 @@ namespace MicroDAQ.Gateway
 
         protected virtual void Update()
         {
-            foreach (IDatabaseManage dbMgr in this.DatabaseManagers)
+            try
             {
-                foreach (IDataItemManage mgr in this.ItemManagers)
+                foreach (IDatabaseManage dbMgr in this.DatabaseManagers)
                 {
-                    foreach (Item item in mgr.Items)
+                    foreach (IDataItemManage mgr in this.ItemManagers)
                     {
-                        dbMgr.UpdateItem(item);
+                        foreach (Item item in mgr.Items)
+                        {
+                            dbMgr.UpdateItem(item);
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                log.Error(new Exception("运行期间出现一个错误！", ex));
+            }
         }
+
 
         private void update2()
         {

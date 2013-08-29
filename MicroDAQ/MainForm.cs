@@ -25,7 +25,6 @@ namespace MicroDAQ
         /// 使用哪个OPCServer
         /// </summary>
         string opcServerType = "SimaticNet";
-
         private string wordItemFormat;
         private string wordArrayItemFormat;
         private string realItemFormat;
@@ -62,7 +61,9 @@ namespace MicroDAQ
                     PLCStationInformation plc = new PLCStationInformation();
                     Plcs.Add(plc);
                     plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);
+
                 }
+
 
             }
             catch (Exception ex)
@@ -76,76 +77,10 @@ namespace MicroDAQ
             }
             ni.Text = this.Text;
         }
+         
+        
 
-      
-        #region 新添加的
-        /// <summary>
-        /// 创建监测点的Item
-        /// </summary>
-        /// <returns></returns>
-        private bool CreateItems()
-        {
-            wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
-            wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
-            realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
-            bool success = false;
-            try
-            {
-                DataTable dtDBWord = GetDBWord();
-                DataTable dtDBReal = GetDBReal();
-                for (int i = 0; i < Plcs.Count; i++)
-                {
-                    PLCStationInformation plc = Plcs[i];
-                    DataRow[] wordRows = dtDBWord.Select("link_id=" + i);
-                    DataRow[] realRows = dtDBReal.Select("link_id=" + i);
-                    for (int j = 0; j < wordRows.Length; j++)
-                    {
-                        plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, wordRows[j]["DB"], wordRows[j]["Word"], wordRows[j]["Length"]));
-                    }
-                    for (int j = 0; j < realRows.Length; j++)
-                    {
-                        plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, realRows[j]["DB"], realRows[j]["Real"]));
-                    }
-                }
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-            }
-            return success;
-        }
-
-        /// <summary>
-        /// 从数据库读取DB块
-        /// </summary>
-        /// <returns></returns>
-        private DataTable GetDBWord()
-        {
-            string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
-            SqlConnection Connection = new SqlConnection(ConnectionString);
-            string sqlWord = "select * from DBWord ";
-            Connection.Open();
-            SqlDataAdapter daWord = new SqlDataAdapter(sqlWord, Connection);
-            DataSet dsWord = new DataSet();
-            daWord.Fill(dsWord);
-            Connection.Close();
-            return dsWord.Tables[0];
-        }
-        private DataTable GetDBReal()
-        {
-            string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
-            SqlConnection Connection = new SqlConnection(ConnectionString);
-            string sqlReal = "select * from DBReal ";
-            Connection.Open();
-            SqlDataAdapter daReal = new SqlDataAdapter(sqlReal, Connection);
-            DataSet dsReal = new DataSet();
-            daReal.Fill(dsReal);
-            Connection.Close();
-            return dsReal.Tables[0];
-        }
-
-        #endregion
+        
 
         /// <summary>
         /// 创建数据项管理器
@@ -159,7 +94,7 @@ namespace MicroDAQ
                 foreach (var plc in Plcs)
                 {
                     string[] head = new string[plc.ItemsHead.Count];
-                    string[] data = new string[plc.ItemsHead.Count];
+                    string[] data = new string[plc.ItemsData.Count];
                     plc.ItemsHead.CopyTo(head, 0);
                     plc.ItemsData.CopyTo(data, 0);
                     IDataItemManage dim = new DataItemManager("ItemData", head, data);
@@ -189,7 +124,7 @@ namespace MicroDAQ
                 foreach (string dbName in dbs)
                 {
                     DatabaseManage dbm = new DatabaseManage(ini.GetValue(dbName, "Address"),
-                                                                 ini.GetValue(dbName, "Port"),
+                                                                 ini.GetValue(dbName, "PersistSecurityInfo"),
                                                                  ini.GetValue(dbName, "Database"),
                                                                  ini.GetValue(dbName, "Username"),
                                                                  ini.GetValue(dbName, "Password"));
@@ -210,12 +145,10 @@ namespace MicroDAQ
         }
         public void Start()
         {
-            //Thread.Sleep(Program.waitMillionSecond);
-            SyncOpc = new OPCServer();
-            string pid = ini.GetValue(opcServerType, "ProgramID");
+          
            
-            ModbusGateway modbus = new ModbusGateway(createDBManagers());
-            modbus.Start();
+            Program.MobusGateway = new ModbusGateway(createDBManagers());
+            Program.MobusGateway.Start();
 
         }
 
@@ -224,7 +157,7 @@ namespace MicroDAQ
         {
             this.BeginInvoke(new MethodInvoker(delegate
             {
-                switch (state)
+                switch (state) 
                 {
                     case JonLibrary.Automatic.RunningState.Paused:
                         this.tsslRemote.Text = "P";
@@ -325,6 +258,7 @@ namespace MicroDAQ
                     break;
             }
         }
+
         Form frmDataDisplay = null;
         private void tsslMeters_Click(object sender, EventArgs e)
         {
@@ -337,6 +271,8 @@ namespace MicroDAQ
             }
 
         }
+
+
 
     }
 

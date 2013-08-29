@@ -16,10 +16,9 @@ namespace MicroDAQ
         {
             InitializeComponent();
             
-        }      
+        } 
         
         SqlConnection connection = null;    
-        ConnectionState aa = Program.opcGateway.ItemManagers[0].ConnectionState;    
         #region PLC与OPCMES即时数据的显示
         private void btnInstant_Click(object sender, EventArgs e)
         {
@@ -29,62 +28,27 @@ namespace MicroDAQ
         /// <summary>
         /// PLC与OPCMES即时数据的显示
         /// </summary>     
-        DataTable dtItems = null;   
+        DataTable NewTable = null;   
         public void ShowItems()
         {
-            //PLC关闭的情况       
-
-            if (aa == ConnectionState.Closed||Program.opcGateway.ItemManagers == null)
-            {
-
-                if (connection.State == ConnectionState.Closed)
-                {                  
-
-                    this.labOPCState.BackColor = Color.Red;
-                    this.labOPCState.ForeColor = Color.Yellow;
-                    this.labOPCState.Text = "通信错误";
-
-                    this.labDBState.BackColor = Color.Red;
-                    this.labDBState.ForeColor = Color.Yellow;
-                    this.labDBState.Text = "通信错误";
-
-                    return;
-                }
-                else
-                {
-                    this.labOPCState.BackColor = Color.Red;
-                    this.labOPCState.ForeColor = Color.Yellow;
-                    this.labOPCState.Text = "通信错误";
-
-                    this.labDBState.BackColor = Color.Green;
-                    this.labDBState.ForeColor = Color.White;
-                    this.labDBState.Text = "通信正常";
-
-                    return;
-                }
-
-            }
-            else
-            {   //plc打开成功，数据库连接成功的情况         
+              
                 if (connection.State == ConnectionState.Open)
                 {
                     this.labDBState.BackColor = Color.Green;
                     this.labDBState.ForeColor = Color.White;
                     this.labDBState.Text = "通信正常";
 
-                    this.labOPCState.BackColor = Color.Green;
-                    this.labOPCState.ForeColor = Color.White;
-                    this.labOPCState.Text = "通信正常";
+
 
                     string sql = @"SELECT v.id AS 参数ID,
-                                       p.name AS 参数名称,
-                                       t.name AS 参数类型,
-                                       v.value1 AS 采集值1,
-                                       v.value2 AS 采集值2,
-                                       v.value3 AS 采集值3,
-                                       p.unit AS 单位,
-                                       v.time AS 刷新时间,
-                                       v.zztime AS 存储点
+                                     p.name AS 参数名称,
+                                     t.name AS 参数类型,
+                                     v.value1 AS 采集值1,
+                                     v.value2 AS 采集值2,
+                                     v.value3 AS 采集值3,
+                                     p.unit AS 单位,
+                                     v.time AS 刷新时间,
+                                     v.zztime AS 存储点
                         FROM ProcessItem p 
                         LEFT JOIN meter_uuid m ON p.id = m.uuid 
                         LEFT JOIN meter_type t ON p.protocolType = t.protocol 
@@ -94,75 +58,104 @@ namespace MicroDAQ
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
 
-                    dtItems = new DataTable();
-                    dtItems.Columns.AddRange(new DataColumn[]{
+                    NewTable = new DataTable();
+                    NewTable.Columns.AddRange(new DataColumn[]{
                         new DataColumn("参数ID"),
                         new DataColumn("参数名称"),
                         new DataColumn("参数类型"),
-                        new DataColumn("数据采集值1"),
-                        new DataColumn("PLC数据值1"),
+                        new DataColumn("数据采集值1"),                      
                         new DataColumn("数据采集值2"),
                         new DataColumn("数据采集值3"),
                         new DataColumn("单位"),
                         new DataColumn("刷新时间"),
-                        new DataColumn("存储点"),             
+                        new DataColumn("存储点"), 
+                        new DataColumn("PLC的编号ID"),
+                        new DataColumn("PLC数据值1"),
                         new DataColumn("PLC设备类型"),
                         new DataColumn("PLC状态"),
                         new DataColumn("PLC可信度") });
-
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        DataRow row = dtItems.NewRow();
                         DataRow tmp = dt.Rows[i];
-
-                        row["参数ID"] = tmp[0].ToString();
-                        row["参数名称"] = tmp[1].ToString();
-                        row["参数类型"] = tmp[2].ToString();
-                        row["数据采集值1"] = tmp[3].ToString();
-                        row["数据采集值2"] = tmp[4].ToString();
-                        row["数据采集值3"] = tmp[5].ToString();
-                        row["单位"] = tmp[6].ToString();
-                        row["刷新时间"] = tmp[7].ToString();
-
-                        foreach (IDataItemManage mgr in Program.opcGateway.ItemManagers)
+                       
+                        foreach (SerialPortMasterManager mgr in Program.MobusGateway.SerialManagers)
                         {
-                            foreach (Item item in mgr.Items)
+                            foreach (Item meter in mgr.Items)
                             {
-                                Item meter = item;
-                                row["PLC数据值1"] = meter.Value.ToString();
-                                row["PLC设备类型"] = meter.Type.ToString();
-                                row["PLC状态"] = meter.State.ToString();
-                                row["plc可信度"] = meter.Quality.ToString();
-                            }
-                        }
-                        dtItems.Rows.Add(row);
-                        dgvDB.DataSource = dtItems;
-                        dgvDB.Columns["刷新时间"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
-                        dgvDB.Columns["存储点"].DefaultCellStyle.Format = "yyyy-MM-dd HH:mm:ss.fff";
+                                if (tmp[0].ToString() == meter.ID.ToString())
+                                {
+                                    DataRow row = NewTable.NewRow();
+                                    row["参数ID"] = tmp[0].ToString();
+                                    row["参数名称"] = tmp[1].ToString();
+                                    row["参数类型"] = tmp[2].ToString();
+                                    row["数据采集值1"] = tmp[3].ToString();
+                                    row["数据采集值2"] = tmp[4].ToString();
+                                    row["数据采集值3"] = tmp[5].ToString();
+                                    row["单位"] = tmp[6].ToString();
+                                    row["刷新时间"] = tmp[7].ToString();
+                                    row["存储点"] = tmp[8].ToString();
 
-                        //比较数据是否相等，如果不相等数据背景色改变
-                        for (int j = 0; j < dgvDB.Rows.Count; j++)
-                        {
-                            string a = this.dgvDB.Rows[j].Cells[3].Value.ToString();
-                            string b = this.dgvDB.Rows[j].Cells[4].Value.ToString();
-                            if (a != b)
-                            {
-                                this.dgvDB.Rows[j].Cells[3].Style.BackColor = Color.Red;
-                                this.dgvDB.Rows[j].Cells[4].Style.BackColor = Color.Red;
+                                    row["PLC的编号ID"] = meter.ID.ToString();
+                                    row["PLC数据值1"] = meter.Value.ToString();
+                                    row["PLC设备类型"] = meter.Type.ToString();
+                                    row["PLC状态"] = meter.State.ToString();
+                                    row["PLC可信度"] = meter.Quality.ToString();
+                                    NewTable.Rows.Add(row);
+                                }
                             }
 
                         }
+                        foreach (IPMasterManager mgr in Program.MobusGateway.IPManagers)
+                        {
+                            foreach (Item meter in mgr.Items)
+                            {
+                                if (tmp[0].ToString() == meter.ID.ToString())
+                                {
+                                    DataRow row = NewTable.NewRow();
+                                    row["参数ID"] = tmp[0].ToString();
+                                    row["参数名称"] = tmp[1].ToString();
+                                    row["参数类型"] = tmp[2].ToString();
+                                    row["数据采集值1"] = tmp[3].ToString();
+                                    row["数据采集值2"] = tmp[4].ToString();
+                                    row["数据采集值3"] = tmp[5].ToString();
+                                    row["单位"] = tmp[6].ToString();
+                                    row["刷新时间"] = tmp[7].ToString();
+                                    row["存储点"] = tmp[8].ToString();
+
+                                    row["PLC的编号ID"] = meter.ID.ToString();
+                                    row["PLC数据值1"] = meter.Value.ToString();
+                                    row["PLC设备类型"] = meter.Type.ToString();
+                                    row["PLC状态"] = meter.State.ToString();
+                                    row["PLC可信度"] = meter.Quality.ToString();
+                                    NewTable.Rows.Add(row);
+                                }
+                            }
+
+                        }
+
                     }
-                    //dtItems.Columns.Clear(); 
+
+                    this.dgvDB.DataSource = NewTable;
+                  
+
+                    //比较数据是否相等，如果不相等数据背景色改变
+                    for (int j = 0; j < dgvDB.Rows.Count; j++)
+                    {
+                        string a = this.dgvDB.Rows[j].Cells[3].Value.ToString();
+                        string b = this.dgvDB.Rows[j].Cells[10].Value.ToString();
+                        if (a != b)
+                        {
+                            this.dgvDB.Rows[j].Cells[3].Style.BackColor = Color.Red;
+                            this.dgvDB.Rows[j].Cells[10].Style.BackColor = Color.Red;
+                        }
+
+                    }
+
 
                 }
 
                 else
-                {//plc打开成功，数据库连接失败的情况
-
-                    this.labOPCState.BackColor = Color.Green;
-                    this.labOPCState.ForeColor = Color.White;
-                    this.labOPCState.Text = "通信正常";
+                { //数据库连接失败的情况
 
                     this.labDBState.BackColor = Color.Red;
                     this.labDBState.ForeColor = Color.Yellow;
@@ -175,39 +168,22 @@ namespace MicroDAQ
                             new DataColumn("PLC设备类型"),
                             new DataColumn("PLC状态"),
                             new DataColumn("PLC可信度")});
-                    if (Program.opcGateway.ItemManagers == null)
+                    if (Program.MobusGateway.IPManagers == null||Program.MobusGateway.SerialManagers==null)
                     {
-                        MessageBox.Show("尚未加载plc数据！");
+                        MessageBox.Show("尚未连接设备！");
                         return;
                     }
-                    else
-                    {
-                        foreach (IDataItemManage mgr in Program.opcGateway.ItemManagers)
-                        {
-                            foreach (Item item in mgr.Items)
-                            {
-                                DataRow row = table.NewRow();
-                                Item meter = item;
-                                row["plc编号"] = meter.ID.ToString();
-                                row["plc数据值1"] = meter.Value.ToString();
-                                row["plc设备类型"] = meter.Type.ToString();
-                                row["plc状态"] = meter.State.ToString();
-                                row["plc可信度"] = meter.Quality.ToString();
-                                table.Rows.Add(row);
-                            }
-                        }
-                        this.dgvDB.DataSource = table;
-                    }
+                   
 
 
                 }
 
 
-            }           
-                   
-              
+            
 
-       }
+
+
+        }
         #endregion
 
         #region 加载form窗体
@@ -219,18 +195,22 @@ namespace MicroDAQ
         private void FormDemo_Load(object sender, EventArgs e)
         {           
             //循环遍历数据库
-            foreach (IDatabaseManage a in Program.opcGateway.DatabaseManagers)
+            List<SqlConnection> sqlcon = new List<SqlConnection>();
+            foreach (IDatabaseManage a in Program.MobusGateway.DatabaseManagers)
             {
-                connection = new SqlConnection(a.UpdateConnection.ConnectionString);
-            }         
+                SqlConnection conn = new SqlConnection(a.UpdateConnection.ConnectionString);
+                sqlcon.Add(conn);
+            }
+            for (int i = 0; i < sqlcon.Count;i++ )
+            {
+                connection=sqlcon[0];          
+               
+            }     
             
             bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
             bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
             bkwConnect.RunWorkerAsync();
-
-            if (Program.opcGateway != null)
-                Program.opcGateway.Stop();    
-            
+     
                       
         }   
         //打开数据库连接
@@ -242,7 +222,6 @@ namespace MicroDAQ
             }
             catch
             { }
-
         }
 
         void bkwConnect_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -416,5 +395,19 @@ namespace MicroDAQ
              ShowDB();
         }
         #endregion
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ShowItems();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            string deleteData = "delete from meters_value";
+            SqlDataAdapter adapter = new SqlDataAdapter(deleteData, connection);
+            DataSet ds = new DataSet();
+            adapter.Fill(ds);
+            MessageBox.Show("数据清除成功！");                   
+        }
     }
 }

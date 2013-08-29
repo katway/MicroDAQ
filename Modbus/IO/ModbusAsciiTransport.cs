@@ -51,7 +51,7 @@ namespace Modbus.IO
 		internal byte[] ReadRequestResponse()
 		{
 			// read message frame, removing frame start ':'
-			string frameHex = StreamResourceUtility.ReadLine(StreamResource).Substring(1);
+            string frameHex = StreamResourceUtility.ReadLine(StreamResource).Substring(1);
 
 			// convert hex to bytes
 			byte[] frame = ModbusUtility.HexToBytes(frameHex);

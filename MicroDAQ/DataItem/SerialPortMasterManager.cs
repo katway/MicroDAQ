@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Modbus.Device;
+using Modbus.Utility;
 using System.Data;
 using System.Data.SqlClient;
 namespace MicroDAQ.DataItem
@@ -14,6 +15,14 @@ namespace MicroDAQ.DataItem
         DataTable dtCommands;
         byte slaveAddress;
         public SqlConnection Connection { get; set; }
+        /// <summary>
+        /// 构造函数 初始化变量
+        /// </summary>
+        /// <param name="master"></param>
+        /// <param name="slave"></param>
+        /// <param name="commandsData"></param>
+        /// <param name="metaData"></param>
+
         public SerialPortMasterManager(IModbusMaster master,int slave, DataTable commandsData, DataTable metaData)
         {
             string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
@@ -30,7 +39,9 @@ namespace MicroDAQ.DataItem
             }
            
         }
-
+        /// <summary>
+        /// 读数据
+        /// </summary>
         public void Read()
         {
             int flag = 0;//items索引
@@ -41,8 +52,8 @@ namespace MicroDAQ.DataItem
                 string regesiter = dtCommands.Rows[i]["RegisterName"].ToString();
                 ushort adress = Convert.ToUInt16(dtCommands.Rows[i]["RegesiterAddress"]);
                 ushort length = Convert.ToUInt16(dtCommands.Rows[i]["Length"]);
-                int serialID = Convert.ToInt32(dtCommands.Rows[i]["SerialID"]);
-                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + serialID,"Address ASC");//一条命令所对应的原始数据表数据
+                string serialID = dtCommands.Rows[i]["SerialID"].ToString();
+                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + "'"+serialID+"'","Address ASC");//一条命令所对应的原始数据表数据
                 ushort[] values = new ushort[length];
                 int index=0;//values 索引
                 try
@@ -57,7 +68,7 @@ namespace MicroDAQ.DataItem
                 catch
                 {
                     //存储过程
-                   // ProCommandState(serialID, "false");
+                    // ProCommandState(serialID, "false");
                     return;
                 }
                 for (int j = 0; j < rows.Length; j++)
@@ -72,7 +83,7 @@ namespace MicroDAQ.DataItem
                     {
                          ushort high;
                          ushort low;
-                         if (rows[j]["Arithmetic"].ToString() == "高")
+                         if (rows[j]["Arithmetic"].ToString().ToLower() == "getfloatmsb")
                          {
                              high = values[index];
                              low = values[index + 1];
@@ -91,18 +102,24 @@ namespace MicroDAQ.DataItem
                 }
             }
         }
-
+        /// <summary>
+        /// 两个ushort转为float
+        /// </summary>
+        /// <param name="highNumber"></param>
+        /// <param name="lowNumber"></param>
+        /// <returns></returns>
         private float ushortToFloat(ushort highNumber,ushort lowNumber)
         {
-            byte[] high = BitConverter.GetBytes(highNumber);
-            byte[] low = BitConverter.GetBytes(lowNumber);
-            byte[] allByte = new byte[4];
-            allByte[0] = high[0];
-            allByte[1] = high[1];
-            allByte[2] = low[0];
-            allByte[3] = low[1];
-           return  BitConverter.ToSingle(allByte, 0);
+         
+           return  ModbusUtility.GetSingle(highNumber, lowNumber);
+
         }
+        /// <summary>
+        /// 日志存储过程
+        /// </summary>
+        /// <param name="serialID"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
         private int ProCommandState(int serialID, string state)
         {
             SqlCommand command = new SqlCommand("proc_RecordCommandLog", Connection);

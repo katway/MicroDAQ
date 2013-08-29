@@ -40,8 +40,8 @@ namespace MicroDAQ.DataItem
                 string regesiter = dtCommands.Rows[i]["RegisterName"].ToString();
                 ushort adress = Convert.ToUInt16(dtCommands.Rows[i]["RegesiterAddress"]);
                 ushort length = Convert.ToUInt16(dtCommands.Rows[i]["Length"]);
-                int serialID = Convert.ToInt32(dtCommands.Rows[i]["SerialID"]);
-                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + serialID,"Address ASC");
+                string serialID = dtCommands.Rows[i]["SerialID"].ToString();
+                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID='" + serialID+"'","Address ASC");
                 ushort[] values = new ushort[length];
                 int index=0;//values 索引
                 try
@@ -51,12 +51,12 @@ namespace MicroDAQ.DataItem
                     else
                     { values = IpMaster.ReadInputRegisters(slaveAddress, adress, length); }
                     //存储过程
-                    ProCommandState(serialID, "true");
+                   // ProCommandState(serialID, "true");
                 }
                 catch
                 {
                     //存储过程
-                    ProCommandState(serialID, "false");
+                   // ProCommandState(serialID, "false");
                     return;
 
                 }
@@ -72,7 +72,7 @@ namespace MicroDAQ.DataItem
                     {
                          ushort high;
                          ushort low;
-                         if (rows[j]["Arithmetic"].ToString() == "高")
+                         if (rows[j]["Arithmetic"].ToString().ToLower() == "getfloatmsb")
                          {
                              high = values[index];
                              low = values[index + 1];
