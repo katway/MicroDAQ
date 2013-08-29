@@ -34,10 +34,11 @@ deploy/*
 
 # Exclude ALL DLLs?
 *.dll
-Test
+Test*
 *.dat
 
 *.exe
+
 
 #KDiff临时文件
 *.orig
