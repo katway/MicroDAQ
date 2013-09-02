@@ -1,16 +1,3 @@
 ﻿CREATE VIEW v_remoteControl AS
 
-SELECT
-id,
-Min(cycle) AS cycle,
-Min(command) AS command,
-Min(cmdstate) AS cmdState
-
-FROM
-(
-SELECT     p.alarm AS id,  (0 | null) AS cycle, 1 AS command, 1 AS cmdState
-FROM         dbo.meters_value m INNER JOIN
-                      dbo.ProcessItem p ON m.id = p.slave
-) b
-GROUP BY B.id
-HAVING B.ID IS NOT NULL
+SELECT     CAST(slave AS int) AS id, ISNULL(cycle, 0) AS cycle, ISNULL(command, 0) AS command, ISNULL(cmdstate, 0) AS cmdstateFROM         dbo.RemoteControlWHERE     (slave IS NOT NULL)UNIONSELECTid,Min(cycle) AS cycle,Min(command) AS command,Min(cmdstate) AS cmdStateFROM(SELECT     p.alarm AS id,  (m.alert | p.alertBuzzer) AS cycle, 1 AS command, 1 AS cmdStateFROM         dbo.meters_value m INNER JOIN                      dbo.ProcessItem p ON m.id = p.slave) bGROUP BY B.idHAVING B.ID IS NOT NULL
