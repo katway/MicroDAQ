@@ -13,6 +13,7 @@ namespace MicroDAQ.DataItem
         IModbusMaster SerialMaster;
         DataTable dtMeta;
         DataTable dtCommands;
+        DataTable dtWriteData;
         byte slaveAddress;
         public SqlConnection Connection { get; set; }
         /// <summary>
@@ -23,7 +24,7 @@ namespace MicroDAQ.DataItem
         /// <param name="commandsData"></param>
         /// <param name="metaData"></param>
 
-        public SerialPortMasterManager(IModbusMaster master,int slave, DataTable commandsData, DataTable metaData)
+        public SerialPortMasterManager(IModbusMaster master,int slave, DataTable commandsData, DataTable metaData,DataTable writeData)
         {
             string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
             Connection = new SqlConnection(ConnectionString);
@@ -32,6 +33,7 @@ namespace MicroDAQ.DataItem
             slaveAddress = Convert.ToByte(slave);
             dtCommands = commandsData;
             dtMeta = metaData;
+            dtWriteData = writeData;
             Items=new List<Item>();
             for (int i = 0; i < metaData.Rows.Count; i++)
             {
@@ -69,7 +71,7 @@ namespace MicroDAQ.DataItem
                 {
                     //存储过程
                     // ProCommandState(serialID, "false");
-                    return;
+                    continue;
                 }
                 for (int j = 0; j < rows.Length; j++)
                 {
@@ -101,6 +103,55 @@ namespace MicroDAQ.DataItem
                     flag += 1;
                 }
             }
+        }
+        public void Write()
+        {
+            for (int i = 0; i<dtWriteData.Rows.Count; i++)
+            {
+                string type = dtWriteData.Rows[i]["type"].ToString();
+                string regesiter = dtWriteData.Rows[i]["RegisterName"].ToString();
+                ushort adress = Convert.ToUInt16(dtWriteData.Rows[i]["RegesiterAddress"]);
+                ushort value=Convert.ToUInt16(dtWriteData.Rows[i]["cycle"]);
+                try
+                {
+                    ushort[] shorts;
+                    if (type == "WLT")
+                    {
+
+                        if (value == 1)
+                        {
+                            shorts = new ushort[4] { 1, 0, 0, 0 };
+                        }
+                        else if (value == 2)
+                        {
+                            shorts = new ushort[4] { 0, 1, 0, 0 };
+                        }
+                        else if (value == 4)
+                        {
+                            shorts = new ushort[4] { 0, 0, 1, 0 };
+                        }
+                        else
+                        {
+                            shorts = new ushort[4] { 1, 0, 0, 1 };
+                        }
+                        SerialMaster.WriteMultipleRegisters(slaveAddress, adress, shorts);
+                    }
+                    else
+                    {
+                        shorts=new ushort[1]{value};
+                        SerialMaster.WriteMultipleRegisters(slaveAddress, adress, shorts);
+                        
+                    }
+                    
+                }
+                catch
+                { }
+            }
+        }
+        public void ReadWriteData()
+        {
+            Read();
+            Write();
         }
         /// <summary>
         /// 两个ushort转为float

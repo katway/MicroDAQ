@@ -11,9 +11,10 @@ namespace MicroDAQ.DataItem
         ModbusIpMaster IpMaster;
         DataTable dtMeta;
         DataTable dtCommands;
+        DataTable dtWriteData;
         byte slaveAddress;
         public SqlConnection Connection { get; set; }
-        public IPMasterManager(ModbusIpMaster master, int slave, DataTable commandsData, DataTable metaData)
+        public IPMasterManager(ModbusIpMaster master, int slave, DataTable commandsData, DataTable metaData, DataTable writeData)
         {
             string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
             Connection = new SqlConnection(ConnectionString);
@@ -90,6 +91,55 @@ namespace MicroDAQ.DataItem
                     flag += 1;
                 }
             }
+        }
+        public void Write()
+        {
+            for (int i = 0; i < dtWriteData.Rows.Count; i++)
+            {
+                string type = dtWriteData.Rows[i]["type"].ToString();
+                string regesiter = dtWriteData.Rows[i]["RegisterName"].ToString();
+                ushort adress = Convert.ToUInt16(dtWriteData.Rows[i]["RegesiterAddress"]);
+                ushort value = Convert.ToUInt16(dtWriteData.Rows[i]["cycle"]);
+                try
+                {
+                    ushort[] shorts;
+                    if (type == "WLT")
+                    {
+
+                        if (value == 1)
+                        {
+                            shorts = new ushort[4] { 1, 0, 0, 0 };
+                        }
+                        else if (value == 2)
+                        {
+                            shorts = new ushort[4] { 0, 1, 0, 0 };
+                        }
+                        else if (value == 4)
+                        {
+                            shorts = new ushort[4] { 0, 0, 1, 0 };
+                        }
+                        else
+                        {
+                            shorts = new ushort[4] { 1, 0, 0, 1 };
+                        }
+                        IpMaster.WriteMultipleRegisters(slaveAddress, adress, shorts);
+                    }
+                    else
+                    {
+                        shorts = new ushort[1] { value };
+                        IpMaster.WriteMultipleRegisters(slaveAddress, adress, shorts);
+
+                    }
+
+                }
+                catch
+                { }
+            }
+        }
+        public void ReadWriteData()
+        {
+            Read();
+            Write();
         }
 
         private float ushortToFloat(ushort highNumber,ushort lowNumber)
