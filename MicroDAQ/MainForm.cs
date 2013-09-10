@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -46,7 +46,7 @@ namespace MicroDAQ
         {
             ni.Icon = this.Icon;
             ni.Text = this.Text;
-            
+
             bool autoStart = false;
             try
             {
@@ -232,6 +232,23 @@ namespace MicroDAQ
         }
 
 
+        private void createCtrl()
+        {
+            string pid = ini.GetValue(opcServerType, "ProgramID");
+            int i = 0;
+            foreach (var plc in Plcs)
+            {
+                Controller MetersCtrl = new Controller("MetersCtrl",
+
+                                        new string[] { plc.Connection + string.Format(wordArrayItemFormat, 2, 100, 5) },
+                                        new string[] { plc.Connection + string.Format(wordArrayItemFormat, 2, 120, 5) }
+                                      );
+                Program.MeterManager.CTMeters.Add(90 + i++, MetersCtrl);
+                MetersCtrl.Connect(pid, "127.0.0.1");
+            }
+        }
+
+
         private IList<IDatabaseManage> createDBManagers()
         {
             bool success = false;
@@ -270,38 +287,43 @@ namespace MicroDAQ
                 if (ReadConfig())
                     if (CreateItems())
                     {
+                        createCtrl();
                         Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
+                        Program.opcGateway.StateChanged += new EventHandler(opcGateway_StateChanged);
                         Program.opcGateway.Start();
-
-                        //添加获取采集点的数量
-                        for (int i = 0; i < Plcs.Count; i++)
-                        {
-                            PLCStationInformation plc = Plcs[i];
-                            for (int j = 0; j < plc.ItemsNumber.Length; j++)
-                            {
-                                PLCStationInformation.ConfigItemsNumber num = plc.ItemsNumber[j];
-
-                                tssddbPLC.DropDownItems.Add(Plcs[i].Connection);
-                                foreach (ToolStripItem tsiItem in tssddbPLC.DropDownItems)
-                                {
-                                    ToolStripMenuItem ti = tsiItem as ToolStripMenuItem;
-                                    if (ti != null && ti.Text == Plcs[i].Connection)
-                                    {
-                                        ti.DropDownItems.Add("20字节监测点数量： " + num.BigItems.ToString());
-                                        ti.DropDownItems.Add("10字节检测点数量： " + num.SmallItems.ToString());
-
-                                    }
-
-                                }
-
-                            }
-
-
-                        }
 
 
                     }
 
+        }
+
+        void opcGateway_StateChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine((sender as OpcGateway).RunningState);
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new MethodInvoker(delegate
+                {
+                    if (Program.opcGateway.RunningState == Gateway.RunningState.Running)
+                    {
+                        //添加获取采集点的数量
+                        this.tsddbPLC.DropDownItems.Clear();
+                        foreach (PLCStationInformation plc in Plcs)
+                        {
+                            ToolStripMenuItem tsiPLC = new ToolStripMenuItem(plc.Connection);
+                            this.tsddbPLC.DropDownItems.Add(tsiPLC);
+                            for (int i = 0; i < plc.ItemsNumber.Length; i++)
+                            {
+                                ToolStripMenuItem tsiItemGrop = new ToolStripMenuItem(string.Format("第{0}对DB块", i+1));
+                                tsiPLC.DropDownItems.Add(tsiItemGrop);
+
+                                tsiItemGrop.DropDownItems.Add(string.Format("20字节监测点数：{0}", plc.ItemsNumber[i].BigItems));
+                                tsiItemGrop.DropDownItems.Add(string.Format("10字节监测点数：{0}", plc.ItemsNumber[i].SmallItems));
+                            }
+                        }
+                    }
+                }));
+            }
         }
 
 

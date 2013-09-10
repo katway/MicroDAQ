@@ -39,11 +39,25 @@ namespace MicroDAQ.Gateway
 
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (Gateway.RunningState)((int)state);
+            if ((UpdateCycle.State == JonLibrary.Automatic.RunningState.Running) || (RemoteCtrlCycle.State == JonLibrary.Automatic.RunningState.Running))
+            {
+                this.RunningState = Gateway.RunningState.Running;
+            }
+            else
+            {
+                this.RunningState = Gateway.RunningState.Stopped;
+            }
         }
         void RemoteCtrlCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (Gateway.RunningState)((int)state);
+            if ((UpdateCycle.State == JonLibrary.Automatic.RunningState.Running) || (RemoteCtrlCycle.State == JonLibrary.Automatic.RunningState.Running))
+            {
+                this.RunningState = Gateway.RunningState.Running;
+            }
+            else
+            {
+                this.RunningState = Gateway.RunningState.Stopped;
+            }
         }
         /// <summary>
         /// 数据项管理器
@@ -130,6 +144,7 @@ namespace MicroDAQ.Gateway
         /// </summary>
         public override void Start()
         {
+        #error  写死了，Matrikon.OPC.Universal
             foreach (var manager in this.ItemManagers)
                 manager.Connect("Matrikon.OPC.Universal", "127.0.0.1");
             UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);

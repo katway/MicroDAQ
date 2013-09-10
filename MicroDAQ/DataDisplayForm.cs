@@ -366,7 +366,9 @@ namespace MicroDAQ
         }
         #endregion
         private void FormDemo_FormClosing(object sender, FormClosingEventArgs e)
-        {           
+        {      
+            
+            
             try
             {
                 connection.Close();               
