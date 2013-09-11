@@ -291,6 +291,8 @@ namespace MicroDAQ
                         createCtrl();
                         Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
                         Program.opcGateway.StateChanged += new EventHandler(opcGateway_StateChanged);
+                        Program.opcGateway.UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
+                        Program.opcGateway.RemoteCtrlCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrlCycle_WorkStateChanged);
                         Program.opcGateway.Start();
 
 
@@ -327,8 +329,7 @@ namespace MicroDAQ
             }
         }
 
-
-        void RemoteCtrl_WorkStateChanged(JonLibrary.Automatic.RunningState state)
+        void RemoteCtrlCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
             this.BeginInvoke(new MethodInvoker(delegate
             {
@@ -349,6 +350,9 @@ namespace MicroDAQ
                 }
             }));
         }
+
+
+
 
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
@@ -380,7 +384,10 @@ namespace MicroDAQ
 
         private void btnPC_Click(object sender, EventArgs e)
         {
-            Program.opcGateway.Pause();
+            if (Program.opcGateway.RunningState == Gateway.RunningState.Running)
+                Program.opcGateway.Pause();
+            else
+                Program.opcGateway.Continue();
         }
 
         private void Form2_FormClosing(object sender, FormClosingEventArgs e)

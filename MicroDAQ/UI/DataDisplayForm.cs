@@ -88,10 +88,8 @@ namespace MicroDAQ.Specifical
 
                     string sql = @"SELECT v.id AS 参数ID,
                                      p.name AS 参数名称,
-                                     t.name AS 参数类型,
                                      v.value1 AS 采集值1,
                                      v.value2 AS 采集值2,
-                                     v.value3 AS 采集值3,
                                      p.unit AS 单位,
                                      v.time AS 刷新时间,
                                      v.zztime AS 存储点
@@ -108,14 +106,11 @@ namespace MicroDAQ.Specifical
                     NewTable.Columns.AddRange(new DataColumn[]{
                         new DataColumn("参数ID"),
                         new DataColumn("参数名称"),
-                        new DataColumn("参数类型"),
                         new DataColumn("数据采集值1"),                      
                         new DataColumn("数据采集值2"),
-                        new DataColumn("数据采集值3"),
                         new DataColumn("单位"),
                         new DataColumn("刷新时间"),
                         new DataColumn("存储点"), 
-                        new DataColumn("PLC的编号ID"),
                         new DataColumn("PLC数据值1"),
                         new DataColumn("PLC设备类型"),
                         new DataColumn("PLC状态"),
@@ -132,15 +127,14 @@ namespace MicroDAQ.Specifical
                                     DataRow row = NewTable.NewRow();
                                     row["参数ID"] = tmp[0].ToString();
                                     row["参数名称"] = tmp[1].ToString();
-                                    row["参数类型"] = tmp[2].ToString();
-                                    row["数据采集值1"] = tmp[3].ToString();
-                                    row["数据采集值2"] = tmp[4].ToString();
-                                    row["数据采集值3"] = tmp[5].ToString();
-                                    row["单位"] = tmp[6].ToString();
-                                    row["刷新时间"] = tmp[7].ToString();
-                                    row["存储点"] = tmp[8].ToString();
-
-                                    row["PLC的编号ID"] = meter.ID.ToString();
+                                    
+                                    row["数据采集值1"] = tmp[2].ToString();
+                                    row["数据采集值2"] = tmp[3].ToString();
+                                    
+                                    row["单位"] = tmp[4].ToString();
+                                    row["刷新时间"] = tmp[5].ToString();
+                                    row["存储点"] = tmp[6].ToString();
+                                                                        
                                     row["PLC数据值1"] = meter.Value.ToString();
                                     row["PLC设备类型"] = meter.Type.ToString();
                                     row["PLC状态"] = meter.State.ToString();
@@ -160,12 +154,12 @@ namespace MicroDAQ.Specifical
                     //比较数据是否相等，如果不相等数据背景色改变
                     for (int j = 0; j < dgvDB.Rows.Count; j++)
                     {
-                        string a = this.dgvDB.Rows[j].Cells[3].Value.ToString();
-                        string b = this.dgvDB.Rows[j].Cells[10].Value.ToString();
+                        string a = this.dgvDB.Rows[j].Cells[2].Value.ToString();
+                        string b = this.dgvDB.Rows[j].Cells[7].Value.ToString();
                         if (a != b)
                         {
-                            this.dgvDB.Rows[j].Cells[3].Style.BackColor = Color.Red;
-                            this.dgvDB.Rows[j].Cells[10].Style.BackColor = Color.Red;
+                            this.dgvDB.Rows[j].Cells[2].Style.BackColor = Color.Red;
+                            this.dgvDB.Rows[j].Cells[7].Style.BackColor = Color.Red;
                         }
 
                     }
@@ -442,7 +436,6 @@ namespace MicroDAQ.Specifical
         {
             ShowItems();
         }
-
         //清除meter-value里面的数据：
         private void btnDelete_Click(object sender, EventArgs e)
         {
