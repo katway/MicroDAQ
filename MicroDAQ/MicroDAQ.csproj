@@ -91,24 +91,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlarmControl.cs">
+    <Compile Include="Specifical\DataState.cs" />
+    <Compile Include="Specifical\DataType.cs" />
+    <Compile Include="Specifical\RunningState.cs" />
+    <Compile Include="UI\AlarmControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AlarmControl.Designer.cs">
+    <Compile Include="UI\AlarmControl.Designer.cs">
       <DependentUpon>AlarmControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="AlertCode.cs" />
-    <Compile Include="Controller.cs" />
+    <Compile Include="Specifical\AlertCode.cs" />
+    <Compile Include="Specifical\Controller.cs" />
     <Compile Include="Database\DatabaseManage.cs" />
     <Compile Include="Database\IDatabaseManage.cs" />
     <Compile Include="DataItem\Item.cs" />
     <Compile Include="DataItem\IDataItemManage.cs" />
-    <Compile Include="FlowAlertManager.cs" />
+    <Compile Include="Specifical\FlowAlertManager.cs" />
     <Compile Include="DataItem\DataItemManager.cs" />
-    <Compile Include="DataDisplayForm.cs">
+    <Compile Include="UI\DataDisplayForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DataDisplayForm.Designer.cs">
+    <Compile Include="UI\DataDisplayForm.Designer.cs">
       <DependentUpon>DataDisplayForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Gateway\GatewayBase.cs" />
@@ -122,23 +125,23 @@
     </Compile>
     <Compile Include="Machine.cs" />
     <Compile Include="MachineManager.cs" />
-    <Compile Include="Meter.cs" />
+    <Compile Include="Specifical\Meter.cs" />
     <Compile Include="Gateway\OpcGateway.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestAlarm.cs">
+    <Compile Include="UI\TestAlarm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TestAlarm.Designer.cs">
+    <Compile Include="UI\TestAlarm.Designer.cs">
       <DependentUpon>TestAlarm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PLCStation.cs" />
+    <Compile Include="Specifical\PLCStation.cs" />
     <Compile Include="UI\ItemAddress.cs" />
-    <EmbeddedResource Include="AlarmControl.resx">
+    <EmbeddedResource Include="UI\AlarmControl.resx">
       <DependentUpon>AlarmControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="DataDisplayForm.resx">
+    <EmbeddedResource Include="UI\DataDisplayForm.resx">
       <DependentUpon>DataDisplayForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
@@ -154,7 +157,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="TestAlarm.resx">
+    <EmbeddedResource Include="UI\TestAlarm.resx">
       <DependentUpon>TestAlarm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />

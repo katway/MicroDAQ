@@ -5,8 +5,9 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using MicroDAQ.Specifical;
 
-namespace MicroDAQ
+namespace MicroDAQ.UI
 {
     public partial class AlarmControl : UserControl
     {
@@ -16,10 +17,11 @@ namespace MicroDAQ
             Slave = 200;
         }
 
-        public AlarmControl(int slave, byte alertCode):this()
+        public AlarmControl(int slave, byte alertCode)
+            : this()
         {
             Slave = slave;
-            AlertCode = (MicroDAQ.AlertCode)alertCode;
+            AlertCode = (AlertCode)alertCode;
         }
 
         void AlarmRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -28,9 +30,9 @@ namespace MicroDAQ
             if (sender is RadioButton)
                 rd = sender as RadioButton;
             if (rd.Equals(this.rdoBuzzRed)) AlertCode = AlertCode.BuzzRed;
-            if (rd.Equals(this.rdoRed)) AlertCode = MicroDAQ.AlertCode.Red;
-            if (rd.Equals(this.rdoYellow)) AlertCode = MicroDAQ.AlertCode.Yellow;
-            if (rd.Equals(this.rdoGreen)) AlertCode = MicroDAQ.AlertCode.Green;
+            if (rd.Equals(this.rdoRed)) AlertCode = AlertCode.Red;
+            if (rd.Equals(this.rdoYellow)) AlertCode = AlertCode.Yellow;
+            if (rd.Equals(this.rdoGreen)) AlertCode = AlertCode.Green;
         }
 
 
@@ -56,6 +58,6 @@ namespace MicroDAQ
             this.Slave = slave;
         }
 
-      
+
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using MicroDAQ.Specifical;
 namespace MicroDAQ.DataItem
 {
     public class Item

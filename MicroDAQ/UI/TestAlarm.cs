@@ -5,8 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using MicroDAQ.UI;
 
-namespace MicroDAQ
+namespace MicroDAQ.UI
 {
     public partial class TestAlarm : Form
     {

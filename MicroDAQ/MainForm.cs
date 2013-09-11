@@ -16,6 +16,7 @@ using MicroDAQ.Database;
 using MicroDAQ.Gateway;
 using log4net;
 using System.Data.SqlClient;
+using MicroDAQ.Specifical;
 
 namespace MicroDAQ
 {
@@ -314,7 +315,7 @@ namespace MicroDAQ
                             this.tsddbPLC.DropDownItems.Add(tsiPLC);
                             for (int i = 0; i < plc.ItemsNumber.Length; i++)
                             {
-                                ToolStripMenuItem tsiItemGrop = new ToolStripMenuItem(string.Format("第{0}对DB块", i+1));
+                                ToolStripMenuItem tsiItemGrop = new ToolStripMenuItem(string.Format("第{0}对DB块", i + 1));
                                 tsiPLC.DropDownItems.Add(tsiItemGrop);
 
                                 tsiItemGrop.DropDownItems.Add(string.Format("20字节监测点数：{0}", plc.ItemsNumber[i].BigItems));

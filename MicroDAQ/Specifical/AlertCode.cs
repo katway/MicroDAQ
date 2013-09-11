@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MicroDAQ
+namespace MicroDAQ.Specifical
 {
     public enum AlertCode : byte
     {

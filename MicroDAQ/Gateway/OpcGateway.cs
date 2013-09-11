@@ -8,6 +8,7 @@ using System.Data;
 using MicroDAQ.Database;
 using MicroDAQ.DataItem;
 using log4net;
+using MicroDAQ.Specifical;
 
 namespace MicroDAQ.Gateway
 {
@@ -144,7 +145,7 @@ namespace MicroDAQ.Gateway
         /// </summary>
         public override void Start()
         {
-        #error  写死了，Matrikon.OPC.Universal
+#warning  写死了，Matrikon.OPC.Universal
             foreach (var manager in this.ItemManagers)
                 manager.Connect("Matrikon.OPC.Universal", "127.0.0.1");
             UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);

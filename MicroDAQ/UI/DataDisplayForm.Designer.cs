@@ -1,4 +1,4 @@
-﻿namespace MicroDAQ
+﻿namespace MicroDAQ.Specifical
 {
     partial class DataDisplayForm
     {

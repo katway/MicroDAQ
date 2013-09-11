@@ -1,4 +1,4 @@
-﻿namespace MicroDAQ
+﻿namespace MicroDAQ.UI
 {
     partial class AlarmControl
     {

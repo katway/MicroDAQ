@@ -4,6 +4,7 @@ using System.Text;
 using System.Data;
 using MicroDAQ.DataItem;
 using JonLibrary.OPC;
+using MicroDAQ.Specifical;
 
 
 namespace MicroDAQ.DataItem

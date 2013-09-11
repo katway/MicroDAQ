@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using JonLibrary.OPC;
+using MicroDAQ.Specifical;
 
 namespace MicroDAQ
 {
@@ -23,11 +24,5 @@ namespace MicroDAQ
                 throw new Exception("不允许创建多实例");
             }
         }
-
-
-
-
-
-
     }
 }

@@ -6,7 +6,7 @@ using MicroDAQ.DataItem;
 using JonLibrary.OPC;
 
 
-namespace MicroDAQ
+namespace MicroDAQ.Specifical
 {
     class FlowAlertManager : IDataItemManage
     {

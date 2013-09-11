@@ -3,71 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 
-namespace MicroDAQ
+namespace MicroDAQ.Specifical
 {
-    public enum DataType
-    {
-        温度表 = 1,
-        湿度表 = 2,
-        压差表 = 4,
-        风速仪 = 5,
-        压力表 = 8,
-        电导率 = 9,
-        总有机碳 = 10,
-        流量表 = 16,
-        尘埃粒子 = 32,
-        浮游菌 = 64,
-        真空泵 = 65,
-        设备状态 = 66,
-        灭菌时间累加 = 67,
-        F0值 = 68,
-        灭菌时间 = 69,
-        脉动次数 = 70,
-        干燥时间 = 71,
-        干燥间隔 = 72,
-        脉动上限 = 73,
-        脉动下限 = 74,
-        压力回差 = 75,
-        干燥回压 = 76,
-        补气间隔 = 77,
-        前门关到位 = 78,
-        后门关到位 = 79,
-        真空泵过热 = 80,
-        夹层进气阀 = 81,
-        内层进气阀 = 82,
-        内层真空阀 = 83,
-        内层补气阀 = 84,
-        内层排气阀 = 85,
-        运行灯 = 86,
-        结束报警灯 = 87,
-        注水阀 = 88,
-        真空度 = 89,
-        速度 = 90,
-        时间间隔 = 91,
-        生产总量 = 92,
-        运行时间小时数 = 93,
-        当前装量号 = 94,
-        产量 = 95,
-        运行时间分钟数 = 96,
-        设备 = 128
-    }
-    public enum RunningState
-    {
-        已读取 = 1,
-        执行中 = 2,
-        完成 = 4,
-        错误 = 8,
-        未完成 = 16
-    }
-    public enum DataState
-    {
-        正常 = 1,
-        仪表故障 = 2,
-        仪表掉线 = 4,
-        已启动 = 8,
-        已停止 = 16
-    }
-
+  
     public class Particle
     {
         public Particle()
@@ -126,7 +64,7 @@ namespace MicroDAQ
                                 case 2:
                                     this.State = (DataState)(ushort)value[i];
                                     break;
-                                case 3:                                   
+                                case 3:
                                     this.DataTick = (int)value[i];
                                     break;
                                 case 4:

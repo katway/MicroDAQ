@@ -40,9 +40,7 @@
             this.tsslMeters = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslUpdate = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsslRemote = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tsslPLC = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsddbPLC = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ni = new System.Windows.Forms.NotifyIcon(this.components);
             this.cmsNI = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.退出EToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,11 +88,9 @@
             this.tsslProject,
             this.tsslVersion,
             this.tsslMeters,
-            this.tsslUpdate,
-            this.tsslRemote,
-            this.tsslPLC,
             this.tsddbPLC,
-            this.toolStripStatusLabel1});
+            this.tsslUpdate,
+            this.tsslRemote});
             this.stspMain.Location = new System.Drawing.Point(0, 253);
             this.stspMain.Name = "stspMain";
             this.stspMain.Size = new System.Drawing.Size(476, 26);
@@ -121,19 +117,19 @@
             // 
             // tsslMeters
             // 
-            this.tsslMeters.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.tsslMeters.DoubleClickEnabled = true;
             this.tsslMeters.Name = "tsslMeters";
             this.tsslMeters.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.tsslMeters.Size = new System.Drawing.Size(60, 21);
+            this.tsslMeters.Size = new System.Drawing.Size(56, 21);
             this.tsslMeters.Text = "采集点：";
             this.tsslMeters.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.tsslMeters.Click += new System.EventHandler(this.tsslMeters_Click);
             // 
             // tsslUpdate
             // 
+            this.tsslUpdate.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
             this.tsslUpdate.Name = "tsslUpdate";
-            this.tsslUpdate.Size = new System.Drawing.Size(15, 21);
+            this.tsslUpdate.Size = new System.Drawing.Size(19, 21);
             this.tsslUpdate.Text = "S";
             // 
             // tsslRemote
@@ -141,12 +137,6 @@
             this.tsslRemote.Name = "tsslRemote";
             this.tsslRemote.Size = new System.Drawing.Size(15, 21);
             this.tsslRemote.Text = "S";
-            // 
-            // tsslPLC
-            // 
-            this.tsslPLC.Name = "tsslPLC";
-            this.tsslPLC.Size = new System.Drawing.Size(77, 21);
-            this.tsslPLC.Text = "PLC的数量：";
             // 
             // tsddbPLC
             // 
@@ -156,12 +146,6 @@
             this.tsddbPLC.Name = "tsddbPLC";
             this.tsddbPLC.Size = new System.Drawing.Size(29, 24);
             this.tsddbPLC.Text = "PLC的显示数量";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(131, 17);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
             // ni
             // 
@@ -248,8 +232,6 @@
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.ToolStripStatusLabel tsslRemote;
         private System.Windows.Forms.Splitter splitter2;
-        private System.Windows.Forms.ToolStripStatusLabel tsslPLC;
         private System.Windows.Forms.ToolStripDropDownButton tsddbPLC;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
