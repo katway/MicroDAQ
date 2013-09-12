@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 
-namespace MicroDAQ.Gateway
+
+namespace MicroDAQ.Common
 {
     public abstract class GatewayBase : IGateway
     {
         /// <summary>
         /// 运行状态
         /// </summary>
-        public Gateway.RunningState RunningState
+        public GatewayState RunningState
         {
             get { return state; }
             set
@@ -20,7 +21,7 @@ namespace MicroDAQ.Gateway
                 OnStateChanged();
             }
         }
-        private RunningState state;
+        private GatewayState state;
         /// <summary>
         /// 启动
         /// </summary>

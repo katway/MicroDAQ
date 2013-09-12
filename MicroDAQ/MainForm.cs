@@ -16,6 +16,7 @@ using MicroDAQ.Database;
 using MicroDAQ.Gateway;
 using log4net;
 using System.Data.SqlClient;
+using MicroDAQ.Common;
 
 namespace MicroDAQ
 {

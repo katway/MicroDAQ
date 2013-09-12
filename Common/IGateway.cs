@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MicroDAQ.Gateway
+namespace MicroDAQ.Common
 {
-    interface IGateway : IDisposable
+    public interface IGateway : IDisposable
     {
         void Start();
         void Pause();

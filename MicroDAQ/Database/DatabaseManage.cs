@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection;
+using MicroDAQ.Common;
 
 namespace MicroDAQ.Database
 {
@@ -126,7 +126,7 @@ namespace MicroDAQ.Database
 
 
 
-        public bool UpdateItem(DataItem.Item item)
+        public bool UpdateItem(Item item)
         {
             bool success = false;
             try
