@@ -119,13 +119,13 @@ namespace MicroDAQ.Gateway
             SerialMasterGroup= SerialMasterGroupCount();
         }
         /// <summary>
-        /// 每个设备的命令
+        /// 每个设备的读命令
         /// </summary>
         /// <param name="deviceID"></param>
         /// <returns></returns>
-        private DataTable GetCommandsByID(string deviceID)
+        private DataTable GetReadCommandsByID(string deviceID)
         {
-            string sqlStr = "select * from  ModbusCommands a left join RegisterType b on a.RegisterType=b.SerialID  where a.ModbusSlave_SerialID=" +"'"+ deviceID+"'";
+            string sqlStr = "select * from  ModbusCommands a left join RegisterType b on a.RegisterType=b.SerialID  where a.ModbusSlave_SerialID=" + "'" + deviceID + "'and b.registerName='HoldinGregister' or b.registerName='InputRegisters' ";
             Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();
@@ -134,7 +134,7 @@ namespace MicroDAQ.Gateway
             return ds.Tables[0];
         }
         /// <summary>
-        /// 每个设备所有的唯一编号
+        /// 每个设备读命令的唯一编号
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
@@ -152,6 +152,16 @@ namespace MicroDAQ.Gateway
                     sqlStr +="'"+dt.Rows[i]["SerialID"].ToString() + "')";
                 }
             }
+            Connection.Open();
+            SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            Connection.Close();
+            return ds.Tables[0];
+        }
+        private DataTable GetWriteCommandsByID(string deviceID)
+        {
+            string sqlStr = "select * from modubs_control a where a.SerialID=" + "'" + deviceID + "'";
             Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();
@@ -305,17 +315,17 @@ namespace MicroDAQ.Gateway
                             {
                                 string deviceID = IPMasterDevice.Rows[row]["SerialID"].ToString();
                                 int slave = Convert.ToInt32(IPMasterDevice.Rows[row]["Slave"]);
-                                DataTable commandData = GetCommandsByID(deviceID);
+                                DataTable commandData = GetReadCommandsByID(deviceID);
+                                DataTable metaData = new DataTable();
+                                DataTable writeData = GetWriteCommandsByID(deviceID);
                                 if (commandData.Rows.Count != 0)
                                 {
-                                    DataTable metaData = GetMetaByID(commandData);
-                                    IPMasterManager manager = new IPMasterManager(master, slave, commandData, metaData);
-                                    IPManagers.Add(manager);
+                                    metaData = GetMetaByID(commandData);
                                 }
-                                else
-                                {
-                                    return;
-                                }
+                              IPMasterManager manager = new IPMasterManager(master, slave, commandData, metaData,writeData);
+                              IPManagers.Add(manager);
+                                
+                                
                                 row = row + 1;
                             }
                         }
@@ -340,14 +350,16 @@ namespace MicroDAQ.Gateway
                             {
                                 string deviceID =IPMasterDevice.Rows[row]["SerialID"].ToString();
                                 int slave = Convert.ToInt32(IPMasterDevice.Rows[row]["Slave"]);
-                                DataTable commandData = GetCommandsByID(deviceID);
+                                DataTable commandData = GetReadCommandsByID(deviceID);
+                                DataTable metaData = new DataTable();
+                                DataTable writeData = GetWriteCommandsByID(deviceID);
                                 if (commandData.Rows.Count != 0)
                                 {
-                                    DataTable metaData = GetMetaByID(commandData);
-                                    SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData);
-                                    SerialManagers.Add(manager);
+                                    metaData = GetMetaByID(commandData);
                                 }
-                                else { return; }
+                                    SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData,writeData);
+                                    SerialManagers.Add(manager);
+                                
                                 row = row + 1;
                             }
                         }
@@ -383,14 +395,16 @@ namespace MicroDAQ.Gateway
                     {
                         string deviceID =SerialMasterDevice.Rows[row]["SerialID"].ToString();
                         int slave = Convert.ToInt32(SerialMasterDevice.Rows[row]["Slave"]);
-                        DataTable commandData = GetCommandsByID(deviceID);
+                        DataTable commandData = GetReadCommandsByID(deviceID);
+                        DataTable metaData = new DataTable();
+                        DataTable writeData = GetWriteCommandsByID(deviceID);
                         if (commandData.Rows.Count != 0)
                         {
-                            DataTable metaData = GetMetaByID(commandData);
-                            SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData);
-                            SerialManagers.Add(manager);
+                            metaData = GetMetaByID(commandData);
                         }
-                        else { return; }
+                            SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData,writeData);
+                            SerialManagers.Add(manager);
+                        
                         row = row + 1;
                     }
                 }
@@ -445,7 +459,8 @@ namespace MicroDAQ.Gateway
         public void ErgodicManagers()
         {
             foreach (SerialPortMasterManager manager in this.SerialManagers)
-                manager.Read();
+                manager.ReadWriteData();
+  
             foreach (IPMasterManager manager in this.IPManagers)
                 manager.Read();
         }
