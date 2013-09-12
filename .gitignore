@@ -2,7 +2,7 @@
 # Thanks to Derick Bailey
 # http://www.lostechies.com/blogs/derickbailey/archive/2009/05/18/a-net-c-developer-s-gitignore-file.aspx
 # Additional Thanks to
-# �C Alexey Abramov
+# �Alexey Abramov
 
 # Standard VS.NET and ReSharper Foo
 [Oo]bj
@@ -34,11 +34,20 @@ deploy/*
 
 # Exclude ALL DLLs?
 #*.dll
-Test
+Test*
 *.dat
 
-#KDiff
+*.exe
+
+
+#KDiff临时文件
 *.orig
 *~HEAD
+*.BASE
+*.LOCAL
+*.REMOTE
 
-*.exe
+#VS升级文件
+_UpgradeReport_Files
+Backup
+UpgradeLog
