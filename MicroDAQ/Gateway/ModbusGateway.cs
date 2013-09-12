@@ -10,13 +10,14 @@ using MicroDAQ.DataItem;
 using System.IO.Ports;
 using MicroDAQ.Database;
 using JonLibrary.Automatic;
+using MicroDAQ.Common;
 
 
 namespace MicroDAQ.Gateway
 {
-    class ModbusGateway :Gateway.GatewayBase 
+    class ModbusGateway : GatewayBase
     {
-       
+
         public SqlConnection Connection { get; set; }
         public DataTable IPMasterDevice;     //通过ip通讯的设备信息表
         public DataTable SerialMasterDevice;//通过Com口通讯的设备信息表
@@ -26,7 +27,7 @@ namespace MicroDAQ.Gateway
         /// 数据项管理器
         /// </summary>
         public List<SerialPortMasterManager> SerialManagers = new List<SerialPortMasterManager>();
-        public List<IPMasterManager> IPManagers=new List<IPMasterManager>();
+        public List<IPMasterManager> IPManagers = new List<IPMasterManager>();
 
         /// <summary>
         /// 数据库管理器
@@ -36,7 +37,7 @@ namespace MicroDAQ.Gateway
         public CycleTask ModbusCycle { get; private set; }
         public ModbusGateway(IList<IDatabaseManage> databaseManagers)
         {
-           // string ConnectionString = "server=.\\SQLEXPRESS;database=Modbusdb;uid=sa;pwd=sa";
+            // string ConnectionString = "server=.\\SQLEXPRESS;database=Modbusdb;uid=sa;pwd=sa";
             string ConnectionString = "server=VWINTECH-201\\SQL2000;database=opcmes3;uid=sa;pwd=";
             Connection = new SqlConnection(ConnectionString);
             this.DatabaseManagers = databaseManagers;
@@ -48,7 +49,7 @@ namespace MicroDAQ.Gateway
             SetTable();
             CreateIPDevice();
             CreatePortDevice();
-                       
+
         }
 
         #region SQL查询,全局变量DataTable赋值
@@ -60,12 +61,12 @@ namespace MicroDAQ.Gateway
         {
             string sqlStr = "select a.SerialID,b.IP,b.Port,a.TransferType,a.slave from ModbusSlave a left join IPSetting b on a.IPSetting_SerialID=b.SerialID where a.Type='IP' order by a.TransferType,a.IPSetting_SerialID ";
             Connection.Open();
-            SqlDataAdapter da = new SqlDataAdapter(sqlStr,Connection);
+            SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();
             da.Fill(ds);
             Connection.Close();
             return ds.Tables[0];
-           
+
         }
         /// <summary>
         /// 获得所有串口通讯的设备信息
@@ -73,7 +74,7 @@ namespace MicroDAQ.Gateway
         /// <returns></returns>
         public DataTable GetSerialMasterDevice()
         {
-           
+
             string sqlStr = "select a.SerialID,b.BaudRate,b.Databits,b.Parity,b.Stopbits,c.PortName,a.TransferType,a.slave from ModbusSlave a left join SerialPortSetting b on a.SerialPortSetting_SerialID=b.SerialID left join SerialPort c on a.SerialPort_SerialID=c.SerialID where a.Type='serialPort' order by a.TransferType,a.SerialPortSetting_SerialID,c.SerialID  ";
             Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
@@ -116,7 +117,7 @@ namespace MicroDAQ.Gateway
             IPMasterDevice = GetIPMasterDevice();
             SerialMasterDevice = GetSerialMasterDevice();
             IPMasterGroup = IPMasterGroupCount();
-            SerialMasterGroup= SerialMasterGroupCount();
+            SerialMasterGroup = SerialMasterGroupCount();
         }
         /// <summary>
         /// 每个设备的读命令
@@ -145,11 +146,11 @@ namespace MicroDAQ.Gateway
             {
                 if (i != dt.Rows.Count - 1)
                 {
-                    sqlStr +="'"+dt.Rows[i]["SerialID"].ToString()+"',";
+                    sqlStr += "'" + dt.Rows[i]["SerialID"].ToString() + "',";
                 }
                 else
                 {
-                    sqlStr +="'"+dt.Rows[i]["SerialID"].ToString() + "')";
+                    sqlStr += "'" + dt.Rows[i]["SerialID"].ToString() + "')";
                 }
             }
             Connection.Open();
@@ -179,39 +180,39 @@ namespace MicroDAQ.Gateway
         /// <param name="port"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private ModbusIpMaster CreateModbusIpMaster(string ip,int port,string type)
-        { 
-            string[] strIP=ip.Split('.');
-            byte[] byteIP=new byte[4];
-            for(int i=0;i<strIP.Length;i++)
+        private ModbusIpMaster CreateModbusIpMaster(string ip, int port, string type)
+        {
+            string[] strIP = ip.Split('.');
+            byte[] byteIP = new byte[4];
+            for (int i = 0; i < strIP.Length; i++)
             {
-                byteIP[i]=Convert.ToByte(strIP[i]);
+                byteIP[i] = Convert.ToByte(strIP[i]);
             }
-             IPAddress address = new IPAddress(byteIP);
-             try
-             {
-                 if (type.ToLower() == "tcp")
-                 {
+            IPAddress address = new IPAddress(byteIP);
+            try
+            {
+                if (type.ToLower() == "tcp")
+                {
 
-                     TcpClient TcpClient = new TcpClient(address.ToString(), port);
-                     ModbusIpMaster master = ModbusIpMaster.CreateIp(TcpClient);
-                     return master;
-                 }
-                 else //UDP
-                 {
-                     UdpClient UdpClient = new UdpClient();
-                     IPEndPoint endPoint = new IPEndPoint(address, port);
-                     UdpClient.Connect(endPoint);
-                     ModbusIpMaster master = ModbusIpMaster.CreateIp(UdpClient);
-                     return master;
-                 }
-             }
-             catch
-             {
-                 // 连接失败
-                 return null;
-             }
-            
+                    TcpClient TcpClient = new TcpClient(address.ToString(), port);
+                    ModbusIpMaster master = ModbusIpMaster.CreateIp(TcpClient);
+                    return master;
+                }
+                else //UDP
+                {
+                    UdpClient UdpClient = new UdpClient();
+                    IPEndPoint endPoint = new IPEndPoint(address, port);
+                    UdpClient.Connect(endPoint);
+                    ModbusIpMaster master = ModbusIpMaster.CreateIp(UdpClient);
+                    return master;
+                }
+            }
+            catch
+            {
+                // 连接失败
+                return null;
+            }
+
         }
         /// <summary>
         /// 创建SerialMaster(TcpClient)
@@ -220,7 +221,7 @@ namespace MicroDAQ.Gateway
         /// <param name="port"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        private ModbusSerialMaster CreateSerialMaster(string ip,int port, string type)
+        private ModbusSerialMaster CreateSerialMaster(string ip, int port, string type)
         {
             string[] strIP = ip.Split('.');
             byte[] byteIP = new byte[4];
@@ -250,24 +251,24 @@ namespace MicroDAQ.Gateway
                 // 连接失败
                 return null;
             }
-           
-            
-            
+
+
+
         }
         private ModbusSerialMaster CreateSerialMaster(DataRow row)
         {
             try
             {
-            string com = row["PortName"].ToString();
-            SerialPort port = new SerialPort(com);
+                string com = row["PortName"].ToString();
+                SerialPort port = new SerialPort(com);
 
-            port.BaudRate =Convert.ToInt32(row["BaudRate"]);
-            port.DataBits =Convert.ToInt32(row["DataBits"]);
-            port.Parity = (Parity)Enum.Parse(typeof(Parity), row["Parity"].ToString());
-            port.StopBits = (StopBits)Enum.Parse(typeof(Parity), row["StopBits"].ToString());
-            port.Open();//打开串口
-            IModbusMaster master;
-           
+                port.BaudRate = Convert.ToInt32(row["BaudRate"]);
+                port.DataBits = Convert.ToInt32(row["DataBits"]);
+                port.Parity = (Parity)Enum.Parse(typeof(Parity), row["Parity"].ToString());
+                port.StopBits = (StopBits)Enum.Parse(typeof(Parity), row["StopBits"].ToString());
+                port.Open();//打开串口
+                IModbusMaster master;
+
                 if (row["TransferType"].ToString().ToLower() == "rtu")
                 {
                     master = ModbusSerialMaster.CreateRtu(port);
@@ -285,8 +286,8 @@ namespace MicroDAQ.Gateway
             }
         }
 
-    
-    
+
+
         #endregion
 
         #region 创建设备类
@@ -322,10 +323,10 @@ namespace MicroDAQ.Gateway
                                 {
                                     metaData = GetMetaByID(commandData);
                                 }
-                              IPMasterManager manager = new IPMasterManager(master, slave, commandData, metaData,writeData);
-                              IPManagers.Add(manager);
-                                
-                                
+                                IPMasterManager manager = new IPMasterManager(master, slave, commandData, metaData, writeData);
+                                IPManagers.Add(manager);
+
+
                                 row = row + 1;
                             }
                         }
@@ -334,9 +335,9 @@ namespace MicroDAQ.Gateway
                             for (int j = 0; j < count; j++)
                             {
                                 string deviceID = IPMasterDevice.Rows[row]["SerialID"].ToString();
-                               // ProCommandState(deviceID);
+                                // ProCommandState(deviceID);
                                 // row=row+1;
-                                 
+
                             }
                             row += count;
                         }
@@ -348,7 +349,7 @@ namespace MicroDAQ.Gateway
                         {
                             for (int j = 0; j < count; j++)
                             {
-                                string deviceID =IPMasterDevice.Rows[row]["SerialID"].ToString();
+                                string deviceID = IPMasterDevice.Rows[row]["SerialID"].ToString();
                                 int slave = Convert.ToInt32(IPMasterDevice.Rows[row]["Slave"]);
                                 DataTable commandData = GetReadCommandsByID(deviceID);
                                 DataTable metaData = new DataTable();
@@ -357,9 +358,9 @@ namespace MicroDAQ.Gateway
                                 {
                                     metaData = GetMetaByID(commandData);
                                 }
-                                    SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData,writeData);
-                                    SerialManagers.Add(manager);
-                                
+                                SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData, writeData);
+                                SerialManagers.Add(manager);
+
                                 row = row + 1;
                             }
                         }
@@ -369,7 +370,7 @@ namespace MicroDAQ.Gateway
                             for (int j = 0; j < count; j++)
                             {
                                 string deviceID = IPMasterDevice.Rows[row]["SerialID"].ToString();
-                               // ProCommandState(deviceID);
+                                // ProCommandState(deviceID);
                             }
                             row += count;
                         }
@@ -387,13 +388,13 @@ namespace MicroDAQ.Gateway
             {
                 int count = Convert.ToInt32(SerialMasterGroup.Rows[i][0]);//每组的个数
                 string type = SerialMasterDevice.Rows[row]["TransferType"].ToString();
-                DataRow rowData=SerialMasterDevice.Rows[row];             
+                DataRow rowData = SerialMasterDevice.Rows[row];
                 IModbusMaster master = CreateSerialMaster(rowData);
                 if (master != null)
                 {
                     for (int j = 0; j < count; j++) //同一个master，创建设备类
                     {
-                        string deviceID =SerialMasterDevice.Rows[row]["SerialID"].ToString();
+                        string deviceID = SerialMasterDevice.Rows[row]["SerialID"].ToString();
                         int slave = Convert.ToInt32(SerialMasterDevice.Rows[row]["Slave"]);
                         DataTable commandData = GetReadCommandsByID(deviceID);
                         DataTable metaData = new DataTable();
@@ -402,9 +403,9 @@ namespace MicroDAQ.Gateway
                         {
                             metaData = GetMetaByID(commandData);
                         }
-                            SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData,writeData);
-                            SerialManagers.Add(manager);
-                        
+                        SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData, writeData);
+                        SerialManagers.Add(manager);
+
                         row = row + 1;
                     }
                 }
@@ -412,7 +413,7 @@ namespace MicroDAQ.Gateway
                 {
                     row += count;
                 }
-                
+
             }
         }
         #endregion
@@ -420,11 +421,11 @@ namespace MicroDAQ.Gateway
         #region 状态改变
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (Gateway.RunningState)((int)state);
+            this.RunningState = (GatewayState)((int)state);
         }
         void ModbusCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (Gateway.RunningState)((int)state);
+            this.RunningState = (GatewayState)((int)state);
         }
         #endregion
 
@@ -460,7 +461,7 @@ namespace MicroDAQ.Gateway
         {
             foreach (SerialPortMasterManager manager in this.SerialManagers)
                 manager.ReadWriteData();
-  
+
             foreach (IPMasterManager manager in this.IPManagers)
                 manager.Read();
         }

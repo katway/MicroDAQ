@@ -4,6 +4,8 @@ using System.Text;
 using Modbus.Device;
 using System.Data;
 using System.Data.SqlClient;
+using MicroDAQ.Common;
+
 namespace MicroDAQ.DataItem
 {
     class IPMasterManager

@@ -209,6 +209,10 @@
       <Project>{52E0A79B-992D-4BB7-876A-B6F7373D69B8}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModbusLibrary\ModbusLibrary.csproj">
+      <Project>{8C1B7762-323A-44E8-A3B0-E1E3F6DF404D}</Project>
+      <Name>ModbusLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Modbus\Modbus.csproj">
       <Project>{FF96B252-2B24-44A1-A09C-6401B5D7ED23}</Project>
       <Name>Modbus</Name>

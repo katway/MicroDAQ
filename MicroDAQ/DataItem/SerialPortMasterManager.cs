@@ -5,6 +5,7 @@ using Modbus.Device;
 using Modbus.Utility;
 using System.Data;
 using System.Data.SqlClient;
+using MicroDAQ.Common;
 namespace MicroDAQ.DataItem
 {
     class SerialPortMasterManager
@@ -24,7 +25,7 @@ namespace MicroDAQ.DataItem
         /// <param name="commandsData"></param>
         /// <param name="metaData"></param>
 
-        public SerialPortMasterManager(IModbusMaster master,int slave, DataTable commandsData, DataTable metaData,DataTable writeData)
+        public SerialPortMasterManager(IModbusMaster master, int slave, DataTable commandsData, DataTable metaData, DataTable writeData)
         {
             string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
             Connection = new SqlConnection(ConnectionString);
@@ -34,12 +35,12 @@ namespace MicroDAQ.DataItem
             dtCommands = commandsData;
             dtMeta = metaData;
             dtWriteData = writeData;
-            Items=new List<Item>();
+            Items = new List<Item>();
             for (int i = 0; i < metaData.Rows.Count; i++)
             {
                 Items.Add(new Item());
             }
-           
+
         }
         /// <summary>
         /// 读数据
@@ -55,9 +56,9 @@ namespace MicroDAQ.DataItem
                 ushort adress = Convert.ToUInt16(dtCommands.Rows[i]["RegesiterAddress"]);
                 ushort length = Convert.ToUInt16(dtCommands.Rows[i]["Length"]);
                 string serialID = dtCommands.Rows[i]["SerialID"].ToString();
-                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + "'"+serialID+"'","Address ASC");//一条命令所对应的原始数据表数据
+                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID=" + "'" + serialID + "'", "Address ASC");//一条命令所对应的原始数据表数据
                 ushort[] values = new ushort[length];
-                int index=0;//values 索引
+                int index = 0;//values 索引
                 try
                 {
                     if (regesiter.ToLower() == "holdingregister")
@@ -65,7 +66,7 @@ namespace MicroDAQ.DataItem
                     else
                     { values = SerialMaster.ReadInputRegisters(slaveAddress, adress, length); }
                     //存储过程
-                   // ProCommandState(serialID, "true");
+                    // ProCommandState(serialID, "true");
                 }
                 catch
                 {
@@ -83,18 +84,18 @@ namespace MicroDAQ.DataItem
                     }
                     else
                     {
-                         ushort high;
-                         ushort low;
-                         if (rows[j]["Arithmetic"].ToString().ToLower() == "getfloatmsb")
-                         {
-                             high = values[index];
-                             low = values[index + 1];
-                         }
-                         else
-                         {
-                             low = values[index];
-                             high = values[index + 1];
-                         }
+                        ushort high;
+                        ushort low;
+                        if (rows[j]["Arithmetic"].ToString().ToLower() == "getfloatmsb")
+                        {
+                            high = values[index];
+                            low = values[index + 1];
+                        }
+                        else
+                        {
+                            low = values[index];
+                            high = values[index + 1];
+                        }
                         float value = ushortToFloat(high, low);
                         Items[flag].Value = value;
                         Items[flag].ID = Convert.ToInt32(rows[j]["Code"]);
@@ -106,12 +107,12 @@ namespace MicroDAQ.DataItem
         }
         public void Write()
         {
-            for (int i = 0; i<dtWriteData.Rows.Count; i++)
+            for (int i = 0; i < dtWriteData.Rows.Count; i++)
             {
                 string type = dtWriteData.Rows[i]["type"].ToString();
                 string regesiter = dtWriteData.Rows[i]["RegisterName"].ToString();
                 ushort adress = Convert.ToUInt16(dtWriteData.Rows[i]["RegesiterAddress"]);
-                ushort value=Convert.ToUInt16(dtWriteData.Rows[i]["cycle"]);
+                ushort value = Convert.ToUInt16(dtWriteData.Rows[i]["cycle"]);
                 try
                 {
                     ushort[] shorts;
@@ -138,11 +139,11 @@ namespace MicroDAQ.DataItem
                     }
                     else
                     {
-                        shorts=new ushort[1]{value};
+                        shorts = new ushort[1] { value };
                         SerialMaster.WriteMultipleRegisters(slaveAddress, adress, shorts);
-                        
+
                     }
-                    
+
                 }
                 catch
                 { }
@@ -159,10 +160,10 @@ namespace MicroDAQ.DataItem
         /// <param name="highNumber"></param>
         /// <param name="lowNumber"></param>
         /// <returns></returns>
-        private float ushortToFloat(ushort highNumber,ushort lowNumber)
+        private float ushortToFloat(ushort highNumber, ushort lowNumber)
         {
-         
-           return  ModbusUtility.GetSingle(highNumber, lowNumber);
+
+            return ModbusUtility.GetSingle(highNumber, lowNumber);
 
         }
         /// <summary>

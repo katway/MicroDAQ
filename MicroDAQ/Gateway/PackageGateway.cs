@@ -6,9 +6,10 @@ using JonLibrary.Automatic;
 using MicroDAQ.Database;
 using System.Xml;
 using System.IO.Ports;
+using MicroDAQ.Common;
 namespace MicroDAQ.Gateway
 {
-    class PackageGateway : Gateway.GatewayBase
+    class PackageGateway : GatewayBase
     {
         #region 全局变量，构造函数
         /// <summary>
@@ -40,18 +41,18 @@ namespace MicroDAQ.Gateway
             UpdateCycle = new CycleTask();
             UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
             ModbusCycle = new CycleTask();
-            ModbusCycle.WorkStateChanged+=new CycleTask.WorkStateChangeEventHandle(ModbusCycle_WorkStateChanged);
+            ModbusCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(ModbusCycle_WorkStateChanged);
         }
         #endregion
 
         #region 状态改变
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (Gateway.RunningState)((int)state);
+            this.RunningState = (GatewayState)((int)state);
         }
         void ModbusCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (Gateway.RunningState)((int)state);
+            this.RunningState = (GatewayState)((int)state);
         }
         #endregion
 
@@ -60,14 +61,14 @@ namespace MicroDAQ.Gateway
         /// 创建数据项管理器
         /// </summary>
         private void CreateItemsMangers(SerialPort port)
-        {  
-           
+        {
+
             for (int i = 0; i < count; i++)
             {
                 PackageDataItemManager data = new PackageDataItemManager(modbusName[i], slaveID[i], dic[slaveID[i]], port);
                 ItemManagers.Add(data);
             }
-           
+
         }
         private void ReadXml()
         {
@@ -100,14 +101,14 @@ namespace MicroDAQ.Gateway
                 }
                 dic.Add(Convert.ToByte(xmlNode.Attributes[1].Value), pro);
             }
-            
+
         }
         private SerialPort CreatePort()
         {
             SerialPort port = new SerialPort(SerialPort["Port"]);
-            port.BaudRate =Convert.ToInt32(SerialPort["BaudRate"]);
-            port.DataBits =Convert.ToInt32(SerialPort["DataBits"]);
-            port.Parity = (Parity)Enum.Parse(typeof(Parity),SerialPort["Parity"]);
+            port.BaudRate = Convert.ToInt32(SerialPort["BaudRate"]);
+            port.DataBits = Convert.ToInt32(SerialPort["DataBits"]);
+            port.Parity = (Parity)Enum.Parse(typeof(Parity), SerialPort["Parity"]);
             port.StopBits = (StopBits)Enum.Parse(typeof(Parity), SerialPort["StopBits"]);
             port.Open();//打开串口
             return port;
@@ -116,9 +117,9 @@ namespace MicroDAQ.Gateway
 
         #region 遍历数据项管理器
         public void ErgodicManagers()
-            {
+        {
             foreach (PackageDataItemManager manager in this.ItemManagers)
-                manager.ModbusReadData();     
+                manager.ModbusReadData();
         }
         #endregion
 
@@ -148,7 +149,7 @@ namespace MicroDAQ.Gateway
 
             ModbusCycle.Run(this.ErgodicManagers, System.Threading.ThreadPriority.BelowNormal);
             UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);
-          
+
         }
         #endregion
 
