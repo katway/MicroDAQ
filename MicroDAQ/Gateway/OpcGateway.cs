@@ -7,6 +7,7 @@ using System.Threading;
 using System.Data;
 using MicroDAQ.Database;
 using MicroDAQ.DataItem;
+using MicroDAQ.Common;
 
 namespace MicroDAQ.Gateway
 {
@@ -23,7 +24,7 @@ namespace MicroDAQ.Gateway
         /// 使用多个ItemManage创建OpcGateway实例
         /// </summary>
         /// <param name="itemManagers"></param>
-        public OpcGateway(IList<MicroDAQ.DataItem.IDataItemManage> itemManagers, IList<IDatabaseManage> databaseManagers)
+        public OpcGateway(IList<IDataItemManage> itemManagers, IList<IDatabaseManage> databaseManagers)
         {
             this.ItemManagers = itemManagers;
             this.DatabaseManagers = databaseManagers;
@@ -37,11 +38,11 @@ namespace MicroDAQ.Gateway
 
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (Gateway.RunningState)((int)state);
+            this.RunningState = (GatewayState)((int)state);
         }
         void RemoteCtrlCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (Gateway.RunningState)((int)state);
+            this.RunningState = (GatewayState)((int)state);
         }
         /// <summary>
         /// 数据项管理器
@@ -78,7 +79,7 @@ namespace MicroDAQ.Gateway
             foreach (var item in Program.M_flowAlert.Items)
             {
                 float t = 0.0f;
-                if ((item.Value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                if ((item.Value == 0) && ((item.State == ItemState.正常) || (item.State == ItemState.已启动)))
                     t = 28.3f;
                 if (item.Value == 2)
                     t = 0.0f;

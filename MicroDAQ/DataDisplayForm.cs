@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using MicroDAQ.DataItem;
 using MicroDAQ.Database;
+using MicroDAQ.Common;
 namespace MicroDAQ
 {
     public partial class DataDisplayForm : Form

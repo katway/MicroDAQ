@@ -1,7 +1,7 @@
 ﻿
-namespace MicroDAQ.Gateway
+namespace MicroDAQ.Common
 {
-    public enum RunningState
+    public enum GatewayState
     {
 
         Intilized,

@@ -4,6 +4,7 @@ using System.Text;
 using System.Data;
 using MicroDAQ.DataItem;
 using JonLibrary.OPC;
+using MicroDAQ.Common;
 
 
 namespace MicroDAQ.DataItem
@@ -79,8 +80,8 @@ namespace MicroDAQ.DataItem
                             {
                                 val = (ushort[])value[i];
                                 Manager.Items[item[i]].ID = val[0];
-                                Manager.Items[item[i]].Type = (DataType)val[1];
-                                Manager.Items[item[i]].State = (DataState)val[2];
+                                Manager.Items[item[i]].Type = (ItemType)val[1];
+                                Manager.Items[item[i]].State = (ItemState)val[2];
                                 Manager.Items[item[i]].Quality = Qualities[i];
                                 Manager.UpdateItemPair(Manager.Items[item[i]].ID, Manager.Items[item[i]]);
                             }

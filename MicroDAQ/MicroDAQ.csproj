@@ -98,9 +98,6 @@
     <Compile Include="AlertCode.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Database\DatabaseManage.cs" />
-    <Compile Include="Database\IDatabaseManage.cs" />
-    <Compile Include="DataItem\Item.cs" />
-    <Compile Include="DataItem\IDataItemManage.cs" />
     <Compile Include="FlowAlertManager.cs" />
     <Compile Include="DataItem\DataItemManager.cs" />
     <Compile Include="DataDisplayForm.cs">
@@ -109,9 +106,6 @@
     <Compile Include="DataDisplayForm.Designer.cs">
       <DependentUpon>DataDisplayForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Gateway\GatewayBase.cs" />
-    <Compile Include="Gateway\IGateway.cs" />
-    <Compile Include="Gateway\RunningState.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -202,6 +196,10 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{52E0A79B-992D-4BB7-876A-B6F7373D69B8}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpcOperate\OpcOperate.csproj">
       <Project>{D4092C70-56FE-45CA-AA8C-951BF10C3555}</Project>
       <Name>OpcOperate</Name>
