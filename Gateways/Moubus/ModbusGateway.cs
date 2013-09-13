@@ -36,7 +36,7 @@ namespace MicroDAQ.Gateways.Modbus
         public ModbusGateway(IList<IDatabaseManage> databaseManagers)
         {
             // string ConnectionString = "server=.\\SQLEXPRESS;database=Modbusdb;uid=sa;pwd=sa";
-            string ConnectionString = "server=VWINTECH-201\\SQL2000;database=opcmes3;uid=sa;pwd=";
+            string ConnectionString = "server=192.168.1.179;database=opcmes3;uid=microdaq;pwd=microdaq";
             Connection = new SqlConnection(ConnectionString);
             this.DatabaseManagers = databaseManagers;
             UpdateCycle = new CycleTask();
@@ -165,6 +165,16 @@ namespace MicroDAQ.Gateways.Modbus
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();
             da.Fill(ds);
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                if (row["type"].ToString() == "CTR")
+                {
+                    string sql = string.Format("Update remotecontrol SET cmdstate= {0} WHERE slave= {1}", 2, row["code"].ToString());//, Connection);
+                    SqlCommand Command = new SqlCommand(sql, Connection);
+                    Command.ExecuteNonQuery();
+                }
+            }
+
             Connection.Close();
             return ds.Tables[0];
         }
