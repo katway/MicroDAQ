@@ -326,12 +326,11 @@ namespace MicroDAQ.Gateways.Modbus
                                 int slave = Convert.ToInt32(IPMasterDevice.Rows[row]["Slave"]);
                                 DataTable commandData = GetReadCommandsByID(deviceID);
                                 DataTable metaData = new DataTable();
-                                DataTable writeData = GetWriteCommandsByID(deviceID);
                                 if (commandData.Rows.Count != 0)
                                 {
                                     metaData = GetMetaByID(commandData);
                                 }
-                                IPMasterManager manager = new IPMasterManager(master, slave, commandData, metaData, writeData);
+                                IPMasterManager manager = new IPMasterManager(master, slave, commandData, metaData, deviceID);
                                 IPManagers.Add(manager);
 
 
@@ -361,12 +360,11 @@ namespace MicroDAQ.Gateways.Modbus
                                 int slave = Convert.ToInt32(IPMasterDevice.Rows[row]["Slave"]);
                                 DataTable commandData = GetReadCommandsByID(deviceID);
                                 DataTable metaData = new DataTable();
-                                DataTable writeData = GetWriteCommandsByID(deviceID);
                                 if (commandData.Rows.Count != 0)
                                 {
                                     metaData = GetMetaByID(commandData);
                                 }
-                                SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData, writeData);
+                                SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData, deviceID);
                                 SerialManagers.Add(manager);
 
                                 row = row + 1;
@@ -406,12 +404,11 @@ namespace MicroDAQ.Gateways.Modbus
                         int slave = Convert.ToInt32(SerialMasterDevice.Rows[row]["Slave"]);
                         DataTable commandData = GetReadCommandsByID(deviceID);
                         DataTable metaData = new DataTable();
-                        DataTable writeData = GetWriteCommandsByID(deviceID);
                         if (commandData.Rows.Count != 0)
                         {
                             metaData = GetMetaByID(commandData);
                         }
-                        SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData, writeData);
+                        SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData, deviceID);
                         SerialManagers.Add(manager);
 
                         row = row + 1;
@@ -447,7 +444,12 @@ namespace MicroDAQ.Gateways.Modbus
                 {
                     foreach (Item item in mgr.Items)
                     {
-                        dbMgr.UpdateItem(item);
+                        if (item.DataTime > item.SyncTime)
+                        {
+                            dbMgr.UpdateItem(item);
+                            item.SyncTime = DateTime.Now;
+
+                        }
                     }
                 }
             }
@@ -457,7 +459,12 @@ namespace MicroDAQ.Gateways.Modbus
                 {
                     foreach (Item item in mgr.Items)
                     {
-                        dbMgr.UpdateItem(item);
+                        if (item.DataTime > item.SyncTime)
+                        {
+                            dbMgr.UpdateItem(item);
+                            item.SyncTime = DateTime.Now;
+
+                        }
                     }
                 }
             }

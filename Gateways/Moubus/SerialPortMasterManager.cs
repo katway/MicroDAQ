@@ -14,7 +14,7 @@ namespace MicroDAQ.Gateways.Modbus
         IModbusMaster SerialMaster;
         DataTable dtMeta;
         DataTable dtCommands;
-        DataTable dtWriteData;
+        string  device_ID;
         byte slaveAddress;
         public SqlConnection Connection { get; set; }
         /// <summary>
@@ -24,7 +24,7 @@ namespace MicroDAQ.Gateways.Modbus
         /// <param name="slave"></param>
         /// <param name="commandsData"></param>
         /// <param name="metaData"></param>
-        public SerialPortMasterManager(IModbusMaster master, int slave, DataTable commandsData, DataTable metaData, DataTable writeData)
+        public SerialPortMasterManager(IModbusMaster master, int slave, DataTable commandsData, DataTable metaData, string deviceID)
         {
             string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
             Connection = new SqlConnection(ConnectionString);
@@ -33,7 +33,7 @@ namespace MicroDAQ.Gateways.Modbus
             slaveAddress = Convert.ToByte(slave);
             dtCommands = commandsData;
             dtMeta = metaData;
-            dtWriteData = writeData;
+            device_ID = deviceID;
             Items = new List<Item>();
             for (int i = 0; i < metaData.Rows.Count; i++)
             {
@@ -78,6 +78,7 @@ namespace MicroDAQ.Gateways.Modbus
                     {
                         Items[flag].Value = Convert.ToSingle(values[index]);
                         Items[flag].ID = Convert.ToInt32(rows[j]["Code"]);
+                        Items[flag].DataTime = DateTime.Now;
                         index += 1;
                     }
                     else
@@ -97,6 +98,7 @@ namespace MicroDAQ.Gateways.Modbus
                         float value = ushortToFloat(high, low);
                         Items[flag].Value = value;
                         Items[flag].ID = Convert.ToInt32(rows[j]["Code"]);
+                        Items[flag].DataTime = DateTime.Now;
                         index += 2;
                     }
                     flag += 1;
@@ -105,6 +107,7 @@ namespace MicroDAQ.Gateways.Modbus
         }
         public void Write()
         {
+            DataTable dtWriteData= GetWriteCommandsByID(device_ID);
             for (int i = 0; i < dtWriteData.Rows.Count; i++)
             {
                 string type = dtWriteData.Rows[i]["type"].ToString();
@@ -159,6 +162,32 @@ namespace MicroDAQ.Gateways.Modbus
         private float ushortToFloat(ushort highNumber, ushort lowNumber)
         {
             return ModbusUtility.GetSingle(highNumber, lowNumber);
+        }
+        /// <summary>
+        /// 查询写命令
+        /// </summary>
+        /// <param name="deviceID"></param>
+        /// <returns></returns>
+
+        private DataTable GetWriteCommandsByID(string deviceID)
+        {
+            string sqlStr = "select * from modubs_control a where a.SerialID=" + "'" + deviceID + "'";
+            Connection.Open();
+            SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                if (row["type"].ToString() == "CTR")
+                {
+                    string sql = string.Format("Update remotecontrol SET cmdstate= {0} WHERE slave= {1}", 2, row["code"].ToString());//, Connection);
+                    SqlCommand Command = new SqlCommand(sql, Connection);
+                    Command.ExecuteNonQuery();
+                }
+            }
+
+            Connection.Close();
+            return ds.Tables[0];
         }
         /// <summary>
         /// 日志存储过程
