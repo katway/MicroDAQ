@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using MicroDAQ.Common;
 namespace MicroDAQ.Gateways.Modbus
 {
-    class SerialPortMasterManager
+    public class SerialPortMasterManager
     {
         public IList<Item> Items { get; set; }
         IModbusMaster SerialMaster;

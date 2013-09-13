@@ -8,8 +8,9 @@ using MicroDAQ.Common;
 
 namespace MicroDAQ.Gateways.Modbus
 {
-    class IPMasterManager
-    { public IList<Item> Items { get; set; }
+    public class IPMasterManager
+    {
+        public IList<Item> Items { get; set; }
         ModbusIpMaster IpMaster;
         DataTable dtMeta;
         DataTable dtCommands;
@@ -25,12 +26,12 @@ namespace MicroDAQ.Gateways.Modbus
             slaveAddress = Convert.ToByte(slave);
             dtCommands = commandsData;
             dtMeta = metaData;
-            Items=new List<Item>();
+            Items = new List<Item>();
             for (int i = 0; i < metaData.Rows.Count; i++)
             {
                 Items.Add(new Item());
             }
-           
+
         }
 
         public void Read()
@@ -44,9 +45,9 @@ namespace MicroDAQ.Gateways.Modbus
                 ushort adress = Convert.ToUInt16(dtCommands.Rows[i]["RegesiterAddress"]);
                 ushort length = Convert.ToUInt16(dtCommands.Rows[i]["Length"]);
                 string serialID = dtCommands.Rows[i]["SerialID"].ToString();
-                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID='" + serialID+"'","Address ASC");
+                DataRow[] rows = dtMeta.Select("ModbusCommands_SerialID='" + serialID + "'", "Address ASC");
                 ushort[] values = new ushort[length];
-                int index=0;//values 索引
+                int index = 0;//values 索引
                 try
                 {
                     if (regesiter.ToLower() == "holdingregister")
@@ -54,12 +55,12 @@ namespace MicroDAQ.Gateways.Modbus
                     else
                     { values = IpMaster.ReadInputRegisters(slaveAddress, adress, length); }
                     //存储过程
-                   // ProCommandState(serialID, "true");
+                    // ProCommandState(serialID, "true");
                 }
                 catch
                 {
                     //存储过程
-                   // ProCommandState(serialID, "false");
+                    // ProCommandState(serialID, "false");
                     return;
 
                 }
@@ -73,18 +74,18 @@ namespace MicroDAQ.Gateways.Modbus
                     }
                     else
                     {
-                         ushort high;
-                         ushort low;
-                         if (rows[j]["Arithmetic"].ToString().ToLower() == "getfloatmsb")
-                         {
-                             high = values[index];
-                             low = values[index + 1];
-                         }
-                         else
-                         {
-                             low = values[index];
-                             high = values[index + 1];
-                         }
+                        ushort high;
+                        ushort low;
+                        if (rows[j]["Arithmetic"].ToString().ToLower() == "getfloatmsb")
+                        {
+                            high = values[index];
+                            low = values[index + 1];
+                        }
+                        else
+                        {
+                            low = values[index];
+                            high = values[index + 1];
+                        }
                         float value = ushortToFloat(high, low);
                         Items[flag].Value = value;
                         Items[flag].ID = Convert.ToInt32(rows[j]["Code"]);
@@ -144,7 +145,7 @@ namespace MicroDAQ.Gateways.Modbus
             Write();
         }
 
-        private float ushortToFloat(ushort highNumber,ushort lowNumber)
+        private float ushortToFloat(ushort highNumber, ushort lowNumber)
         {
             byte[] high = BitConverter.GetBytes(highNumber);
             byte[] low = BitConverter.GetBytes(lowNumber);
@@ -153,9 +154,9 @@ namespace MicroDAQ.Gateways.Modbus
             allByte[1] = high[1];
             allByte[2] = low[0];
             allByte[3] = low[1];
-           return  BitConverter.ToSingle(allByte, 0);
+            return BitConverter.ToSingle(allByte, 0);
         }
-        private int ProCommandState(int serialID,string state)
+        private int ProCommandState(int serialID, string state)
         {
             SqlCommand command = new SqlCommand("proc_RecordCommandLog", Connection);
             Connection.Open();

@@ -13,7 +13,7 @@ using MicroDAQ.Common;
 
 namespace MicroDAQ.Gateways.Modbus
 {
-    class ModbusGateway : GatewayBase
+    public class ModbusGateway : GatewayBase
     {
 
         public SqlConnection Connection { get; set; }

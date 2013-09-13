@@ -17,6 +17,7 @@ using MicroDAQ.Gateway;
 using log4net;
 using System.Data.SqlClient;
 using MicroDAQ.Common;
+using MicroDAQ.Gateways.Modbus;
 
 namespace MicroDAQ
 {
@@ -78,10 +79,10 @@ namespace MicroDAQ
             }
             ni.Text = this.Text;
         }
-         
-        
 
-        
+
+
+
 
         /// <summary>
         /// 创建数据项管理器
@@ -109,7 +110,7 @@ namespace MicroDAQ
                 log.Error(ex);
             }
             if (success)
-                return listDataItemManger;          
+                return listDataItemManger;
             else
                 return null;
         }
@@ -146,8 +147,8 @@ namespace MicroDAQ
         }
         public void Start()
         {
-          
-           
+
+
             Program.MobusGateway = new ModbusGateway(createDBManagers());
             Program.MobusGateway.Start();
 
@@ -158,7 +159,7 @@ namespace MicroDAQ
         {
             this.BeginInvoke(new MethodInvoker(delegate
             {
-                switch (state) 
+                switch (state)
                 {
                     case JonLibrary.Automatic.RunningState.Paused:
                         this.tsslRemote.Text = "P";

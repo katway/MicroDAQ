@@ -100,9 +100,7 @@
     <Compile Include="AlertCode.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Database\DatabaseManage.cs" />
-    <Compile Include="DataItem\IPMasterManager.cs" />
     <Compile Include="DataItem\PackageDataItemManager.cs" />
-    <Compile Include="DataItem\SerialPortMasterManager.cs" />
     <Compile Include="FlowAlertManager.cs" />
     <Compile Include="DataItem\DataItemManager.cs" />
     <Compile Include="DataDisplayForm.cs">
@@ -111,7 +109,6 @@
     <Compile Include="DataDisplayForm.Designer.cs">
       <DependentUpon>DataDisplayForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Gateway\ModbusGateway.cs" />
     <Compile Include="Gateway\PackageGateway.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -208,6 +205,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{52E0A79B-992D-4BB7-876A-B6F7373D69B8}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gateways\Gateways.csproj">
+      <Project>{AFFBE9E4-0C18-471C-AC10-8174AF3B90D7}</Project>
+      <Name>Gateways</Name>
     </ProjectReference>
     <ProjectReference Include="..\ModbusLibrary\ModbusLibrary.csproj">
       <Project>{8C1B7762-323A-44E8-A3B0-E1E3F6DF404D}</Project>
