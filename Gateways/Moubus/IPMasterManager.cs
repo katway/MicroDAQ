@@ -5,6 +5,7 @@ using Modbus.Device;
 using System.Data;
 using System.Data.SqlClient;
 using MicroDAQ.Common;
+using Modbus.Utility;
 
 namespace MicroDAQ.Gateways.Modbus
 {
@@ -19,7 +20,7 @@ namespace MicroDAQ.Gateways.Modbus
         public SqlConnection Connection { get; set; }
         public IPMasterManager(ModbusIpMaster master, int slave, DataTable commandsData, DataTable metaData,  string deviceID)
         {
-            string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
+            string ConnectionString = "server=VWINTECH-201\\SQL2000;database=opcmes3;uid=sa;pwd= ";
             Connection = new SqlConnection(ConnectionString);
             IpMaster = master;
             master.Transport.ReadTimeout = 300;
@@ -62,7 +63,14 @@ namespace MicroDAQ.Gateways.Modbus
                 {
                     //存储过程
                     // ProCommandState(serialID, "false");
-                    return;
+                    for (int j = 0; j < rows.Length; j++)
+                    {
+                        Items[flag].ID = Convert.ToInt32(rows[j]["Code"]);
+                        Items[flag].DataTime = DateTime.Now;
+                        Items[flag].State = ItemState.仪表掉线;
+                        flag = flag + 1;
+                    }
+                    continue;
 
                 }
                 for (int j = 0; j < rows.Length; j++)
@@ -72,26 +80,50 @@ namespace MicroDAQ.Gateways.Modbus
                         Items[flag].Value = Convert.ToSingle(values[index]);
                         Items[flag].ID = Convert.ToInt32(rows[j]["Code"]);
                         Items[flag].DataTime = DateTime.Now;
+                        Items[flag].State =ItemState.正常;
                         index += 1;
                     }
                     else
                     {
                         ushort high;
                         ushort low;
-                        if (rows[j]["Arithmetic"].ToString().ToLower() == "getfloatmsb")
+                        float value;
+                        string type = rows[j]["Arithmetic"].ToString().ToLower();
+                        switch (type)
                         {
-                            high = values[index];
-                            low = values[index + 1];
+                            case "getfloatmsb":
+                                high = values[index];
+                                low = values[index + 1];
+                                value = ModbusUtility.GetSingle(high, low);
+                                break;
+
+                            case "getfloatlsb":
+                                low = values[index];
+                                high = values[index + 1];
+                                value = ModbusUtility.GetSingle(high, low);
+                                break;
+
+                            case "getuintmsb":
+                                high = values[index];
+                                low = values[index + 1];
+                                value = ModbusUtility.GetUInt32(high, low);
+                                break;
+
+                            case "getuintlsb":
+                                low = values[index];
+                                high = values[index + 1];
+                                value = ModbusUtility.GetUInt32(high, low);
+                                break;
+                            default:
+                                value = 0;
+                                break;
+
                         }
-                        else
-                        {
-                            low = values[index];
-                            high = values[index + 1];
-                        }
-                        float value = ushortToFloat(high, low);
+                       
                         Items[flag].Value = value;
                         Items[flag].ID = Convert.ToInt32(rows[j]["Code"]);
                         Items[flag].DataTime = DateTime.Now;
+                        Items[flag].State = ItemState.正常;
                         index += 2;
                     }
                     flag += 1;
@@ -149,17 +181,7 @@ namespace MicroDAQ.Gateways.Modbus
             Write();
         }
 
-        private float ushortToFloat(ushort highNumber, ushort lowNumber)
-        {
-            byte[] high = BitConverter.GetBytes(highNumber);
-            byte[] low = BitConverter.GetBytes(lowNumber);
-            byte[] allByte = new byte[4];
-            allByte[0] = high[0];
-            allByte[1] = high[1];
-            allByte[2] = low[0];
-            allByte[3] = low[1];
-            return BitConverter.ToSingle(allByte, 0);
-        }
+      
         /// <summary>
         /// 查询写命令
         /// </summary>
