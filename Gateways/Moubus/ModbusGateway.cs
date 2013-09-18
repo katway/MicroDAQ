@@ -35,8 +35,8 @@ namespace MicroDAQ.Gateways.Modbus
         public CycleTask ModbusCycle { get; private set; }
         public ModbusGateway(IList<IDatabaseManage> databaseManagers)
         {
-            // string ConnectionString = "server=.\\SQLEXPRESS;database=Modbusdb;uid=sa;pwd=sa";
-            string ConnectionString = "server=192.168.1.179;database=opcmes3;uid=microdaq;pwd=microdaq";
+            //string ConnectionString = "server=.\\SQLEXPRESS;database=opcmes3;uid=microdaq;pwd=microdaq";
+            string ConnectionString = @"server=192.168.1.201\SQL2000;database=opcmes3;uid=microdaq;pwd=microdaq";
             Connection = new SqlConnection(ConnectionString);
             this.DatabaseManagers = databaseManagers;
             UpdateCycle = new CycleTask();
