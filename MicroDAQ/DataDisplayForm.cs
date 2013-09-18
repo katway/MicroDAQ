@@ -8,18 +8,46 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using MicroDAQ.Common;
 using MicroDAQ.Database;
-using MicroDAQ.UI;
+using MicroDAQ.Gateways.Modbus;
+
 namespace MicroDAQ
 {
     public partial class DataDisplayForm : Form
     {
+        SqlConnection connection = null;
         public DataDisplayForm()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// 加载form窗体
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>        
+        private void FormDemo_Load(object sender, EventArgs e)
+        {
+            //循环遍历数据库
+            List<SqlConnection> sqlcon = new List<SqlConnection>();
+            if ((Program.MobusGateway != null) && (Program.MobusGateway.DatabaseManagers != null))
+                foreach (IDatabaseManage dbm in Program.MobusGateway.DatabaseManagers)
+                {
+                    SqlConnection conn = new SqlConnection(dbm.UpdateConnection.ConnectionString);
+                    sqlcon.Add(conn);
+                }
+            for (int i = 0; i < sqlcon.Count; i++)
+            {
+                connection = sqlcon[0];
+
+            }
+
+            bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
+            bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
+            bkwConnect.RunWorkerAsync();
+
 
         }
 
-        SqlConnection connection = null;
         #region PLC与OPCMES即时数据的显示
         private void btnInstant_Click(object sender, EventArgs e)
         {
@@ -34,7 +62,7 @@ namespace MicroDAQ
         {
             //PLC关闭的情况
 
-            if (Program.opcGateway.ItemManagers == null)
+            if (Program.MobusGateway.SerialManagers == null)
             {
                 try
                 {
@@ -99,8 +127,8 @@ namespace MicroDAQ
                         RIGHT JOIN meters_value v ON m.id = v.id 
                         ORDER BY v.id ";
                     SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
+                    DataTable dtUnion = new DataTable();
+                    adapter.Fill(dtUnion);
 
                     NewTable = new DataTable();
                     NewTable.Columns.AddRange(new DataColumn[]{
@@ -115,36 +143,34 @@ namespace MicroDAQ
                         new DataColumn("PLC设备类型"),
                         new DataColumn("PLC状态"),
                         new DataColumn("PLC可信度") });
-                    for (int i = 0; i < dt.Rows.Count; i++)
+                    for (int i = 0; i < dtUnion.Rows.Count; i++)
                     {
-                        DataRow tmp = dt.Rows[i];
-                        foreach (IDataItemManage mgr in Program.opcGateway.ItemManagers)
+                        DataRow tmpRow = dtUnion.Rows[i];
+                        foreach (SerialPortMasterManager mgr in Program.MobusGateway.SerialManagers)
                         {
                             foreach (Item meter in mgr.Items)
                             {
-                                if (tmp[0].ToString() == meter.ID.ToString())
+                                if (tmpRow[0].ToString() == meter.ID.ToString())
                                 {
-                                    DataRow row = NewTable.NewRow();
-                                    row["参数ID"] = tmp[0].ToString();
-                                    row["参数名称"] = tmp[1].ToString();
+                                    DataRow newRow = NewTable.NewRow();
+                                    newRow["参数ID"] = tmpRow[0].ToString();
+                                    newRow["参数名称"] = tmpRow[1].ToString();
 
-                                    row["数据采集值1"] = tmp[2].ToString();
-                                    row["数据采集值2"] = tmp[3].ToString();
+                                    newRow["数据采集值1"] = tmpRow[2].ToString();
+                                    newRow["数据采集值2"] = tmpRow[3].ToString();
 
-                                    row["单位"] = tmp[4].ToString();
-                                    row["刷新时间"] = tmp[5].ToString();
-                                    row["存储点"] = tmp[6].ToString();
+                                    newRow["单位"] = tmpRow[4].ToString();
+                                    newRow["刷新时间"] = tmpRow[5].ToString();
+                                    newRow["存储点"] = tmpRow[6].ToString();
 
-                                    row["PLC数据值1"] = meter.Value.ToString();
-                                    row["PLC设备类型"] = meter.Type.ToString();
-                                    row["PLC状态"] = meter.State.ToString();
-                                    row["PLC可信度"] = meter.Quality.ToString();
-                                    NewTable.Rows.Add(row);
+                                    newRow["PLC数据值1"] = meter.Value.ToString();
+                                    newRow["PLC设备类型"] = meter.Type.ToString();
+                                    newRow["PLC状态"] = meter.State.ToString();
+                                    newRow["PLC可信度"] = meter.Quality.ToString();
+                                    NewTable.Rows.Add(newRow);
                                 }
                             }
-
                         }
-
                     }
 
                     this.dgvDB.DataSource = NewTable;
@@ -221,33 +247,7 @@ namespace MicroDAQ
         #endregion
 
         #region 加载form窗体
-        /// <summary>
-        /// 加载form窗体
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>        
-        private void FormDemo_Load(object sender, EventArgs e)
-        {
-            //循环遍历数据库
-            List<SqlConnection> sqlcon = new List<SqlConnection>();
-            if ((Program.opcGateway != null) && (Program.opcGateway.DatabaseManagers != null))
-                foreach (IDatabaseManage a in Program.opcGateway.DatabaseManagers)
-                {
-                    SqlConnection conn = new SqlConnection(a.UpdateConnection.ConnectionString);
-                    sqlcon.Add(conn);
-                }
-            for (int i = 0; i < sqlcon.Count; i++)
-            {
-                connection = sqlcon[0];
 
-            }
-
-            bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
-            bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
-            bkwConnect.RunWorkerAsync();
-
-
-        }
         //打开数据库连接
         void bkwConnect_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -373,8 +373,6 @@ namespace MicroDAQ
             {
                 MessageBox.Show(ex.Message);
             }
-            if (Program.opcGateway != null)
-                Program.opcGateway.Stop();
 
         }
         #region 配置情况
