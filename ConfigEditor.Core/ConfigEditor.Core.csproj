@@ -65,7 +65,9 @@
     <Compile Include="Util\SerializeHelper.cs" />
     <Compile Include="Util\StringHelper.cs" />
     <Compile Include="ViewModels\DeviceViewModel.cs" />
+    <Compile Include="ViewModels\EthernetViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
+    <Compile Include="ViewModels\ProjectViewModel.cs" />
     <Compile Include="ViewModels\SerialPortViewModel.cs" />
   </ItemGroup>
   <ItemGroup />

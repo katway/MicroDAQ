@@ -44,6 +44,9 @@ namespace ConfigEditor.Core.ViewModels
         //Modbus通讯协议
         private ModbusProtocols _protocol;
 
+        //设备列表
+        private List<DeviceViewModel> _devices;
+
         /// <summary>
         /// 唯一标识
         /// </summary>
@@ -107,8 +110,19 @@ namespace ConfigEditor.Core.ViewModels
             set { _protocol = value; }
         }
 
+
+        /// <summary>
+        /// 设备列表
+        /// </summary>
+        public List<DeviceViewModel> Devices 
+        {
+            get { return _devices; }
+            set { _devices = value; }
+        }
+
         public SerialPortViewModel()
         {
+            _devices = new List<DeviceViewModel>();
         }
 
     }

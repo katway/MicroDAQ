@@ -91,4 +91,18 @@ namespace ConfigEditor.Core.Models
     {
         PROJECT
     }
+
+    /// <summary>
+    /// 用户操作
+    /// </summary>
+    public enum UserActions
+    {
+        //添加
+        Add,
+        //编辑
+        Edit,
+        //删除
+        Delete
+    }
+
 }

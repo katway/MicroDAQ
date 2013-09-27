@@ -50,6 +50,9 @@ namespace ConfigEditor.Core.ViewModels
         //Modbus通讯协议
         private ModbusProtocols _protocol;
 
+        //变量列表
+        private List<ItemViewModel> _items;
+
         /// <summary>
         /// 唯一标识
         /// </summary>
@@ -131,8 +134,18 @@ namespace ConfigEditor.Core.ViewModels
             set { _protocol = value; }
         }
 
+        /// <summary>
+        /// 变量列表
+        /// </summary>
+        public List<ItemViewModel> Items
+        {
+            get { return _items; }
+            set { _items = value; }
+        }
+
         public DeviceViewModel()
         {
+            _items = new List<ItemViewModel>();
         }
     }
 }

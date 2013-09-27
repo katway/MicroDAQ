@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ToolStripButton tsbEdit;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("串口");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("以太网");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("串口");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("以太网");
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.文件FToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiProjectProperty = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,15 +55,20 @@
             this.帮助HToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolStrip = new System.Windows.Forms.ToolStrip();
+            this.tsbAddSerialPort = new System.Windows.Forms.ToolStripButton();
+            this.tsbAddDevice = new System.Windows.Forms.ToolStripButton();
+            this.tsbAddItem = new System.Windows.Forms.ToolStripButton();
+            this.tsbBatchAddItem = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.帮助LToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelp = new System.Windows.Forms.ToolStripButton();
             this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.naviTreeView = new System.Windows.Forms.TreeView();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.itemListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -70,6 +77,20 @@
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.itemPropertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.commonImageList = new System.Windows.Forms.ImageList(this.components);
+            this.cmsNavi = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.添加串口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.添加设备ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.添加变量ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.批量添加变量ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.编辑ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsItem = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.编辑ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.删除ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            tsbEdit = new System.Windows.Forms.ToolStripButton();
             this.mainMenuStrip.SuspendLayout();
             this.mainToolStrip.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
@@ -81,7 +102,20 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.cmsNavi.SuspendLayout();
+            this.cmsItem.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // tsbEdit
+            // 
+            tsbEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            tsbEdit.Image = ((System.Drawing.Image)(resources.GetObject("tsbEdit.Image")));
+            tsbEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            tsbEdit.Name = "tsbEdit";
+            tsbEdit.Size = new System.Drawing.Size(23, 22);
+            tsbEdit.Text = "属性";
+            tsbEdit.ToolTipText = "编辑";
+            tsbEdit.Click += new System.EventHandler(this.tsmiEdit_Click);
             // 
             // mainMenuStrip
             // 
@@ -109,19 +143,19 @@
             // tsmiProjectProperty
             // 
             this.tsmiProjectProperty.Name = "tsmiProjectProperty";
-            this.tsmiProjectProperty.Size = new System.Drawing.Size(139, 22);
+            this.tsmiProjectProperty.Size = new System.Drawing.Size(152, 22);
             this.tsmiProjectProperty.Text = "项目属性(&P)";
             this.tsmiProjectProperty.Click += new System.EventHandler(this.tsmiProjectProperty_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(136, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
             // 
             // tsmiExit
             // 
             this.tsmiExit.Name = "tsmiExit";
-            this.tsmiExit.Size = new System.Drawing.Size(139, 22);
+            this.tsmiExit.Size = new System.Drawing.Size(152, 22);
             this.tsmiExit.Text = "退出(&X)";
             this.tsmiExit.Click += new System.EventHandler(this.tsmiExit_Click);
             // 
@@ -213,21 +247,21 @@
             // tsmiClearProject
             // 
             this.tsmiClearProject.Name = "tsmiClearProject";
-            this.tsmiClearProject.Size = new System.Drawing.Size(140, 22);
+            this.tsmiClearProject.Size = new System.Drawing.Size(152, 22);
             this.tsmiClearProject.Text = "清空项目(&C)";
             this.tsmiClearProject.Click += new System.EventHandler(this.tsmiClearProject_Click);
             // 
             // tsmiOptions
             // 
             this.tsmiOptions.Name = "tsmiOptions";
-            this.tsmiOptions.Size = new System.Drawing.Size(140, 22);
+            this.tsmiOptions.Size = new System.Drawing.Size(152, 22);
             this.tsmiOptions.Text = "选项(&O)";
             this.tsmiOptions.Click += new System.EventHandler(this.tsmiOptions_Click);
             // 
             // tsmiTest
             // 
             this.tsmiTest.Name = "tsmiTest";
-            this.tsmiTest.Size = new System.Drawing.Size(140, 22);
+            this.tsmiTest.Size = new System.Drawing.Size(152, 22);
             this.tsmiTest.Text = "测试";
             this.tsmiTest.Click += new System.EventHandler(this.tsmiTest_Click);
             // 
@@ -249,27 +283,95 @@
             // mainToolStrip
             // 
             this.mainToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsbAddSerialPort,
+            this.tsbAddDevice,
+            this.tsbAddItem,
+            this.tsbBatchAddItem,
+            this.toolStripSeparator4,
+            tsbEdit,
+            this.tsbDelete,
             this.toolStripSeparator7,
-            this.帮助LToolStripButton});
+            this.tsbHelp});
             this.mainToolStrip.Location = new System.Drawing.Point(0, 25);
             this.mainToolStrip.Name = "mainToolStrip";
             this.mainToolStrip.Size = new System.Drawing.Size(1008, 25);
             this.mainToolStrip.TabIndex = 1;
             this.mainToolStrip.Text = "toolStrip1";
             // 
+            // tsbAddSerialPort
+            // 
+            this.tsbAddSerialPort.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbAddSerialPort.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddSerialPort.Image")));
+            this.tsbAddSerialPort.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAddSerialPort.Name = "tsbAddSerialPort";
+            this.tsbAddSerialPort.Size = new System.Drawing.Size(23, 22);
+            this.tsbAddSerialPort.Text = "新建通道";
+            this.tsbAddSerialPort.ToolTipText = "添加串口";
+            this.tsbAddSerialPort.Click += new System.EventHandler(this.tsmiAddSerialPort_Click);
+            // 
+            // tsbAddDevice
+            // 
+            this.tsbAddDevice.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbAddDevice.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddDevice.Image")));
+            this.tsbAddDevice.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAddDevice.Name = "tsbAddDevice";
+            this.tsbAddDevice.Size = new System.Drawing.Size(23, 22);
+            this.tsbAddDevice.Text = "新建设备";
+            this.tsbAddDevice.ToolTipText = "添加设备";
+            this.tsbAddDevice.Click += new System.EventHandler(this.tsmiAddDevice_Click);
+            // 
+            // tsbAddItem
+            // 
+            this.tsbAddItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbAddItem.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddItem.Image")));
+            this.tsbAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAddItem.Name = "tsbAddItem";
+            this.tsbAddItem.Size = new System.Drawing.Size(23, 22);
+            this.tsbAddItem.Text = "新建数据项";
+            this.tsbAddItem.ToolTipText = "添加变量";
+            this.tsbAddItem.Click += new System.EventHandler(this.tsmiAddItem_Click);
+            // 
+            // tsbBatchAddItem
+            // 
+            this.tsbBatchAddItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbBatchAddItem.Image = ((System.Drawing.Image)(resources.GetObject("tsbBatchAddItem.Image")));
+            this.tsbBatchAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbBatchAddItem.Name = "tsbBatchAddItem";
+            this.tsbBatchAddItem.Size = new System.Drawing.Size(23, 22);
+            this.tsbBatchAddItem.Text = "新建组";
+            this.tsbBatchAddItem.ToolTipText = "批量添加变量";
+            this.tsbBatchAddItem.Click += new System.EventHandler(this.tsmiBatchAddItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tsbDelete
+            // 
+            this.tsbDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbDelete.Image = ((System.Drawing.Image)(resources.GetObject("tsbDelete.Image")));
+            this.tsbDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbDelete.Name = "tsbDelete";
+            this.tsbDelete.Size = new System.Drawing.Size(23, 22);
+            this.tsbDelete.Text = "删除";
+            this.tsbDelete.Click += new System.EventHandler(this.tsmiDelete_Click);
+            // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
             // 
-            // 帮助LToolStripButton
+            // tsbHelp
             // 
-            this.帮助LToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.帮助LToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("帮助LToolStripButton.Image")));
-            this.帮助LToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.帮助LToolStripButton.Name = "帮助LToolStripButton";
-            this.帮助LToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.帮助LToolStripButton.Text = "帮助(&L)";
+            this.tsbHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbHelp.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelp.Image")));
+            this.tsbHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelp.Name = "tsbHelp";
+            this.tsbHelp.Size = new System.Drawing.Size(23, 22);
+            this.tsbHelp.Text = "帮助(&L)";
+            this.tsbHelp.ToolTipText = "关于";
+            this.tsbHelp.Click += new System.EventHandler(this.tsmiAbout_Click);
             // 
             // mainStatusStrip
             // 
@@ -296,7 +398,7 @@
             // 
             // mainSplitContainer.Panel1
             // 
-            this.mainSplitContainer.Panel1.Controls.Add(this.treeView1);
+            this.mainSplitContainer.Panel1.Controls.Add(this.naviTreeView);
             // 
             // mainSplitContainer.Panel2
             // 
@@ -305,20 +407,24 @@
             this.mainSplitContainer.SplitterDistance = 220;
             this.mainSplitContainer.TabIndex = 3;
             // 
-            // treeView1
+            // naviTreeView
             // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 0);
-            this.treeView1.Name = "treeView1";
-            treeNode3.Name = "节点0";
-            treeNode3.Text = "串口";
-            treeNode4.Name = "节点1";
-            treeNode4.Text = "以太网";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4});
-            this.treeView1.Size = new System.Drawing.Size(220, 610);
-            this.treeView1.TabIndex = 0;
+            this.naviTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.naviTreeView.ImageIndex = 0;
+            this.naviTreeView.ImageList = this.commonImageList;
+            this.naviTreeView.Location = new System.Drawing.Point(0, 0);
+            this.naviTreeView.Name = "naviTreeView";
+            treeNode1.Name = "节点0";
+            treeNode1.Text = "串口";
+            treeNode2.Name = "节点1";
+            treeNode2.Text = "以太网";
+            this.naviTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2});
+            this.naviTreeView.SelectedImageIndex = 0;
+            this.naviTreeView.ShowRootLines = false;
+            this.naviTreeView.Size = new System.Drawing.Size(220, 610);
+            this.naviTreeView.TabIndex = 0;
             // 
             // splitContainer2
             // 
@@ -329,18 +435,18 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.listView1);
+            this.splitContainer2.Panel1.Controls.Add(this.itemListView);
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
+            this.splitContainer2.Panel2.Controls.Add(this.itemPropertyGrid);
             this.splitContainer2.Size = new System.Drawing.Size(784, 610);
             this.splitContainer2.SplitterDistance = 574;
             this.splitContainer2.TabIndex = 0;
             // 
-            // listView1
+            // itemListView
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.itemListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3,
@@ -349,22 +455,15 @@
             this.columnHeader6,
             this.columnHeader7,
             this.columnHeader8});
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(574, 610);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(206, 610);
-            this.propertyGrid1.TabIndex = 0;
-            this.propertyGrid1.ToolbarVisible = false;
+            this.itemListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemListView.Location = new System.Drawing.Point(0, 0);
+            this.itemListView.Name = "itemListView";
+            this.itemListView.Size = new System.Drawing.Size(574, 610);
+            this.itemListView.SmallImageList = this.commonImageList;
+            this.itemListView.StateImageList = this.commonImageList;
+            this.itemListView.TabIndex = 0;
+            this.itemListView.UseCompatibleStateImageBehavior = false;
+            this.itemListView.View = System.Windows.Forms.View.Details;
             // 
             // columnHeader1
             // 
@@ -402,6 +501,112 @@
             // 
             this.columnHeader8.Text = "刷新周期";
             // 
+            // itemPropertyGrid
+            // 
+            this.itemPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.itemPropertyGrid.Location = new System.Drawing.Point(0, 0);
+            this.itemPropertyGrid.Name = "itemPropertyGrid";
+            this.itemPropertyGrid.Size = new System.Drawing.Size(206, 610);
+            this.itemPropertyGrid.TabIndex = 0;
+            this.itemPropertyGrid.ToolbarVisible = false;
+            // 
+            // commonImageList
+            // 
+            this.commonImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("commonImageList.ImageStream")));
+            this.commonImageList.TransparentColor = System.Drawing.Color.Magenta;
+            this.commonImageList.Images.SetKeyName(0, "channel.bmp");
+            this.commonImageList.Images.SetKeyName(1, "delete_channel.bmp");
+            this.commonImageList.Images.SetKeyName(2, "delete_tag.bmp");
+            this.commonImageList.Images.SetKeyName(3, "device.bmp");
+            this.commonImageList.Images.SetKeyName(4, "disable_device.bmp");
+            this.commonImageList.Images.SetKeyName(5, "edit_tag.bmp");
+            this.commonImageList.Images.SetKeyName(6, "group.bmp");
+            this.commonImageList.Images.SetKeyName(7, "new_channel.bmp");
+            this.commonImageList.Images.SetKeyName(8, "new_device.bmp");
+            this.commonImageList.Images.SetKeyName(9, "new_group.bmp");
+            this.commonImageList.Images.SetKeyName(10, "new_tag.bmp");
+            this.commonImageList.Images.SetKeyName(11, "qc.bmp");
+            this.commonImageList.Images.SetKeyName(12, "tag.bmp");
+            this.commonImageList.Images.SetKeyName(13, "property.bmp");
+            this.commonImageList.Images.SetKeyName(14, "information.png");
+            this.commonImageList.Images.SetKeyName(15, "warning.png");
+            this.commonImageList.Images.SetKeyName(16, "error.png");
+            this.commonImageList.Images.SetKeyName(17, "view.png");
+            // 
+            // cmsNavi
+            // 
+            this.cmsNavi.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.添加串口ToolStripMenuItem,
+            this.添加设备ToolStripMenuItem,
+            this.添加变量ToolStripMenuItem,
+            this.批量添加变量ToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.编辑ToolStripMenuItem,
+            this.删除ToolStripMenuItem});
+            this.cmsNavi.Name = "cmsNavi";
+            this.cmsNavi.Size = new System.Drawing.Size(149, 142);
+            // 
+            // 添加串口ToolStripMenuItem
+            // 
+            this.添加串口ToolStripMenuItem.Name = "添加串口ToolStripMenuItem";
+            this.添加串口ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.添加串口ToolStripMenuItem.Text = "添加串口";
+            // 
+            // 添加设备ToolStripMenuItem
+            // 
+            this.添加设备ToolStripMenuItem.Name = "添加设备ToolStripMenuItem";
+            this.添加设备ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.添加设备ToolStripMenuItem.Text = "添加设备";
+            // 
+            // 添加变量ToolStripMenuItem
+            // 
+            this.添加变量ToolStripMenuItem.Name = "添加变量ToolStripMenuItem";
+            this.添加变量ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.添加变量ToolStripMenuItem.Text = "添加变量";
+            // 
+            // 批量添加变量ToolStripMenuItem
+            // 
+            this.批量添加变量ToolStripMenuItem.Name = "批量添加变量ToolStripMenuItem";
+            this.批量添加变量ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.批量添加变量ToolStripMenuItem.Text = "批量添加变量";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(145, 6);
+            // 
+            // 编辑ToolStripMenuItem
+            // 
+            this.编辑ToolStripMenuItem.Name = "编辑ToolStripMenuItem";
+            this.编辑ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.编辑ToolStripMenuItem.Text = "编辑";
+            // 
+            // 删除ToolStripMenuItem
+            // 
+            this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.删除ToolStripMenuItem.Text = "删除";
+            // 
+            // cmsItem
+            // 
+            this.cmsItem.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.编辑ToolStripMenuItem1,
+            this.删除ToolStripMenuItem1});
+            this.cmsItem.Name = "cmsItem";
+            this.cmsItem.Size = new System.Drawing.Size(101, 48);
+            // 
+            // 编辑ToolStripMenuItem1
+            // 
+            this.编辑ToolStripMenuItem1.Name = "编辑ToolStripMenuItem1";
+            this.编辑ToolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
+            this.编辑ToolStripMenuItem1.Text = "编辑";
+            // 
+            // 删除ToolStripMenuItem1
+            // 
+            this.删除ToolStripMenuItem1.Name = "删除ToolStripMenuItem1";
+            this.删除ToolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
+            this.删除ToolStripMenuItem1.Text = "删除";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -411,6 +616,7 @@
             this.Controls.Add(this.mainStatusStrip);
             this.Controls.Add(this.mainToolStrip);
             this.Controls.Add(this.mainMenuStrip);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mainMenuStrip;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -431,6 +637,8 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.cmsNavi.ResumeLayout(false);
+            this.cmsItem.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -448,14 +656,14 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiAbout;
         private System.Windows.Forms.ToolStrip mainToolStrip;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripButton 帮助LToolStripButton;
+        private System.Windows.Forms.ToolStripButton tsbHelp;
         private System.Windows.Forms.StatusStrip mainStatusStrip;
         private System.Windows.Forms.SplitContainer mainSplitContainer;
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView naviTreeView;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.PropertyGrid itemPropertyGrid;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView itemListView;
         private System.Windows.Forms.ToolStripMenuItem tsmiProjectProperty;
         private System.Windows.Forms.ToolStripMenuItem 编辑EToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsmiAddSerialPort;
@@ -477,6 +685,24 @@
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ImageList commonImageList;
+        private System.Windows.Forms.ToolStripButton tsbAddSerialPort;
+        private System.Windows.Forms.ToolStripButton tsbAddDevice;
+        private System.Windows.Forms.ToolStripButton tsbAddItem;
+        private System.Windows.Forms.ToolStripButton tsbBatchAddItem;
+        private System.Windows.Forms.ToolStripButton tsbDelete;
+        private System.Windows.Forms.ContextMenuStrip cmsNavi;
+        private System.Windows.Forms.ToolStripMenuItem 添加串口ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 添加设备ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 添加变量ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 批量添加变量ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem 编辑ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip cmsItem;
+        private System.Windows.Forms.ToolStripMenuItem 编辑ToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem1;
     }
 }
 

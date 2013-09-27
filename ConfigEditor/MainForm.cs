@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ConfigEditor.Forms;
+using ConfigEditor.Core.ViewModels;
 
 namespace ConfigEditor
 {
@@ -32,6 +33,15 @@ namespace ConfigEditor
 
         //同步对象
         private static object sync = new object();
+
+        //项目实体对象
+        private ProjectViewModel _project;
+
+        /// <summary>
+        /// 项目实体对象
+        /// </summary>
+        public ProjectViewModel Project { get { return _project; } }
+
 
         public MainForm()
         {
@@ -67,7 +77,7 @@ namespace ConfigEditor
         {
             try
             {
-                DeviceEditForm frm = new DeviceEditForm();
+                SerialPortEditForm frm = new SerialPortEditForm();
                 frm.ShowDialog();
             }
             catch (Exception ex)

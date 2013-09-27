@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ConfigEditor.Core.ViewModels;
 
 namespace ConfigEditor.Core.IO
 {
@@ -22,6 +23,26 @@ namespace ConfigEditor.Core.IO
     /// </summary>
     public class ProjectReader
     {
+        public ProjectReader()
+        {
+        }
 
+        /// <summary>
+        /// 读取项目数据库文件
+        /// </summary>
+        /// <returns></returns>
+        public static ProjectViewModel Read()
+        {
+            try
+            {
+                ProjectViewModel project = new ProjectViewModel();
+
+                return project;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("读取项目数据库过程中发生异常。", ex);
+            }
+        }
     }
 }
