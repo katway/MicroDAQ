@@ -20,8 +20,9 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
-using ConfigEditor.Core.Util;
 using log4net;
+using ConfigEditor.Core.Util;
+using ConfigEditor.Core.Models;
 
 namespace ConfigEditor.Core.Database
 {
