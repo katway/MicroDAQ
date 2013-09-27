@@ -99,7 +99,7 @@ namespace MicroDAQ
                     string[] data = new string[plc.ItemsData.Count];
                     plc.ItemsHead.CopyTo(head, 0);
                     plc.ItemsData.CopyTo(data, 0);
-                    IDataItemManage dim = new DataItemManager("ItemData", head, data);
+                    IDataItemManage dim = new OpcDataItemManager("ItemData", head, data);
                     listDataItemManger.Add(dim);
                 }
 
@@ -116,10 +116,10 @@ namespace MicroDAQ
         }
 
 
-        private IList<IDatabaseManage> createDBManagers()
+        private IList<IDatabase> createDBManagers()
         {
             bool success = false;
-            IList<IDatabaseManage> listDatabaseManger = new List<IDatabaseManage>();
+            IList<IDatabase> listDatabaseManger = new List<IDatabase>();
             string[] dbs = ini.GetValue("Database", "Members").Trim().Split(',');
             try
             {

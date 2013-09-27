@@ -14,6 +14,6 @@ namespace MicroDAQ.Common
         public DateTime DataTime { get;  set; }
         public DateTime SyncTime { get;  set; }
         public float Value { get;  set; }
-        public short Quality { get;  set; }
+        public short Quality { get; set; }
     }
 }

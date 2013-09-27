@@ -25,7 +25,7 @@ namespace MicroDAQ.Gateway
         /// 使用多个ItemManage创建OpcGateway实例
         /// </summary>
         /// <param name="itemManagers"></param>
-        public OpcGateway(IList<IDataItemManage> itemManagers, IList<IDatabaseManage> databaseManagers)
+        public OpcGateway(IList<IDataItemManage> itemManagers, IList<IDatabase> databaseManagers)
         {
             log = LogManager.GetLogger(this.GetType());
             this.ItemManagers = itemManagers;
@@ -40,11 +40,11 @@ namespace MicroDAQ.Gateway
 
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (GatewayState)((int)state);
+            this.GatewayState = (GatewayState)((int)state);
         }
         void RemoteCtrlCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (GatewayState)((int)state);
+            this.GatewayState = (GatewayState)((int)state);
         }
         /// <summary>
         /// 数据项管理器
@@ -53,7 +53,7 @@ namespace MicroDAQ.Gateway
         /// <summary>
         /// 数据库管理器
         /// </summary>
-        public IList<IDatabaseManage> DatabaseManagers { get; set; }
+        public IList<IDatabase> DatabaseManagers { get; set; }
         public CycleTask UpdateCycle { get; private set; }
         public CycleTask RemoteCtrlCycle { get; private set; }
 
@@ -62,7 +62,7 @@ namespace MicroDAQ.Gateway
         {
             try
             {
-                foreach (IDatabaseManage dbMgr in this.DatabaseManagers)
+                foreach (IDatabase dbMgr in this.DatabaseManagers)
                 {
                     foreach (IDataItemManage mgr in this.ItemManagers)
                     {
@@ -131,8 +131,8 @@ namespace MicroDAQ.Gateway
         /// </summary>
         public override void Start()
         {
-            foreach (var manager in this.ItemManagers)
-                manager.Connect("Matrikon.OPC.Universal", "127.0.0.1");
+            //foreach (var manager in this.ItemManagers)
+            //    manager.Connect("Matrikon.OPC.Universal", "127.0.0.1");
             UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);
             RemoteCtrlCycle.Run(this.remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
         }

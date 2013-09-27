@@ -98,5 +98,11 @@ namespace MicroDAQ.DataItem
         {
             throw new NotImplementedException();
         }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

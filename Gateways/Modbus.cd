@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MicroDAQ.Gateways.Modbus.IPMasterManager" Collapsed="true">
+    <Position X="9" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAACAEAAABAAAAwAAAAAgAAADAAAIEAACA=</HashCode>
+      <FileName>Moubus\IPMasterManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MicroDAQ.Gateways.Modbus.ModbusGateway">
+    <Position X="1" Y="2.5" Width="2" />
+    <Members>
+      <Method Name="CreateIPDevice" Hidden="true" />
+      <Method Name="CreateModbusIpMaster" Hidden="true" />
+      <Method Name="CreatePortDevice" Hidden="true" />
+      <Method Name="CreateSerialMaster" Hidden="true" />
+      <Method Name="GetIPMasterDevice" Hidden="true" />
+      <Method Name="GetMetaByID" Hidden="true" />
+      <Method Name="GetReadCommandsByID" Hidden="true" />
+      <Method Name="GetWriteCommandsByID" Hidden="true" />
+      <Method Name="ModbusCycle_WorkStateChanged" Hidden="true" />
+      <Method Name="ProCommandState" Hidden="true" />
+      <Method Name="SetTable" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BIQgCACgCKAAAgEBIBACAAAwAgAgAgAAICgAAACBRAQ=</HashCode>
+      <FileName>Moubus\ModbusGateway.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MicroDAQ.Gateways.Modbus.SerialPortMasterManager">
+    <Position X="6" Y="2.25" Width="2" />
+    <AssociationLine Name="Items" Type="MicroDAQ.Common.Item">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.568" Y="0.081" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgEAAAAAACAACAEAAABAAAAwAAAAAgAAACAAAIEAACA=</HashCode>
+      <FileName>Moubus\SerialPortMasterManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MicroDAQ.Common.Item" Collapsed="true">
+    <Position X="9.5" Y="4" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="微软雅黑" Size="9" />
+</ClassDiagram>
