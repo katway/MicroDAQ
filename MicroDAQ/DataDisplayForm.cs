@@ -199,7 +199,7 @@ namespace MicroDAQ
         {
             //循环遍历数据库
             List<SqlConnection> sqlcon = new List<SqlConnection>();
-            foreach (IDatabaseManage a in Program.MobusGateway.DatabaseManagers)
+            foreach (IDatabase a in Program.MobusGateway.DatabaseManagers)
             {
                 SqlConnection conn = new SqlConnection(a.UpdateConnection.ConnectionString);
                 sqlcon.Add(conn);

@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MicroDAQ.Common.GatewayBase" BaseTypeListCollapsed="true">
+    <Position X="3" Y="1.75" Width="2" />
+    <AssociationLine Name="DatabaseManage" Type="MicroDAQ.Common.IDatabaseManage">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.523" Y="0.024" Height="0.181" Width="1.422" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="GatewayState" Type="MicroDAQ.Common.GatewayState">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.457" Y="0.06" Height="0.181" Width="1.519" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="ItemManage" Type="MicroDAQ.Common.IDataItemManage">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.912" Y="0.081" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>IAAgCAAABCAAAAAAAAAAIAAAACAAAAAEIAAAAAEASCA=</HashCode>
+      <FileName>GatewayBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DatabaseManage" />
+      <Property Name="GatewayState" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ItemManage" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MicroDAQ.Common.Item">
+    <Position X="10.5" Y="3.75" Width="1.5" />
+    <AssociationLine Name="Type" Type="MicroDAQ.Common.ItemType">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.393" Y="0.068" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="State" Type="MicroDAQ.Common.ItemState">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.393" Y="0.089" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAiAAQAAAgABAAAAAAAAEAAAAAAAAAQAgBAAAAAA=</HashCode>
+      <FileName>Item.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+      <Property Name="State" />
+    </ShowAsAssociation>
+  </Class>
+  <Interface Name="MicroDAQ.Common.IDatabase">
+    <Position X="10.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAEAAQAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IDatabase.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MicroDAQ.Common.IDataItemManage">
+    <Position X="7" Y="3.75" Width="1.75" />
+    <AssociationLine Name="Items" Type="MicroDAQ.Common.Item">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.475" Y="0.06" Height="0.161" Width="1.18" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IDataItemManage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Interface Name="MicroDAQ.Common.IGateway" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgCAAAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>IGateway.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="MicroDAQ.Common.IDatabaseManage">
+    <Position X="7" Y="2.75" Width="1.75" />
+    <AssociationLine Name="DatabaseList" Type="MicroDAQ.Common.IDatabase">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.568" Y="0.06" Height="0.161" Width="1.069" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>IDatabaseManage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="DatabaseList" />
+    </ShowAsCollectionAssociation>
+  </Interface>
+  <Enum Name="MicroDAQ.Common.GatewayState" Collapsed="true">
+    <Position X="7" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAEAIAAQEAAAAAQAAAAAIAAAAYAAAAAAACAAQ=</HashCode>
+      <FileName>GatewayState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MicroDAQ.Common.ItemState" Collapsed="true">
+    <Position X="13" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAABAAAACAEAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>ItemState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="MicroDAQ.Common.ItemType" Collapsed="true">
+    <Position X="13" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgMAAAgACghACggQDAIgEAwEABAwElAYAAKQAhACAAg=</HashCode>
+      <FileName>ItemType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="微软雅黑" Size="9" />
+</ClassDiagram>

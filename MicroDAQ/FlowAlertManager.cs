@@ -46,6 +46,8 @@ namespace MicroDAQ
             ItemPair[key] = item;
         }
 
+        public void Dispose()
+        { }
         /// <summary>
         /// 用于实现特定业务功能的内部类 
         /// </summary>
@@ -116,6 +118,8 @@ namespace MicroDAQ
                 }
                 OnStatusChannge();
             }
+
+
         }
     }
 }

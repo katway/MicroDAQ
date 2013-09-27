@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ItemManageBase.cs" />
     <Compile Include="Modbus2\ModbusGateway.cs" />
     <Compile Include="Modbus2\ModbusItemManager.cs" />
     <Compile Include="Moubus\IPMasterManager.cs" />
@@ -61,6 +62,10 @@
       <Project>{FF96B252-2B24-44A1-A09C-6401B5D7ED23}</Project>
       <Name>Modbus</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gateways.cd" />
+    <None Include="Modbus.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

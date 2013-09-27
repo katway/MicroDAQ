@@ -19,7 +19,7 @@ namespace MicroDAQ.Gateway
         /// <summary>
         /// 数据库管理器
         /// </summary>
-        public IList<IDatabaseManage> DatabaseManagers { get; set; }
+        public IList<IDatabase> DatabaseManagers { get; set; }
         public CycleTask UpdateCycle { get; private set; }
         public CycleTask ModbusCycle { get; private set; }
         int count;
@@ -27,7 +27,7 @@ namespace MicroDAQ.Gateway
         List<byte> slaveID;
         Dictionary<byte, Dictionary<int, string>> dic;
         Dictionary<string, string> SerialPort = new Dictionary<string, string>();
-        public PackageGateway(IList<IDatabaseManage> databaseManagers)
+        public PackageGateway(IList<IDatabase> databaseManagers)
         {
             #region 初始化全局变量
             modbusName = new List<string>();
@@ -48,11 +48,11 @@ namespace MicroDAQ.Gateway
         #region 状态改变
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (GatewayState)((int)state);
+            this.GatewayState = (GatewayState)((int)state);
         }
         void ModbusCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (GatewayState)((int)state);
+            this.GatewayState = (GatewayState)((int)state);
         }
         #endregion
 
@@ -127,7 +127,7 @@ namespace MicroDAQ.Gateway
 
         protected virtual void Update()
         {
-            foreach (IDatabaseManage dbMgr in this.DatabaseManagers)
+            foreach (IDatabase dbMgr in this.DatabaseManagers)
             {
                 foreach (IDataItemManage mgr in this.ItemManagers)
                 {
@@ -214,5 +214,10 @@ namespace MicroDAQ.Gateway
         }
         #endregion
 
+
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

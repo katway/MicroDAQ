@@ -12,7 +12,7 @@ namespace MicroDAQ.DataItem
     /// <summary>
     /// 数量项管理器
     /// </summary>
-    public class DataItemManager : IDataItemManage
+    public class OpcDataItemManager : IDataItemManage
     {
         public IList<Item> Items { get; set; }
         public ConnectionState ConnectionState { get; set; }
@@ -23,7 +23,7 @@ namespace MicroDAQ.DataItem
         /// <param name="name"></param>
         /// <param name="dataHead"></param>
         /// <param name="data"></param>
-        public DataItemManager(string name, string[] dataHead, string[] data)
+        public OpcDataItemManager(string name, string[] dataHead, string[] data)
             : base()
         {
             machine = new DataItem(this, name, dataHead, data);
@@ -41,9 +41,9 @@ namespace MicroDAQ.DataItem
 
         class DataItem : Machine
         {
-            DataItemManager Manager;
+            OpcDataItemManager Manager;
 
-            public DataItem(DataItemManager manager, string name, string[] dataHead, string[] data)
+            public DataItem(OpcDataItemManager manager, string name, string[] dataHead, string[] data)
                 : base()
             {
                 this.Manager = manager;
@@ -80,7 +80,7 @@ namespace MicroDAQ.DataItem
                             if (value[i] != null)
                             {
                                 val = (ushort[])value[i];
-                                 Manager.Items[item[i]].ID = val[0];
+                                Manager.Items[item[i]].ID = val[0];
                                 Manager.Items[item[i]].Type = (ItemType)val[1];
                                 Manager.Items[item[i]].State = (ItemState)val[2];
                                 Manager.Items[item[i]].Quality = Qualities[i];
@@ -109,6 +109,12 @@ namespace MicroDAQ.DataItem
             if (!ItemPair.ContainsKey(key))
             { ItemPair.Add(key, item); }
             ItemPair[key] = item;
+        }
+
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

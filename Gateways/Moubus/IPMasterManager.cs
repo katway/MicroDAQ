@@ -8,7 +8,7 @@ using MicroDAQ.Common;
 
 namespace MicroDAQ.Gateways.Modbus
 {
-    public class IPMasterManager
+    public class IPMasterManager : IDataItemManage
     {
         public IList<Item> Items { get; set; }
         ModbusIpMaster IpMaster;
@@ -170,6 +170,11 @@ namespace MicroDAQ.Gateways.Modbus
             Connection.Close();
             return i;
 
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

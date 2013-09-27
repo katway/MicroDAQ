@@ -24,17 +24,21 @@ namespace MicroDAQ.Gateways.Modbus
         /// <summary>
         /// 数据项管理器
         /// </summary>
-        public List<SerialPortMasterManager> SerialManagers = new List<SerialPortMasterManager>();
-        public List<IPMasterManager> IPManagers = new List<IPMasterManager>();
+        public List<SerialPortMasterManager> SerialManagers { get; set; }
+        public List<IPMasterManager> IPManagers { get; set; }
+
+        public IList<IDataItemManage> ItemManagers { get; set; }
 
         /// <summary>
         /// 数据库管理器
         /// </summary>
-        public IList<IDatabaseManage> DatabaseManagers { get; set; }
+        public IList<IDatabase> DatabaseManagers { get; set; }
         public CycleTask UpdateCycle { get; private set; }
         public CycleTask ModbusCycle { get; private set; }
-        public ModbusGateway(IList<IDatabaseManage> databaseManagers)
+        public ModbusGateway(IList<IDatabase> databaseManagers)
         {
+            SerialManagers = new List<SerialPortMasterManager>();
+            IPManagers = new List<IPMasterManager>();
             //string ConnectionString = "server=.\\SQLEXPRESS;database=opcmes3;uid=microdaq;pwd=microdaq";
             string ConnectionString = @"server=192.168.1.201\SQL2000;database=opcmes3;uid=microdaq;pwd=microdaq";
             Connection = new SqlConnection(ConnectionString);
@@ -55,7 +59,7 @@ namespace MicroDAQ.Gateways.Modbus
         /// 获得所有IP通讯方式的设备信息
         /// </summary>
         /// <returns></returns>
-        public DataTable GetIPMasterDevice()
+        private DataTable GetIPMasterDevice()
         {
             string sqlStr = "select a.SerialID,b.IP,b.Port,a.TransferType,a.slave from ModbusSlave a left join IPSetting b on a.IPSetting_SerialID=b.SerialID where a.Type='IP' order by a.TransferType,a.IPSetting_SerialID ";
             Connection.Open();
@@ -429,11 +433,11 @@ namespace MicroDAQ.Gateways.Modbus
         #region 状态改变
         void UpdateCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (GatewayState)((int)state);
+            this.GatewayState = (GatewayState)((int)state);
         }
         void ModbusCycle_WorkStateChanged(JonLibrary.Automatic.RunningState state)
         {
-            this.RunningState = (GatewayState)((int)state);
+            this.GatewayState = (GatewayState)((int)state);
         }
         #endregion
 
@@ -441,7 +445,7 @@ namespace MicroDAQ.Gateways.Modbus
 
         protected virtual void Update()
         {
-            foreach (IDatabaseManage dbMgr in this.DatabaseManagers)
+            foreach (IDatabase dbMgr in this.DatabaseManagers)
             {
                 foreach (SerialPortMasterManager mgr in this.SerialManagers)
                 {
@@ -451,7 +455,7 @@ namespace MicroDAQ.Gateways.Modbus
                     }
                 }
             }
-            foreach (IDatabaseManage dbMgr in this.DatabaseManagers)
+            foreach (IDatabase dbMgr in this.DatabaseManagers)
             {
                 foreach (IPMasterManager mgr in this.IPManagers)
                 {
@@ -465,7 +469,10 @@ namespace MicroDAQ.Gateways.Modbus
         #endregion
 
         #region 遍历数据项管理器
-        public void ErgodicManagers()
+        /// <summary>
+        /// 同步仪表数据
+        /// </summary>
+        private void ErgodicManagers()
         {
             foreach (SerialPortMasterManager manager in this.SerialManagers)
                 manager.ReadWriteData();
@@ -549,6 +556,9 @@ namespace MicroDAQ.Gateways.Modbus
                 task.Quit();
         }
         #endregion
+
+        public override void Dispose()
+        { }
 
         #region 日志存储过程
         private int ProCommandState(int serialID)
