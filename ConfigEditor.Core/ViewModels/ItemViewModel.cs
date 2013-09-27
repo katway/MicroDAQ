@@ -21,7 +21,7 @@ namespace ConfigEditor.Core.ViewModels
     /// <summary>
     /// 变量实体模型
     /// </summary>
-    public class ItemViewMdoel
+    public class ItemViewModel
     {
         //唯一标识
         private int _id;
@@ -190,7 +190,7 @@ namespace ConfigEditor.Core.ViewModels
             set { _isEnable = value; }
         }
         
-        public ItemViewMdoel()
+        public ItemViewModel()
         {
         }
     }

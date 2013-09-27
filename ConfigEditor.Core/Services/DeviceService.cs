@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ConfigEditor.Core.ViewModels;
 
 namespace ConfigEditor.Core.Services
 {
@@ -22,5 +23,31 @@ namespace ConfigEditor.Core.Services
     /// </summary>
     public class DeviceService
     {
+        /// <summary>
+        /// 添加设备
+        /// </summary>
+        /// <param name="model"></param>
+        public void AddDevice(DeviceViewModel model)
+        {
+
+        }
+
+        /// <summary>
+        /// 编辑设备
+        /// </summary>
+        /// <param name="model"></param>
+        public void EditDevice(DeviceViewModel model)
+        {
+
+        }
+
+        /// <summary>
+        /// 删除设备
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteDevice(int id)
+        {
+
+        }
     }
 }

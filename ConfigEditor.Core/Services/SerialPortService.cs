@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ConfigEditor.Core.ViewModels;
 
 namespace ConfigEditor.Core.Services
 {
@@ -22,6 +23,35 @@ namespace ConfigEditor.Core.Services
     /// </summary>
     public class SerialPortService
     {
+        public SerialPortService()
+        {
+        }
 
+        /// <summary>
+        /// 添加串口
+        /// </summary>
+        /// <param name="model"></param>
+        public void AddSerialPort(SerialPortViewModel model)
+        {
+
+        }
+
+        /// <summary>
+        /// 编辑串口
+        /// </summary>
+        /// <param name="model"></param>
+        public void EditSerialPort(SerialPortViewModel model)
+        {
+
+        }
+
+        /// <summary>
+        /// 删除串口
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteSerialPort(int id)
+        {
+
+        }
     }
 }

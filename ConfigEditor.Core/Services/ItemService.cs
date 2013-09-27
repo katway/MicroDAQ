@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ConfigEditor.Core.ViewModels;
 
 namespace ConfigEditor.Core.Services
 {
@@ -22,5 +23,37 @@ namespace ConfigEditor.Core.Services
     /// </summary>
     public class ItemService
     {
+        public ItemService()
+        {
+        }
+
+        /// <summary>
+        /// 添加变量
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public void AddItem(ItemViewModel model)
+        {
+
+        }
+
+        /// <summary>
+        /// 编辑变量
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public void EditItem(ItemViewModel model)
+        {
+
+        }
+
+        /// <summary>
+        /// 删除变量
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteItem(int id)
+        {
+
+        }
     }
 }
