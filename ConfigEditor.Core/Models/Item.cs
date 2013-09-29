@@ -1,11 +1,23 @@
-﻿using System;
+﻿/**
+ * 文件名：Item.cs
+ * 说明：监测参数类
+ * 作者：刘风彬
+ * 更改记录： 
+ * -------------------------------------------------------
+ * 改动人 	时间 			原因
+ * -------------------------------------------------------
+ * 刘风彬 	2013-09-29		创建文件
+ * -------------------------------------------------------
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace ConfigEditor.Core.Models
 {
-    class Item
+    public class Item
     {
         //监测参数编号
         private long _serialID;

@@ -50,7 +50,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database\DataSources.cs" />
+    <Compile Include="Database\DeviceDao.cs" />
+    <Compile Include="Database\IPSettingDao.cs" />
+    <Compile Include="Database\ItemDao.cs" />
+    <Compile Include="Database\ModbusGatewayDao.cs" />
+    <Compile Include="Database\ModbusMasterDao.cs" />
+    <Compile Include="Database\ModbusRegisterDao.cs" />
     <Compile Include="Database\ModbusSlaveDao.cs" />
+    <Compile Include="Database\SerialPortDao.cs" />
     <Compile Include="IO\ProjectReader.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\IPSetting.cs" />

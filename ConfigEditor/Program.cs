@@ -18,6 +18,7 @@ namespace ConfigEditor
         [STAThread]
         static void Main()
         {
+
             Application.ThreadException += new ThreadExceptionEventHandler(Application_UIThreadException);
             AppDomain.CurrentDomain.UnhandledException += new System.UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 

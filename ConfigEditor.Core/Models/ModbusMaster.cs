@@ -1,11 +1,23 @@
-﻿using System;
+﻿/**
+ * 文件名：ModbusMaster.cs
+ * 说明：Modbus主机类
+ * 作者：刘风彬
+ * 更改记录： 
+ * -------------------------------------------------------
+ * 改动人 	时间 			原因
+ * -------------------------------------------------------
+ * 刘风彬 	2013-09-29		创建文件
+ * -------------------------------------------------------
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace ConfigEditor.Core.Models
 {
-    class ModbusMaster
+    public class ModbusMaster
     {
         //Modbus主机编号
         private long _serialID;

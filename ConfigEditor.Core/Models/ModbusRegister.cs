@@ -1,14 +1,29 @@
-﻿using System;
+﻿/**
+ * 文件名：ModbusRegister.cs
+ * 说明：监测变量类
+ * 作者：刘风彬
+ * 更改记录： 
+ * -------------------------------------------------------
+ * 改动人 	时间 			原因
+ * -------------------------------------------------------
+ * 刘风彬 	2013-09-29		创建文件
+ * -------------------------------------------------------
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace ConfigEditor.Core.Models
 {
-    class ModbusRegister
+    public class ModbusRegister
     {
         //监测变量编号
         private long _serialID;
+
+        //Modbus从机编号
+        private long _modbusSlave_SerialID;
 
         //别名
         private string _allias;
@@ -52,6 +67,9 @@ namespace ConfigEditor.Core.Models
         //小数位数
         private int _decimalPlaces;
 
+        //启用
+        private string _enable2;
+
         /// <summary>
         /// 监测变量编号
         /// </summary>
@@ -61,6 +79,14 @@ namespace ConfigEditor.Core.Models
             set { _serialID = value; }
         }
 
+        /// <summary>
+        /// Modbus从机编号
+        /// </summary>
+        public long ModbusSlave_SerialID
+        {
+            get { return _modbusSlave_SerialID; }
+            set { _modbusSlave_SerialID = value; }
+        }
         /// <summary>
         /// 别名
         /// </summary>
@@ -185,6 +211,15 @@ namespace ConfigEditor.Core.Models
         {
             get { return _decimalPlaces; }
             set { _decimalPlaces = value; }
+        }
+
+        /// <summary>
+        /// 启用
+        /// </summary>
+        public string Enable2
+        {
+            get { return _enable2; }
+            set { _enable2 = value; }
         }
 
     }

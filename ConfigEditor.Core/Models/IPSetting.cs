@@ -1,11 +1,25 @@
-﻿using System;
+﻿/**
+ * 文件名：IPSetting.cs
+ * 说明：IP设置类
+ * 作者：刘风彬
+ * 更改记录： 
+ * -------------------------------------------------------
+ * 改动人 	时间 			原因
+ * -------------------------------------------------------
+ * 刘风彬 	2013-09-29		创建文件
+ * -------------------------------------------------------
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ConfigEditor.Core.Models;
+using System.Data;
 
 namespace ConfigEditor.Core.Models
 {
-    class IPSetting
+    public class IPSetting
     {
         //IP设置编号
         private long _serialID;
@@ -14,10 +28,10 @@ namespace ConfigEditor.Core.Models
         private string _enable;
 
         //端口
-        private string _port;
+        private int _port;
 
         //网络地址
-        private int _ip;
+        private string _ip;
 
         /// <summary>
         /// 监测参数编号
@@ -40,7 +54,7 @@ namespace ConfigEditor.Core.Models
         /// <summary>
         /// 端口
         /// </summary>
-        public string Port
+        public int Port
         {
             get { return _port; }
             set { _port = value; }
@@ -49,7 +63,7 @@ namespace ConfigEditor.Core.Models
         /// <summary>
         /// 网络地址
         /// </summary>
-        public int IP
+        public string IP
         {
             get { return _ip; }
             set { _ip = value; }
