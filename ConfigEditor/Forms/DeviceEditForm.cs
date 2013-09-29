@@ -104,7 +104,7 @@ namespace ConfigEditor.Forms
                     return;
                 }
 
-                var query = this._parentForm.Project.SerialPorts.Where(obj => obj.PortName.Equals(this.txtName.Text) && obj != this._model);
+                var query = this._parentForm.Project.SerialPorts.Where(obj => obj.PortName.Equals(this.txtName.Text));
                 if (query.Any())
                 {
                     MessageBox.Show("名称不能重复。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Information);

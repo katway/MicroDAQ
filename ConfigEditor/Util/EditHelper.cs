@@ -27,7 +27,7 @@ namespace ConfigEditor.Util
 
         public static readonly string[] DEVICES = new string[]
         {
-    
+            "标准",
         };
 
 

@@ -90,7 +90,7 @@ namespace ConfigEditor.Forms
         {
             try
             {
-                string[] portNames = SerialPort.GetPortNames();
+                string[] portNames = System.IO.Ports.SerialPort.GetPortNames();
 
                 this.cmbPortName.Items.AddRange(portNames);
                 this.cmbBaudRate.Items.AddRange(EditHelper.COMMON_BAUD_RATE.Select(obj => obj.ToString()).ToArray());

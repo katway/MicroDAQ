@@ -59,6 +59,7 @@
     <Compile Include="Database\SerialPortDao.cs" />
     <Compile Include="IO\ProjectReader.cs" />
     <Compile Include="Models\Device.cs" />
+    <Compile Include="Models\EnumTypes.cs" />
     <Compile Include="Models\IPSetting.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ModbusGateway.cs" />
