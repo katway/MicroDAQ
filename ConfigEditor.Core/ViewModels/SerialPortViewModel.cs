@@ -39,7 +39,10 @@ namespace ConfigEditor.Core.ViewModels
         private string _parity;
 
         //停止位
-        private int _stopBits;
+        private string _stopBits;
+
+        //是否启用
+        private bool _isEnable;
 
         //Modbus通讯协议
         private ModbusProtocols _protocol;
@@ -95,10 +98,19 @@ namespace ConfigEditor.Core.ViewModels
         /// <summary>
         /// 停止位
         /// </summary>
-        public int StopBits
+        public string StopBits
         {
             get { return _stopBits; }
             set { _stopBits = value; }
+        }
+
+        /// <summary>
+        /// 是否启用
+        /// </summary>
+        public bool IsEnable
+        {
+            get { return _isEnable; }
+            set { _isEnable = value; }
         }
 
         /// <summary>

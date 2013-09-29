@@ -20,6 +20,7 @@ using System.Text;
 using System.Windows.Forms;
 using ConfigEditor.Forms;
 using ConfigEditor.Core.ViewModels;
+using ConfigEditor.Core.Services;
 
 namespace ConfigEditor
 {
@@ -55,7 +56,17 @@ namespace ConfigEditor
         /// <param name="e"></param>
         private void MainForm_Load(object sender, EventArgs e)
         {
+            try
+            {
+                this._project = new ProjectViewModel();
 
+                this.naviTreeView.ExpandAll();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -77,8 +88,25 @@ namespace ConfigEditor
         {
             try
             {
-                SerialPortEditForm frm = new SerialPortEditForm();
-                frm.ShowDialog();
+                SerialPortEditForm frm = new SerialPortEditForm(this);
+                DialogResult dr = frm.ShowDialog();
+                if (dr == DialogResult.OK)
+                {
+                    SerialPortViewModel model = frm.Model;
+                    
+                    TreeNode node = new TreeNode(model.PortName);
+                    node.Tag = model;
+                    node.ImageKey = "channel.bmp";
+                    node.SelectedImageKey = "channel.bmp";
+
+                    this._project.SerialPorts.Add(model);
+                    this.naviTreeView.Nodes[0].Nodes.Add(node);
+                    this.naviTreeView.SelectedNode = node;
+                    if (!this.naviTreeView.Nodes[0].IsExpanded)
+                    {
+                        this.naviTreeView.Nodes[0].Expand();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -97,7 +125,51 @@ namespace ConfigEditor
             try
             {
                 DeviceEditForm frm = new DeviceEditForm();
-                frm.ShowDialog();
+                DialogResult dr = frm.ShowDialog();
+                if (dr == DialogResult.OK)
+                {
+                    DeviceViewModel model = frm.Model;
+
+                    TreeNode node = new TreeNode(model.Name);
+                    node.Tag = model;
+
+                    if (model.IsEnable)
+                    {
+                        node.ImageKey = "device.bmp";
+                        node.SelectedImageKey = "device.bmp";
+                    }
+                    else
+                    {
+                        node.ImageKey = "disable_device.bmp";
+                        node.SelectedImageKey = "disable_device.bmp";
+                    }
+
+                    TreeNode parentNode = this.naviTreeView.SelectedNode;
+                    //以太网通道设备
+                    if (parentNode.Level == 0)
+                    {
+                        this._project.Ethernet.Devices.Add(model);
+                        this.naviTreeView.Nodes[1].Nodes.Add(node);
+                        this.naviTreeView.SelectedNode = node;
+                        if (!this.naviTreeView.Nodes[1].IsExpanded)
+                        {
+                            this.naviTreeView.Nodes[1].Expand();
+                        }
+                    }
+                    //串口通道设备
+                    else
+                    {
+                        SerialPortViewModel parentModel = parentNode.Tag as SerialPortViewModel;
+                        parentModel.Devices.Add(model);
+                        parentNode.Nodes.Add(node);
+                        this.naviTreeView.SelectedNode = node;
+                        if (!parentNode.IsExpanded)
+                        {
+                            parentNode.Expand();
+                        }
+                    }                                        
+
+                }
             }
             catch (Exception ex)
             {
@@ -116,7 +188,11 @@ namespace ConfigEditor
             try
             {
                 ItemEditForm frm = new ItemEditForm();
-                frm.ShowDialog();
+                DialogResult dr = frm.ShowDialog();
+                if (dr == DialogResult.OK)
+                {
+
+                }
             }
             catch (Exception ex) 
             {
@@ -135,7 +211,11 @@ namespace ConfigEditor
             try
             {
                 ItemBatchAddForm frm = new ItemBatchAddForm();
-                frm.ShowDialog();
+                DialogResult dr = frm.ShowDialog();
+                if (dr == DialogResult.OK)
+                {
+
+                }
             }
             catch (Exception ex)
             {
@@ -161,7 +241,51 @@ namespace ConfigEditor
         /// <param name="e"></param>
         private void tsmiEdit_Click(object sender, EventArgs e)
         {
+            try
+            {
+                //编辑变量
+                if (this.itemListView.Focused && this.itemListView.SelectedItems.Count > 0)
+                {
+                    ListViewItem lvi = this.itemListView.SelectedItems[0];
+                    ItemViewModel model = lvi.Tag as ItemViewModel;
 
+                    ItemEditForm frm = new ItemEditForm(this, model);
+                    frm.ShowDialog();
+                }
+                //编辑其他
+                else if (this.naviTreeView.Focused && this.naviTreeView.SelectedNode != null)
+                {
+                    TreeNode node = this.naviTreeView.SelectedNode;
+                    object tag = node.Tag;
+                    if (tag == null)
+                    {
+                        return;
+                    }
+
+                    //串口节点
+                    if (tag.GetType() == typeof(SerialPortViewModel))
+                    {
+                        SerialPortViewModel model = node.Tag as SerialPortViewModel;
+
+                        SerialPortEditForm frm = new SerialPortEditForm(this, model);
+                        frm.ShowDialog();
+                    }
+                    //设备节点
+                    else if (tag.GetType() == typeof(DeviceViewModel))
+                    {
+                        DeviceViewModel model = node.Tag as DeviceViewModel;
+
+                        DeviceEditForm frm = new DeviceEditForm(this, model);
+                        frm.ShowDialog();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -171,7 +295,79 @@ namespace ConfigEditor
         /// <param name="e"></param>
         private void tsmiDelete_Click(object sender, EventArgs e)
         {
+            try
+            {
+                //删除变量
+                if (this.itemListView.Focused  && this.itemListView.SelectedItems.Count > 0)
+                {
+                    if (MessageBox.Show("确定删除变量吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    {
+                        return;
+                    }
 
+                    ListView.SelectedIndexCollection indexList = this.itemListView.SelectedIndices;
+                    for (int i = indexList.Count; i > 0; i--)
+                    {
+                        int index = indexList[i - 1];
+                        this.itemListView.Items.RemoveAt(index);
+                    }
+                }
+                //删除其他
+                else if (this.naviTreeView.Focused && this.naviTreeView.SelectedNode != null)
+                {
+                    TreeNode node = this.naviTreeView.SelectedNode;
+                    object tag = node.Tag;
+                    if (tag == null)
+                    {
+                        return;
+                    }
+
+                    //串口节点
+                    if (tag.GetType() == typeof(SerialPortViewModel))
+                    {
+                        if (MessageBox.Show("确定删除串口吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        {
+                            return;
+                        }
+
+                        SerialPortViewModel model = node.Tag as SerialPortViewModel;
+                        this._project.SerialPorts.Remove(model);
+
+                        SerialPortService service = new SerialPortService();
+                        service.DeleteSerialPort(model.Id);
+                    }
+                    //设备节点
+                    else if (tag.GetType() == typeof(DeviceViewModel))
+                    {
+                        if (MessageBox.Show("确定删除设备吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        {
+                            return;
+                        }
+
+                        DeviceViewModel model = node.Tag as DeviceViewModel;
+                        if (node.Level == 1)
+                        {
+                            this._project.Ethernet.Devices.Remove(model);
+                        }
+                        else if (node.Level == 2)
+                        {
+                            SerialPortViewModel parentModel = node.Parent.Tag as SerialPortViewModel;
+                            parentModel.Devices.Remove(model);
+                        }
+
+                        DeviceService service = new DeviceService();
+                        service.DeleteDevice(model.Id);
+                    }
+
+                    this.itemListView.Items.Clear();
+                    node.Parent.Nodes.Remove(node);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -210,7 +406,14 @@ namespace ConfigEditor
         /// <param name="e"></param>
         private void tsmiClearProject_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -253,6 +456,85 @@ namespace ConfigEditor
             {
                 AboutForm frm = new AboutForm();
                 frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// 选择串口、设备节点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void naviTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            try
+            {
+                this.itemListView.Items.Clear();
+
+                TreeNode node = e.Node;
+                object tag = node.Tag;
+
+                if (node.Level == 0)
+                {
+                    //1级节点
+                    string type = tag.ToString();
+                    if (type == "SerialPorts")
+                    {
+                        this.tsbAddSerialPort.Enabled = true;
+                        this.tsbAddDevice.Enabled = false;
+                        this.tsbAddItem.Enabled = false;
+                        this.tsbBatchAddItem.Enabled = false;
+                        this.tsbEdit.Enabled = false;
+                        this.tsbDelete.Enabled = false;
+                    }
+                    else if(type == "Ethernet")
+                    {
+                        this.tsbAddSerialPort.Enabled = false;
+                        this.tsbAddDevice.Enabled = true;
+                        this.tsbAddItem.Enabled = false;
+                        this.tsbBatchAddItem.Enabled = false;
+                        this.tsbEdit.Enabled = false;
+                        this.tsbDelete.Enabled = false;
+                    }
+                }
+                else if (node.Level == 1)
+                {
+                    //2级节点
+                    string type = node.Parent.Tag.ToString();
+                    if (type == "SerialPorts")
+                    {
+                        this.tsbAddSerialPort.Enabled = true;
+                        this.tsbAddDevice.Enabled = true;
+                        this.tsbAddItem.Enabled = false;
+                        this.tsbBatchAddItem.Enabled = false;
+                        this.tsbEdit.Enabled = true;
+                        this.tsbDelete.Enabled = true;
+                    }
+                    else if (type == "Ethernet")
+                    {
+                        this.tsbAddSerialPort.Enabled = false;
+                        this.tsbAddDevice.Enabled = true;
+                        this.tsbAddItem.Enabled = true;
+                        this.tsbBatchAddItem.Enabled = true;
+                        this.tsbEdit.Enabled = true;
+                        this.tsbDelete.Enabled = true;
+                    }
+                }
+                else
+                {
+                    //3级节点
+                    this.tsbAddSerialPort.Enabled = false;
+                    this.tsbAddDevice.Enabled = false;
+                    this.tsbAddItem.Enabled = true;
+                    this.tsbBatchAddItem.Enabled = true;
+                    this.tsbEdit.Enabled = true;
+                    this.tsbDelete.Enabled = true;
+                }
+
             }
             catch (Exception ex)
             {
