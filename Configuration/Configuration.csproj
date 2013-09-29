@@ -8,7 +8,7 @@
     <ProjectGuid>{AC06BCF8-1CFE-406A-BBFE-606FC2175617}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Configuration</RootNamespace>
+    <RootNamespace>MicroDAQ.Configuration</RootNamespace>
     <AssemblyName>Configuration</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

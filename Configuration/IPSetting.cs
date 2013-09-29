@@ -4,12 +4,14 @@
 // Purpose: Definition of Class IPSetting
 
 using System;
-
-public class IPSetting
+namespace MicroDAQ.Configuration
 {
-   public long serialID;
-   public string iP;
-   public int port;
-   public string enable;
+    public class IPSetting
+    {
+        public long serialID;
+        public string iP;
+        public int port;
+        public string enable;
 
+    }
 }

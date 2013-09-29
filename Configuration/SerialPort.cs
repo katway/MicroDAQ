@@ -4,15 +4,17 @@
 // Purpose: Definition of Class SerialPort
 
 using System;
-
-public class SerialPort
+namespace MicroDAQ.Configuration
 {
-   public long serialID;
-   public string port;
-   public int baudRate;
-   public string parity;
-   public int databits;
-   public int stopbits;
-   public string enable;
+    public class SerialPort
+    {
+        public long serialID;
+        public string port;
+        public int baudRate;
+        public string parity;
+        public int databits;
+        public int stopbits;
+        public string enable;
 
+    }
 }

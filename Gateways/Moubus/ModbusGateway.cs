@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.IO.Ports;
 using JonLibrary.Automatic;
 using MicroDAQ.Common;
+using MicroDAQ.Configuration;
 
 
 namespace MicroDAQ.Gateways.Modbus

@@ -4,11 +4,13 @@
 // Purpose: Definition of Class Device
 
 using System;
-
-public class Device
+namespace MicroDAQ.Configuration
 {
-   public long serialID;
-   public string name;
-   public string allias;
+    public class Device
+    {
+        public long serialID;
+        public string name;
+        public string allias;
 
+    }
 }
