@@ -16,11 +16,7 @@ namespace MicroDAQ.Gateways.Modbus2
         }
 
 
-        /// <summary>
-        /// 启动
-        /// </summary>
-        public override void Start()
-        { }
+
 
         /// <summary>
         /// 暂停

@@ -45,36 +45,46 @@ namespace MicroDAQ.Common
             this.GatewayState = Common.GatewayState.Starting;
             foreach (IDataItemManage mg in this.ItemManagers)
                 mg.StartSynchronize();
-            new JonLibrary.Automatic.CycleTask().
-                Run(new System.Threading.ThreadStart(Push), System.Threading.ThreadPriority.BelowNormal);
+            pushTask = new JonLibrary.Automatic.CycleTask();
+            pushTask.Run(new System.Threading.ThreadStart(Push), System.Threading.ThreadPriority.BelowNormal);
             this.GatewayState = Common.GatewayState.Started;
         }
+        CycleTask pushTask;
+
 
         /// <summary>
         /// 暂停
         /// </summary>
         public virtual void Pause()
-        { }
+        {
+            pushTask.Pause();
+        }
 
         /// <summary>
         /// 继续
         /// </summary>
         public virtual void Continue()
-        { }
+        {
+            pushTask.Continue();
+        }
 
         /// <summary>
         /// 停止
         /// </summary>
         public virtual void Stop()
-        { 
-        
+        {
+            foreach (IDataItemManage mg in this.ItemManagers)
+                mg.StopSynchronize();
+            pushTask.Quit();
         }
 
         /// <summary>
         /// 销毁并释放资源
         /// </summary>
         public virtual void Dispose()
-        { }
+        {
+            pushTask = null;
+        }
 
         protected void OnStateChanging()
         {
