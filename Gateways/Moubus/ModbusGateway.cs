@@ -24,7 +24,7 @@ namespace MicroDAQ.Gateways.Modbus
         /// <summary>
         /// 数据项管理器
         /// </summary>
-        public List<SerialPortMasterManager> SerialManagers { get; set; }
+        public List<SerialPortSlaveDevice> SerialManagers { get; set; }
         public List<IPMasterManager> IPManagers { get; set; }
 
         public IList<IDataItemManage> ItemManagers { get; set; }
@@ -37,7 +37,7 @@ namespace MicroDAQ.Gateways.Modbus
         public CycleTask ModbusCycle { get; private set; }
         public ModbusGateway(IList<IDatabase> databaseManagers)
         {
-            SerialManagers = new List<SerialPortMasterManager>();
+            SerialManagers = new List<SerialPortSlaveDevice>();
             IPManagers = new List<IPMasterManager>();
             //string ConnectionString = "server=.\\SQLEXPRESS;database=opcmes3;uid=microdaq;pwd=microdaq";
             string ConnectionString = @"server=192.168.1.201\SQL2000;database=opcmes3;uid=microdaq;pwd=microdaq";
@@ -370,7 +370,7 @@ namespace MicroDAQ.Gateways.Modbus
                                 {
                                     metaData = GetMetaByID(commandData);
                                 }
-                                SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData, writeData);
+                                SerialPortSlaveDevice manager = new SerialPortSlaveDevice(master, slave, commandData, metaData, writeData);
                                 SerialManagers.Add(manager);
 
                                 row = row + 1;
@@ -415,7 +415,7 @@ namespace MicroDAQ.Gateways.Modbus
                         {
                             metaData = GetMetaByID(commandData);
                         }
-                        SerialPortMasterManager manager = new SerialPortMasterManager(master, slave, commandData, metaData, writeData);
+                        SerialPortSlaveDevice manager = new SerialPortSlaveDevice(master, slave, commandData, metaData, writeData);
                         SerialManagers.Add(manager);
 
                         row = row + 1;
@@ -447,7 +447,7 @@ namespace MicroDAQ.Gateways.Modbus
         {
             foreach (IDatabase dbMgr in this.DatabaseManagers)
             {
-                foreach (SerialPortMasterManager mgr in this.SerialManagers)
+                foreach (SerialPortSlaveDevice mgr in this.SerialManagers)
                 {
                     foreach (Item item in mgr.Items)
                     {
@@ -474,7 +474,7 @@ namespace MicroDAQ.Gateways.Modbus
         /// </summary>
         private void ErgodicManagers()
         {
-            foreach (SerialPortMasterManager manager in this.SerialManagers)
+            foreach (SerialPortSlaveDevice manager in this.SerialManagers)
                 manager.ReadWriteData();
 
             foreach (IPMasterManager manager in this.IPManagers)

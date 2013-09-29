@@ -99,6 +99,14 @@ namespace MicroDAQ.DataItem
             throw new NotImplementedException();
         }
 
+        public void StartSynchronize()
+        {
+            throw new NotImplementedException();
+        }
+        public void StopSynchronize()
+        {
+            throw new System.NotImplementedException();
+        }
         public void Dispose()
         {
             throw new NotImplementedException();

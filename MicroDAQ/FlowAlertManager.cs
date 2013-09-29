@@ -45,9 +45,16 @@ namespace MicroDAQ
             { ItemPair.Add(key, item); }
             ItemPair[key] = item;
         }
-
+        public void StartSynchronize()
+        {
+            throw new NotImplementedException();
+        }
+        public void StopSynchronize()
+        {
+            throw new System.NotImplementedException();
+        }
         public void Dispose()
-        { }
+        { throw new NotImplementedException(); }
         /// <summary>
         /// 用于实现特定业务功能的内部类 
         /// </summary>

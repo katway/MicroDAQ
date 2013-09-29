@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using MicroDAQ.Common;
 namespace MicroDAQ.Gateways.Modbus
 {
-    public class SerialPortMasterManager : IDataItemManage
+    public class SerialPortSlaveDevice : IDataItemManage
     {
         public IList<Item> Items { get; set; }
         IModbusMaster SerialMaster;
@@ -24,7 +24,7 @@ namespace MicroDAQ.Gateways.Modbus
         /// <param name="slave"></param>
         /// <param name="commandsData"></param>
         /// <param name="metaData"></param>
-        public SerialPortMasterManager(IModbusMaster master, int slave, DataTable commandsData, DataTable metaData, DataTable writeData)
+        public SerialPortSlaveDevice(IModbusMaster master, int slave, DataTable commandsData, DataTable metaData, DataTable writeData)
         {
             string ConnectionString = "server=.\\sqlexpress;database=Modbusdb;uid=sa;pwd=sa";
             Connection = new SqlConnection(ConnectionString);
@@ -180,10 +180,19 @@ namespace MicroDAQ.Gateways.Modbus
             Connection.Close();
             return i;
         }
-
+        
+        public void StartSynchronize()
+        {
+            new JonLibrary.Automatic.CycleTask().Run(new System.Threading.ThreadStart(ReadWriteData), System.Threading.ThreadPriority.BelowNormal);
+        }
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        public void StopSynchronize()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

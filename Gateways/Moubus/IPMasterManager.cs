@@ -172,9 +172,19 @@ namespace MicroDAQ.Gateways.Modbus
 
         }
 
+        public void StartSynchronize()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        public void StopSynchronize()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="MicroDAQ.Gateways.Modbus.IPMasterManager" Collapsed="true">
-    <Position X="9" Y="1" Width="2" />
+    <Position X="4.25" Y="4.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAAACAEAAABAAAAwAAAAAgAAADAAAIEAACA=</HashCode>
+      <HashCode>AAEAAAAABCAACAEAAABAAAAwAAAAAgAAADAAAIEAgCA=</HashCode>
       <FileName>Moubus\IPMasterManager.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -15,6 +15,7 @@
       <Method Name="CreateModbusIpMaster" Hidden="true" />
       <Method Name="CreatePortDevice" Hidden="true" />
       <Method Name="CreateSerialMaster" Hidden="true" />
+      <Method Name="ErgodicManagers" Hidden="true" />
       <Method Name="GetIPMasterDevice" Hidden="true" />
       <Method Name="GetMetaByID" Hidden="true" />
       <Method Name="GetReadCommandsByID" Hidden="true" />
@@ -23,21 +24,38 @@
       <Method Name="ProCommandState" Hidden="true" />
       <Method Name="SetTable" Hidden="true" />
     </Members>
-    <TypeIdentifier>
-      <HashCode>BIQgCACgCKAAAgEBIBACAAAwAgAgAgAAICgAAACBRAQ=</HashCode>
-      <FileName>Moubus\ModbusGateway.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="MicroDAQ.Gateways.Modbus.SerialPortMasterManager">
-    <Position X="6" Y="2.25" Width="2" />
-    <AssociationLine Name="Items" Type="MicroDAQ.Common.Item">
+    <AssociationLine Name="SerialManagers" Type="MicroDAQ.Gateways.Modbus.SerialPortSlaveDevice" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3" Y="2.964" />
+        <Point X="3.99" Y="2.964" />
+        <Point X="3.99" Y="3" />
+        <Point X="6.5" Y="3" />
+      </Path>
       <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.568" Y="0.081" />
+        <Position X="1.713" Y="0.049" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AgEAAAAAACAACAEAAABAAAAwAAAAAgAAACAAAIEAACA=</HashCode>
-      <FileName>Moubus\SerialPortMasterManager.cs</FileName>
+      <HashCode>BIQgCACgCKAAAgEBIBACAAAwAgAgAiAAICgAAACBRAQ=</HashCode>
+      <FileName>Moubus\ModbusGateway.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="SerialManagers" />
+      <Property Name="ItemManagers" />
+      <Property Name="IPManagers" />
+      <Property Name="DatabaseManagers" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="MicroDAQ.Gateways.Modbus.SerialPortSlaveDevice">
+    <Position X="6.5" Y="2.25" Width="2" />
+    <AssociationLine Name="Items" Type="MicroDAQ.Common.Item">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.379" Y="0.081" Height="0.181" Width="0.716" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgEAAAAABCAACAEAAABAAAAwAAAAAgAAACAAAIEAgCA=</HashCode>
+      <FileName>Moubus\SerialPortSlaveDevice.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Items" />
@@ -48,5 +66,13 @@
     <Position X="9.5" Y="4" Width="1.5" />
     <TypeIdentifier />
   </Class>
+  <Interface Name="MicroDAQ.Common.IDataItemManage" Collapsed="true">
+    <Position X="4.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="MicroDAQ.Common.IDatabase" Collapsed="true">
+    <Position X="4.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
   <Font Name="微软雅黑" Size="9" />
 </ClassDiagram>

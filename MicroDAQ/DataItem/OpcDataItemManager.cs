@@ -10,7 +10,7 @@ using MicroDAQ.Common;
 namespace MicroDAQ.DataItem
 {
     /// <summary>
-    /// 数量项管理器
+    /// OPC数量项管理器
     /// </summary>
     public class OpcDataItemManager : IDataItemManage
     {
@@ -110,8 +110,15 @@ namespace MicroDAQ.DataItem
             { ItemPair.Add(key, item); }
             ItemPair[key] = item;
         }
+        public void StartSynchronize()
+        {
+            throw new NotImplementedException();
+        }
 
-
+        public void StopSynchronize()
+        {
+            throw new System.NotImplementedException();
+        }
         public void Dispose()
         {
             throw new NotImplementedException();

@@ -102,7 +102,7 @@
     <Compile Include="Database\DatabaseManage.cs" />
     <Compile Include="DataItem\PackageDataItemManager.cs" />
     <Compile Include="FlowAlertManager.cs" />
-    <Compile Include="DataItem\DataItemManager.cs" />
+    <Compile Include="DataItem\OpcDataItemManager.cs" />
     <Compile Include="DataDisplayForm.cs">
       <SubType>Form</SubType>
     </Compile>

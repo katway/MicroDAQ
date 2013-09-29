@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using JonLibrary.Automatic;
+using System.Threading;
 
 
 namespace MicroDAQ.Common
@@ -17,7 +19,7 @@ namespace MicroDAQ.Common
         /// <summary>
         /// Item管理器对象
         /// </summary>
-        public IList<MicroDAQ.Common.IDataItemManage> ItemManage { get; set; }
+        public IList<MicroDAQ.Common.IDataItemManage> ItemManagers { get; set; }
 
         /// <summary>
         /// 运行状态
@@ -39,7 +41,14 @@ namespace MicroDAQ.Common
         /// 启动
         /// </summary>
         public virtual void Start()
-        { }
+        {
+            this.GatewayState = Common.GatewayState.Starting;
+            foreach (IDataItemManage mg in this.ItemManagers)
+                mg.StartSynchronize();
+            new JonLibrary.Automatic.CycleTask().
+                Run(new System.Threading.ThreadStart(Push), System.Threading.ThreadPriority.BelowNormal);
+            this.GatewayState = Common.GatewayState.Started;
+        }
 
         /// <summary>
         /// 暂停
@@ -57,7 +66,9 @@ namespace MicroDAQ.Common
         /// 停止
         /// </summary>
         public virtual void Stop()
-        { }
+        { 
+        
+        }
 
         /// <summary>
         /// 销毁并释放资源
@@ -82,7 +93,7 @@ namespace MicroDAQ.Common
         public virtual void Push()
         {
             foreach (IDatabase db in this.DatabaseManage.DatabaseList)
-                foreach (IDataItemManage itemManage in this.ItemManage)
+                foreach (IDataItemManage itemManage in this.ItemManagers)
                     foreach (Item item in itemManage.Items)
                     {
                         db.UpdateItem(item);

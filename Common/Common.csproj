@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JonLibrary">
-      <HintPath>..\..\..\Project\JonLibrary\JonLibrary\bin\Release\JonLibrary.dll</HintPath>
+    <Reference Include="Automatic">
+      <HintPath>..\..\..\Project\JonLibrary\Automatic\bin\Release\Automatic.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

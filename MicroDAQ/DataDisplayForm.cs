@@ -81,7 +81,7 @@ namespace MicroDAQ
                 {
                     DataRow tmp = dt.Rows[i];
 
-                    foreach (SerialPortMasterManager mgr in Program.MobusGateway.SerialManagers)
+                    foreach (SerialPortSlaveDevice mgr in Program.MobusGateway.SerialManagers)
                     {
                         foreach (Item meter in mgr.Items)
                         {
