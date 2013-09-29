@@ -1,12 +1,12 @@
 ﻿/**
  * 文件名：ModbusSlaveDao.cs
  * 说明：Modbus从机DAO类
- * 作者：林安城
+ * 作者：刘风彬
  * 更改记录： 
  * -------------------------------------------------------
  * 改动人 	时间 			原因
  * -------------------------------------------------------
- * 林安城 	2013-09-20		创建文件
+ * 刘风彬 	2013-09-29		创建文件
  * -------------------------------------------------------
  */
 
@@ -31,7 +31,7 @@ namespace ConfigEditor.Core.Database
         /// <summary>
         /// 插入新记录
         /// </summary>
-        /// <param name="device"></param>
+        /// <param name="slave"></param>
         /// <returns></returns>
         public bool Insert(ModbusSlave slave)
         {
@@ -40,35 +40,30 @@ namespace ConfigEditor.Core.Database
             try
             {
                 DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
-                string sql = @"
-                                INSERT INTO ModbusSlave
-                                      (Name, ProtocolId, IsSimulate, IsTagLog, Timeout, Reconnect, ChannelId, 
-                                      IpAddress, IpPort, Slave, IsEnabled)
-                                VALUES ('{0}',{1},'{2}','{3}',{4},{5},{6},'{7}',{8},'{9}','{10}')
-                              ";
+                string sql = @" INSERT INTO ModbusSlave
+                               ( ModbusMaster_SerialID, IPSetting_SerialID, Name, Allias, Type,Slave, Enable)
+                                VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}')  ";
 
                 object[] objs = new object[]
                 {
-                    //device.Name,
-                    //device.ProtocolId,
-                    //device.IsSimulate.ToString(),
-                    //device.IsTagLog.ToString(),
-                    //device.Timeout,
-                    //device.Reconnect,
-                    //device.ChannelId,
-                    //device.IpAddress,
-                    //device.IpPort,
-                    //device.Slave,
-                    //device.IsEnabled.ToString()
+                    slave.SerialID,
+                    slave.ModbusMaster_SerialID,
+                    slave.IPSetting_SerialID,
+                    slave.Name,
+                    slave.Allias,
+                    slave.Type,
+                    slave.Slave,                         
+                    slave.Enable
                 };
 
-                int rowCount = dao.ExecuteNonQuery(string.Format(sql, objs), true);
+                 sql = string.Format(sql, objs);
+                int rowCount = dao.ExecuteNonQuery(sql, true);
                 if (rowCount > 0)
                 {
                     result = true;
                 }
             }
-            catch
+            catch(Exception e)
             {
                 throw;
             }
@@ -79,7 +74,7 @@ namespace ConfigEditor.Core.Database
         /// <summary>
         /// 修改记录
         /// </summary>
-        /// <param name="device"></param>
+        /// <param name="slave"></param>
         /// <returns></returns>
         public bool Update(ModbusSlave slave)
         {
@@ -89,25 +84,21 @@ namespace ConfigEditor.Core.Database
             {
                 DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
                 string sql = @"
-                                UPDATE Device
-                                SET Name ='{1}', ProtocolId ={2}, IsSimulate ='{3}', IsTagLog ='{4}', Timeout ={5}, Reconnect ={6}, ChannelId ={7}, 
-                                      IpAddress ='{8}', IpPort ={9}, Slave ='{10}', IsEnabled ='{11}'
-                                WHERE (Id = {0})
+                                UPDATE ModbusSlave
+                                SET  ModbusMaster_SerialID ='{1}', IPSetting_SerialID ='{2}', Name ='{3}', Allias ='{4}', Type ='{5}', Slave ='{6}', 
+                                      Enable ='{7}'
+                                WHERE (SerialID = '{0}')
                               ";
                 object[] objs = new object[]
                 {
-                    //device.Id,
-                    //device.Name,
-                    //device.ProtocolId,
-                    //device.IsSimulate.ToString(),
-                    //device.IsTagLog.ToString(),
-                    //device.Timeout,
-                    //device.Reconnect,
-                    //device.ChannelId,
-                    //device.IpAddress,
-                    //device.IpPort,
-                    //device.Slave,
-                    //device.IsEnabled.ToString()
+                    slave.SerialID,
+                    slave.ModbusMaster_SerialID,
+                    slave.IPSetting_SerialID,
+                    slave.Name,
+                    slave.Allias,
+                    slave.Type,
+                    slave.Slave,                         
+                    slave.Enable
                 };
 
                 int rowCount = dao.ExecuteNonQuery(string.Format(sql, objs));
@@ -127,19 +118,28 @@ namespace ConfigEditor.Core.Database
         /// <summary>
         /// 删除记录
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="SerialID"></param>
         /// <returns></returns>
-        public bool Delete(int id)
+        public bool Delete(int SerialID)
         {
             bool result = false;
 
             try
             {
                 DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
-                //删除变量
+                string sql =@"DELETE FROM ModbusSlave WHERE SerialID = '{0}' ";
+                object[] objs = new object[]
+                {
+                    SerialID
+                    
+                };
 
-                //删除设备
-
+                sql = string.Format(sql, objs);
+                int rowCount = dao.ExecuteNonQuery(sql);
+                if (rowCount > 0)
+                {
+                    result = true;
+                }
             }
             catch
             {
@@ -190,18 +190,14 @@ namespace ConfigEditor.Core.Database
                 {
                     ModbusSlave slave = new ModbusSlave()
                     {
-                        //Id = Convert.ToInt32(row["Id"]),
-                        //Name = Convert.ToString(row["Name"]),
-                        //ProtocolId = Convert.ToInt32(row["ProtocolId"]),
-                        //IsSimulate = Convert.ToBoolean(row["IsSimulate"]),
-                        //IsTagLog = Convert.ToBoolean(row["IsTagLog"]),
-                        //Timeout = Convert.ToInt32(row["Timeout"]),
-                        //Reconnect = Convert.ToInt32(row["Reconnect"]),
-                        //ChannelId = Convert.ToInt32(row["ChannelId"]),
-                        //IpAddress = (row["IpAddress"] == DBNull.Value) ? null : Convert.ToString(row["IpAddress"]),
-                        //IpPort = (row["IpPort"] == DBNull.Value) ? 0 : Convert.ToInt32(row["IpPort"]),
-                        //Slave = Convert.ToString(row["Slave"]),
-                        //IsEnabled = Convert.ToBoolean(row["IsEnabled"])
+                        SerialID = Convert.ToInt32(row["SerialID"]),
+                        Name = Convert.ToString(row["Name"]),
+                        ModbusMaster_SerialID = Convert.ToInt32(row["ModbusMaster_SerialID"]),
+                        IPSetting_SerialID = Convert.ToInt32(row["IPSetting_SerialID"]),
+                        Allias = Convert.ToString(row["Allias"]),
+                        Type = Convert.ToString(row["Type"]),
+                        Slave = Convert.ToInt32(row["Slave"]),
+                        Enable = Convert.ToString(row["Enable"])
                     };
 
                     list.Add(slave);
@@ -233,18 +229,15 @@ namespace ConfigEditor.Core.Database
                 {
                     ModbusSlave slave = new ModbusSlave()
                     {
-                        //Id = Convert.ToInt32(row["Id"]),
-                        //Name = Convert.ToString(row["Name"]),
-                        //ProtocolId = Convert.ToInt32(row["ProtocolId"]),
-                        //IsSimulate = Convert.ToBoolean(row["IsSimulate"]),
-                        //IsTagLog = Convert.ToBoolean(row["IsTagLog"]),
-                        //Timeout = Convert.ToInt32(row["Timeout"]),
-                        //Reconnect = Convert.ToInt32(row["Reconnect"]),
-                        //ChannelId = Convert.ToInt32(row["ChannelId"]),
-                        //IpAddress = (row["IpAddress"] == DBNull.Value) ? null : Convert.ToString(row["IpAddress"]),
-                        //IpPort = (row["IpPort"] == DBNull.Value) ? 0 : Convert.ToInt32(row["IpPort"]),
-                        //Slave = Convert.ToString(row["Slave"]),
-                        //IsEnabled = Convert.ToBoolean(row["IsEnabled"])
+                       
+                        SerialID = Convert.ToInt32(row["SerialID"]),
+                        Name = Convert.ToString(row["Name"]),
+                        ModbusMaster_SerialID = Convert.ToInt32(row["ModbusMaster_SerialID"]),
+                        IPSetting_SerialID = Convert.ToInt32(row["IPSetting_SerialID"]),
+                        Allias = Convert.ToString(row["Allias"]),
+                        Type = Convert.ToString(row["Type"]),
+                        Slave = Convert.ToInt32(row["Slave"]),
+                        Enable = Convert.ToString(row["Enable"])
                     };
 
                     list.Add(slave);
@@ -262,29 +255,26 @@ namespace ConfigEditor.Core.Database
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        public ModbusSlave GetByID(int id)
+        public ModbusSlave GetByID(int SerialID)
         {
             ModbusSlave item = new ModbusSlave();
             try
             {
                 DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
-                string sql = string.Format("SELECT * FROM ModbusSlave where ModbusSlaveID = {0}", id);
+                string sql = string.Format("SELECT * FROM ModbusSlave where SerialID = '{0}'", SerialID);
                 DataTable dt = dao.ExecuteQuery(sql);
                 if (dt != null && dt.Rows.Count > 0)
                 {
                     DataRow row = dt.Rows[0];
-                    //item.Id = Convert.ToInt32(row["Id"]);
-                    //item.Name = Convert.ToString(row["Name"]);
-                    //item.ProtocolId = Convert.ToInt32(row["ProtocolId"]);
-                    //item.IsSimulate = Convert.ToBoolean(row["IsSimulate"]);
-                    //item.IsTagLog = Convert.ToBoolean(row["IsTagLog"]);
-                    //item.Timeout = Convert.ToInt32(row["Timeout"]);
-                    //item.Reconnect = Convert.ToInt32(row["Reconnect"]);
-                    //item.ChannelId = Convert.ToInt32(row["ChannelId"]);
-                    //item.IpAddress = (row["IpAddress"] == DBNull.Value) ? null : Convert.ToString(row["IpAddress"]);
-                    //item.IpPort = (row["IpPort"] == DBNull.Value) ? 0 : Convert.ToInt32(row["IpPort"]);
-                    //item.Slave = Convert.ToString(row["Slave"]);
-                    //item.IsEnabled = Convert.ToBoolean(row["IsEnabled"]);
+                   
+                    item.SerialID = Convert.ToInt32(row["SerialID"]);
+                    item.Name = Convert.ToString(row["Name"]);
+                    item.ModbusMaster_SerialID = Convert.ToInt32(row["ModbusMaster_SerialID"]);
+                    item.IPSetting_SerialID = Convert.ToInt32(row["IPSetting_SerialID"]);
+                    item.Allias = Convert.ToString(row["Allias"]);
+                    item.Type = Convert.ToString(row["Type"]);
+                    item.Slave = Convert.ToInt32(row["Slave"]);
+                    item.Enable = Convert.ToString(row["Enable"]);
                 }
             }
             catch
@@ -294,23 +284,23 @@ namespace ConfigEditor.Core.Database
             return item;
         }
         /// <summary>
-        /// 获取最新ID
+        /// 获取最新SerialID
         /// </summary>
         /// <returns></returns>
-        public int GetLastID()
+        public int GetLastSerialID()
         {
-            int lastID = 0;
+            int lastSerialID = 0;
             DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
             try
             {
-                lastID = Convert.ToInt32(dao.ExecuteScalar("select id from [ModbusSlave] order by id desc limit 1"));
+                lastSerialID = Convert.ToInt32(dao.ExecuteScalar("select SerialID from [ModbusSlave] order by SerialID desc limit 1"));
             }
             catch
             {
                 throw;
             }
 
-            return lastID;
+            return lastSerialID;
         }
 
         /// <summary>
