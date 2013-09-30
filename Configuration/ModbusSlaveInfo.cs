@@ -19,6 +19,17 @@ namespace MicroDAQ.Configuration
 
         public IPSettingInfo iPSetting;
 
+        internal DataLoader ConfigLoader
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
 
 
     }

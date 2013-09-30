@@ -16,5 +16,16 @@ namespace MicroDAQ.Configuration
         public int stopbits;
         public string enable;
 
+        internal DataLoader ConfigLoader
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
     }
 }

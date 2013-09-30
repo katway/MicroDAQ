@@ -19,5 +19,16 @@ namespace MicroDAQ.Configuration
 
         public SerialPort serialPort;
 
+        internal DataLoader ConfigLoader
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
     }
 }

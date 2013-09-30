@@ -81,7 +81,7 @@ namespace MicroDAQ
                 {
                     DataRow tmp = dt.Rows[i];
 
-                    foreach (SerialPortSlaveDevice mgr in Program.MobusGateway.SerialManagers)
+                    foreach (SerialPortSlaveDevice mgr in Program.MobusGateway.SlaveManagers)
                     {
                         foreach (Item meter in mgr.Items)
                         {
@@ -171,7 +171,7 @@ namespace MicroDAQ
                             new DataColumn("PLC设备类型"),
                             new DataColumn("PLC状态"),
                             new DataColumn("PLC可信度")});
-                if (Program.MobusGateway.IPManagers == null || Program.MobusGateway.SerialManagers == null)
+                if (Program.MobusGateway.IPManagers == null || Program.MobusGateway.SlaveManagers == null)
                 {
                     MessageBox.Show("尚未连接设备！");
                     return;

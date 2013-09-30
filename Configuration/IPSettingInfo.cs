@@ -13,5 +13,16 @@ namespace MicroDAQ.Configuration
         public int port;
         public string enable;
 
+        internal DataLoader ConfigLoader
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
     }
 }

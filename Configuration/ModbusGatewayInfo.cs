@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 namespace MicroDAQ.Configuration
 {
-    public class ModbusGatewayInfo
+    public class ModbusGatewayInfo : DataLoader
     {
         public long serialID;
         public string name;

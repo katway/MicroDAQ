@@ -36,6 +36,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigLoader.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="IPSettingInfo.cs" />
     <Compile Include="ModbusGatewayInfo.cs" />
@@ -44,6 +45,9 @@
     <Compile Include="ModbusVariable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialPortInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="configuration.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

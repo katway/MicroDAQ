@@ -27,5 +27,16 @@ namespace MicroDAQ.Configuration
         public decimal originalValue;
         public int decimalPlaces;
 
+        internal DataLoader ConfigLoader
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
     }
 }
