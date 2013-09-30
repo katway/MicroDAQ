@@ -73,6 +73,7 @@
     <Compile Include="Util\ArrayHelper.cs" />
     <Compile Include="Database\DbDaoHelper.cs" />
     <Compile Include="Util\EntityHelper.cs" />
+    <Compile Include="Util\EnumHelper.cs" />
     <Compile Include="Util\KernelHelper.cs" />
     <Compile Include="Util\LogHelper.cs" />
     <Compile Include="Util\SerializeHelper.cs" />

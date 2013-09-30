@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using ConfigEditor.Core.Models;
 
-namespace ConfigEditor.Util
+namespace ConfigEditor.Core.Util
 {
     /// <summary>
     /// 枚举类型转换
