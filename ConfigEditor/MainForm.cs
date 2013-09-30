@@ -95,7 +95,7 @@ namespace ConfigEditor
                 if (dr == DialogResult.OK)
                 {
                     SerialPortViewModel model = frm.Model;
-                    
+
                     TreeNode node = new TreeNode(model.PortName);
                     node.Tag = model;
                     node.ImageKey = "channel.bmp";
@@ -171,7 +171,7 @@ namespace ConfigEditor
                         {
                             parentNode.Expand();
                         }
-                    }                                        
+                    }
 
                 }
             }
@@ -225,7 +225,7 @@ namespace ConfigEditor
                     this.itemPropertyGrid.SelectedObject = model;
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -415,7 +415,7 @@ namespace ConfigEditor
             try
             {
                 //删除变量
-                if (this.itemListView.Focused  && this.itemListView.SelectedItems.Count > 0)
+                if (this.itemListView.Focused && this.itemListView.SelectedItems.Count > 0)
                 {
                     if (MessageBox.Show("确定删除变量吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                     {

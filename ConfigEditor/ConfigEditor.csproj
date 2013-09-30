@@ -36,8 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
-      <HintPath>bin\Debug\ThirdParty\log4net.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\MicroDAQ\Dynamic\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
@@ -179,7 +178,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ConfigEditor.Core\ConfigEditor.Core.csproj">
       <Project>{D0F0B1A7-483C-4016-AE1C-11DDBA0B2DA3}</Project>

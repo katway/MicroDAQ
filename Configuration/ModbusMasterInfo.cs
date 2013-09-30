@@ -17,7 +17,7 @@ namespace MicroDAQ.Configuration
         public System.Collections.Generic.List<ModbusSlaveInfo> modbusSlave;
 
 
-        public SerialPort serialPort;
+        public SerialPortInfo serialPort;
 
         internal DataLoader ConfigLoader
         {
