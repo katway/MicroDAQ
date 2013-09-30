@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using ConfigEditor.Core.Models;
+using ConfigEditor.Core.Util;
 
 namespace ConfigEditor.Core.ViewModels
 {
@@ -129,6 +130,15 @@ namespace ConfigEditor.Core.ViewModels
         [DisplayName("功能区")]
         [Description("Modbus 功能区")]
         [ReadOnly(true)]
+        public string TableNameShow
+        {
+            get { return EnumHelper.EnumToCaption(_tableName); }
+        }
+
+        /// <summary>
+        /// 功能区
+        /// </summary>
+        [Browsable(false)]
         public ModbusDataModels TableName
         {
             get { return _tableName; }
@@ -143,6 +153,12 @@ namespace ConfigEditor.Core.ViewModels
         [DisplayName("访问属性")]
         [Description("访问属性")]
         [ReadOnly(true)]
+        public string AccessShow
+        {
+            get { return EnumHelper.EnumToCaption(_access); }
+        }
+
+        [Browsable(false)]
         public AccessRights Access
         {
             get { return _access; }
@@ -150,13 +166,22 @@ namespace ConfigEditor.Core.ViewModels
         }
 
         /// <summary>
-        /// 数据类型
+        /// 数据类型，显示
         /// </summary>
         [Browsable(true)]
         [Category("\t数据")]
         [DisplayName("数据类型")]
         [Description("数据类型")]
         [ReadOnly(true)]
+        public string DataTypeShow
+        {
+            get { return EnumHelper.EnumToCaption(_dataType); }
+        }
+
+        /// <summary>
+        /// 数据类型
+        /// </summary>
+        [Browsable(false)]
         public DataTypes DataType
         {
             get { return _dataType; }
