@@ -78,6 +78,7 @@
     <Compile Include="Util\LogHelper.cs" />
     <Compile Include="Util\SerializeHelper.cs" />
     <Compile Include="Util\StringHelper.cs" />
+    <Compile Include="ViewModels\ChannelBase.cs" />
     <Compile Include="ViewModels\DeviceViewModel.cs" />
     <Compile Include="ViewModels\EthernetViewModel.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />

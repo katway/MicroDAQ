@@ -21,7 +21,7 @@ namespace ConfigEditor.Core.ViewModels
     /// <summary>
     /// 串口视图模型
     /// </summary>
-    public class SerialPortViewModel
+    public class SerialPortViewModel : ChannelBase
     {
         //唯一标识
         private int _id;
@@ -43,12 +43,6 @@ namespace ConfigEditor.Core.ViewModels
 
         //是否启用
         private bool _isEnable;
-
-        //Modbus通讯协议
-        private ModbusProtocols _protocol;
-
-        //设备列表
-        private List<DeviceViewModel> _devices;
 
         /// <summary>
         /// 唯一标识
@@ -113,28 +107,10 @@ namespace ConfigEditor.Core.ViewModels
             set { _isEnable = value; }
         }
 
-        /// <summary>
-        /// Modbus通讯协议
-        /// </summary>
-        public ModbusProtocols Protocol
-        {
-            get { return _protocol; }
-            set { _protocol = value; }
-        }
-
-
-        /// <summary>
-        /// 设备列表
-        /// </summary>
-        public List<DeviceViewModel> Devices 
-        {
-            get { return _devices; }
-            set { _devices = value; }
-        }
-
         public SerialPortViewModel()
         {
-            _devices = new List<DeviceViewModel>();
+            Type = ChannelTypes.SerialPort;
+            Devices = new List<DeviceViewModel>();
         }
 
     }

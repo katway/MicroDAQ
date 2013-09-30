@@ -34,7 +34,7 @@ namespace ConfigEditor.Core.ViewModels
         private string _alias;
 
         //标识码
-        private int _code;
+        private int? _code;
 
         //功能区
         private ModbusDataModels _tableName;
@@ -55,16 +55,19 @@ namespace ConfigEditor.Core.ViewModels
         private int _scanPeriod;
 
         //小数精度
-        private int _precision;
+        private int? _precision;
 
         //最大值
-        private double _maximum;
+        private double? _maximum;
 
         //最小值
-        private double _minimum;
+        private double? _minimum;
 
         //是否启用
         private bool _isEnable;
+
+        //所属设备
+        private DeviceViewModel _device;
 
         /// <summary>
         /// 唯一标识
@@ -112,7 +115,7 @@ namespace ConfigEditor.Core.ViewModels
         [DisplayName("标识码")]
         [Description("与EMS系统的仪表参数对应的标识码")]
         [ReadOnly(true)]
-        public int Code
+        public int? Code
         {
             get { return _code; }
             set { _code = value; }
@@ -122,7 +125,7 @@ namespace ConfigEditor.Core.ViewModels
         /// 功能区
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t数据")]
+        [Category("\t数据")]
         [DisplayName("功能区")]
         [Description("Modbus 功能区")]
         [ReadOnly(true)]
@@ -136,7 +139,7 @@ namespace ConfigEditor.Core.ViewModels
         /// 访问属性
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t数据")]
+        [Category("\t数据")]
         [DisplayName("访问属性")]
         [Description("访问属性")]
         [ReadOnly(true)]
@@ -150,7 +153,7 @@ namespace ConfigEditor.Core.ViewModels
         /// 数据类型
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t数据")]
+        [Category("\t数据")]
         [DisplayName("数据类型")]
         [Description("数据类型")]
         [ReadOnly(true)]
@@ -164,7 +167,7 @@ namespace ConfigEditor.Core.ViewModels
         /// 寄存器地址
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t数据")]
+        [Category("\t数据")]
         [DisplayName("寄存器地址")]
         [Description("寄存器地址，十六进制表示")]
         [ReadOnly(true)]
@@ -178,7 +181,7 @@ namespace ConfigEditor.Core.ViewModels
         /// 寄存器长度
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t数据")]
+        [Category("\t数据")]
         [DisplayName("寄存器长度")]
         [Description("寄存器长度")]
         [ReadOnly(true)]
@@ -192,7 +195,7 @@ namespace ConfigEditor.Core.ViewModels
         /// 刷新周期
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t数据")]
+        [Category("\t数据")]
         [DisplayName("刷新周期")]
         [Description("刷新周期")]
         [ReadOnly(true)]
@@ -206,11 +209,11 @@ namespace ConfigEditor.Core.ViewModels
         /// 小数精度
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t高级")]
+        [Category("高级")]
         [DisplayName("小数精度")]
         [Description("小数精度")]
         [ReadOnly(true)]
-        public int Precision
+        public int? Precision
         {
             get { return _precision; }
             set { _precision = value; }
@@ -220,11 +223,11 @@ namespace ConfigEditor.Core.ViewModels
         /// 最大值
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t高级")]
+        [Category("高级")]
         [DisplayName("最大有效值")]
         [Description("最大有效值")]
         [ReadOnly(true)]
-        public double Maximum
+        public double? Maximum
         {
             get { return _maximum; }
             set { _maximum = value; }
@@ -234,11 +237,11 @@ namespace ConfigEditor.Core.ViewModels
         /// 最小值
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t高级")]
+        [Category("高级")]
         [DisplayName("最小有效值")]
         [Description("最小有效值")]
         [ReadOnly(true)]
-        public double Minimum
+        public double? Minimum
         {
             get { return _minimum; }
             set { _minimum = value; }
@@ -248,7 +251,7 @@ namespace ConfigEditor.Core.ViewModels
         /// 是否启用
         /// </summary>
         [Browsable(true)]
-        [Category("\t\t高级")]
+        [Category("高级")]
         [DisplayName("启用")]
         [Description("启用")]
         [ReadOnly(true)]
@@ -256,6 +259,17 @@ namespace ConfigEditor.Core.ViewModels
         {
             get { return _isEnable; }
             set { _isEnable = value; }
+        }
+
+
+        /// <summary>
+        /// 所属设备
+        /// </summary>
+        [Browsable(false)]
+        public DeviceViewModel Device
+        {
+            get { return _device; }
+            set { _device = value; }
         }
         
         public ItemViewModel()

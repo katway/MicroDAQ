@@ -77,6 +77,7 @@
             // 
             // cmbDeviceModels
             // 
+            this.cmbDeviceModels.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDeviceModels.FormattingEnabled = true;
             this.cmbDeviceModels.Location = new System.Drawing.Point(80, 16);
             this.cmbDeviceModels.Name = "cmbDeviceModels";

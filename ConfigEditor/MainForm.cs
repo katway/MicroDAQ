@@ -21,6 +21,7 @@ using System.Windows.Forms;
 using ConfigEditor.Forms;
 using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Services;
+using ConfigEditor.Util;
 
 namespace ConfigEditor
 {
@@ -60,6 +61,7 @@ namespace ConfigEditor
             {
                 this._project = new ProjectViewModel();
 
+                this.naviTreeView.Nodes[1].Tag = this._project.Ethernet;
                 this.naviTreeView.ExpandAll();
             }
             catch (Exception ex)
@@ -124,7 +126,10 @@ namespace ConfigEditor
         {
             try
             {
-                DeviceEditForm frm = new DeviceEditForm();
+                TreeNode parentNode = this.naviTreeView.SelectedNode;
+                ChannelBase channel = parentNode.Tag as ChannelBase;
+
+                DeviceEditForm frm = new DeviceEditForm(this, channel);
                 DialogResult dr = frm.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
@@ -144,7 +149,6 @@ namespace ConfigEditor
                         node.SelectedImageKey = "disable_device.bmp";
                     }
 
-                    TreeNode parentNode = this.naviTreeView.SelectedNode;
                     //以太网通道设备
                     if (parentNode.Level == 0)
                     {
@@ -187,17 +191,109 @@ namespace ConfigEditor
         {
             try
             {
-                ItemEditForm frm = new ItemEditForm();
+                TreeNode parentNode = this.naviTreeView.SelectedNode;
+                DeviceViewModel device = parentNode.Tag as DeviceViewModel;
+                if (device == null)
+                {
+                    return;
+                }
+
+                ItemEditForm frm = new ItemEditForm(this, device);
                 DialogResult dr = frm.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
+                    ItemViewModel model = frm.Model;
 
+                    string[] items = new string[] 
+                    { 
+                        model.Name,
+                        model.Alias,
+                        model.Code.ToString(),
+                        EnumHelper.EnumToCaption(model.DataType),
+                        EnumHelper.EnumToCaption(model.TableName),
+                        model.Address,
+                        model.Length.ToString(),
+                        model.ScanPeriod.ToString()
+                    };
+
+                    ListViewItem lvi = new ListViewItem(items);
+                    lvi.ImageKey = "tag.bmp";
+                    lvi.Tag = model;
+
+                    this.itemListView.Items.Add(lvi);
+
+                    this.itemPropertyGrid.SelectedObject = model;
                 }
             }
             catch (Exception ex) 
             {
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// 刷新变量列表窗体
+        /// </summary>
+        public void RefreshItemListView(ItemViewModel model)
+        {
+            string[] items = new string[] 
+            { 
+                model.Name,
+                model.Alias,
+                model.Code.ToString(),
+                EnumHelper.EnumToCaption(model.DataType),
+                EnumHelper.EnumToCaption(model.TableName),
+                model.Address,
+                model.Length.ToString(),
+                model.ScanPeriod.ToString()
+            };
+
+            ListViewItem lvi = new ListViewItem(items);
+            lvi.ImageKey = "tag.bmp";
+            lvi.Tag = model;
+
+            this.itemListView.Items.Add(lvi);
+
+            this.itemPropertyGrid.SelectedObject = model;
+        }
+
+        /// <summary>
+        /// 刷新变量列表窗体
+        /// </summary>
+        public void RefreshItemListView(DeviceViewModel device)
+        {
+            if (device == null)
+            {
+                return;
+            }
+
+            foreach (ItemViewModel model in device.Items)
+            {
+                string[] items = new string[] 
+                { 
+                    model.Name,
+                    model.Alias,
+                    model.Code.ToString(),
+                    EnumHelper.EnumToCaption(model.DataType),
+                    EnumHelper.EnumToCaption(model.TableName),
+                    model.Address,
+                    model.Length.ToString(),
+                    model.ScanPeriod.ToString()
+                };
+
+                ListViewItem lvi = new ListViewItem(items);
+                lvi.ImageKey = "tag.bmp";
+                lvi.Tag = model;
+
+                this.itemListView.Items.Add(lvi);
+            }
+
+            if (this.itemListView.Items.Count > 0)
+            {
+                this.itemListView.Items[0].Selected = true;
+                ItemViewModel model = this.itemListView.Items[0].Tag as ItemViewModel;
+                this.itemPropertyGrid.SelectedObject = model;
             }
         }
 
@@ -210,11 +306,18 @@ namespace ConfigEditor
         {
             try
             {
-                ItemBatchAddForm frm = new ItemBatchAddForm();
+                TreeNode parentNode = this.naviTreeView.SelectedNode;
+                DeviceViewModel device = parentNode.Tag as DeviceViewModel;
+                if (device == null)
+                {
+                    return;
+                }
+
+                ItemBatchAddForm frm = new ItemBatchAddForm(this, device);
                 DialogResult dr = frm.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
-
+                    this.RefreshItemListView(device);
                 }
             }
             catch (Exception ex)
@@ -248,9 +351,22 @@ namespace ConfigEditor
                 {
                     ListViewItem lvi = this.itemListView.SelectedItems[0];
                     ItemViewModel model = lvi.Tag as ItemViewModel;
+                    DeviceViewModel device = model.Device;
 
-                    ItemEditForm frm = new ItemEditForm(this, model);
-                    frm.ShowDialog();
+                    ItemEditForm frm = new ItemEditForm(this, device, model);
+                    DialogResult dr = frm.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        //更新变量列表的对应行
+                        lvi.SubItems[0].Text = model.Name;
+                        lvi.SubItems[1].Text = model.Alias;
+                        lvi.SubItems[2].Text = model.Code.ToString();
+                        lvi.SubItems[3].Text = EnumHelper.EnumToCaption(model.DataType);
+                        lvi.SubItems[4].Text = EnumHelper.EnumToCaption(model.TableName);
+                        lvi.SubItems[5].Text = model.Address;
+                        lvi.SubItems[6].Text = model.Length.ToString();
+                        lvi.SubItems[7].Text = model.ScanPeriod.ToString();
+                    }
                 }
                 //编辑其他
                 else if (this.naviTreeView.Focused && this.naviTreeView.SelectedNode != null)
@@ -274,8 +390,9 @@ namespace ConfigEditor
                     else if (tag.GetType() == typeof(DeviceViewModel))
                     {
                         DeviceViewModel model = node.Tag as DeviceViewModel;
+                        ChannelBase channel = node.Parent.Tag as ChannelBase;
 
-                        DeviceEditForm frm = new DeviceEditForm(this, model);
+                        DeviceEditForm frm = new DeviceEditForm(this, channel, model);
                         frm.ShowDialog();
                     }
 
@@ -305,11 +422,17 @@ namespace ConfigEditor
                         return;
                     }
 
+                    ItemService service = new ItemService();
                     ListView.SelectedIndexCollection indexList = this.itemListView.SelectedIndices;
                     for (int i = indexList.Count; i > 0; i--)
                     {
                         int index = indexList[i - 1];
+                        ListViewItem lvi = this.itemListView.Items[index];
+                        ItemViewModel model = lvi.Tag as ItemViewModel;
+
                         this.itemListView.Items.RemoveAt(index);
+                        model.Device.Items.Remove(model);
+                        service.DeleteItem(model.Id);
                     }
                 }
                 //删除其他
@@ -436,16 +559,6 @@ namespace ConfigEditor
         }
 
         /// <summary>
-        /// 测试
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void tsmiTest_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        /// <summary>
         /// 关于
         /// </summary>
         /// <param name="sender"></param>
@@ -490,8 +603,15 @@ namespace ConfigEditor
                         this.tsbBatchAddItem.Enabled = false;
                         this.tsbEdit.Enabled = false;
                         this.tsbDelete.Enabled = false;
+
+                        this.tsmiAddSerialPort.Enabled = true;
+                        this.tsmiAddDevice.Enabled = false;
+                        this.tsmiAddItem.Enabled = false;
+                        this.tsmiBatchAddItem.Enabled = false;
+                        this.tsmiEdit.Enabled = false;
+                        this.tsmiDelete.Enabled = false;
                     }
-                    else if(type == "Ethernet")
+                    else
                     {
                         this.tsbAddSerialPort.Enabled = false;
                         this.tsbAddDevice.Enabled = true;
@@ -499,6 +619,13 @@ namespace ConfigEditor
                         this.tsbBatchAddItem.Enabled = false;
                         this.tsbEdit.Enabled = false;
                         this.tsbDelete.Enabled = false;
+
+                        this.tsmiAddSerialPort.Enabled = false;
+                        this.tsmiAddDevice.Enabled = true;
+                        this.tsmiAddItem.Enabled = false;
+                        this.tsmiBatchAddItem.Enabled = false;
+                        this.tsmiEdit.Enabled = false;
+                        this.tsmiDelete.Enabled = false;
                     }
                 }
                 else if (node.Level == 1)
@@ -513,8 +640,15 @@ namespace ConfigEditor
                         this.tsbBatchAddItem.Enabled = false;
                         this.tsbEdit.Enabled = true;
                         this.tsbDelete.Enabled = true;
+
+                        this.tsmiAddSerialPort.Enabled = true;
+                        this.tsmiAddDevice.Enabled = true;
+                        this.tsmiAddItem.Enabled = false;
+                        this.tsmiBatchAddItem.Enabled = false;
+                        this.tsmiEdit.Enabled = true;
+                        this.tsmiDelete.Enabled = true;
                     }
-                    else if (type == "Ethernet")
+                    else
                     {
                         this.tsbAddSerialPort.Enabled = false;
                         this.tsbAddDevice.Enabled = true;
@@ -522,6 +656,17 @@ namespace ConfigEditor
                         this.tsbBatchAddItem.Enabled = true;
                         this.tsbEdit.Enabled = true;
                         this.tsbDelete.Enabled = true;
+
+                        this.tsmiAddSerialPort.Enabled = false;
+                        this.tsmiAddDevice.Enabled = true;
+                        this.tsmiAddItem.Enabled = true;
+                        this.tsmiBatchAddItem.Enabled = true;
+                        this.tsmiEdit.Enabled = true;
+                        this.tsmiDelete.Enabled = true;
+
+                        DeviceViewModel device = node.Tag as DeviceViewModel;
+                        this.RefreshItemListView(device);
+                        return;
                     }
                 }
                 else
@@ -533,14 +678,75 @@ namespace ConfigEditor
                     this.tsbBatchAddItem.Enabled = true;
                     this.tsbEdit.Enabled = true;
                     this.tsbDelete.Enabled = true;
+
+                    this.tsmiAddSerialPort.Enabled = false;
+                    this.tsmiAddDevice.Enabled = false;
+                    this.tsmiAddItem.Enabled = true;
+                    this.tsmiBatchAddItem.Enabled = true;
+                    this.tsmiEdit.Enabled = true;
+                    this.tsmiDelete.Enabled = true;
+
+                    DeviceViewModel device = node.Tag as DeviceViewModel;
+                    this.RefreshItemListView(device);
+                    return;
                 }
 
+                this.itemListView.Items.Clear();
+                this.itemPropertyGrid.SelectedObject = null;
             }
             catch (Exception ex)
             {
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>
+        /// 选择变量对象
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void itemListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.itemListView.SelectedItems.Count == 0)
+                {
+                    this.itemPropertyGrid.SelectedObject = null;
+                    return;
+                }
+
+                ListViewItem lvi = this.itemListView.SelectedItems[0];
+                ItemViewModel model = lvi.Tag as ItemViewModel;
+
+                this.itemPropertyGrid.SelectedObject = model;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Del键删除选中行
+        /// </summary>
+        private void itemListView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                this.tsmiDelete_Click(this, null);
+            }
+        }
+
+        /// <summary>
+        /// 鼠标双击事件编辑变量
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void itemListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.tsmiEdit_Click(this, null);
         }
     }
 }

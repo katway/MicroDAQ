@@ -114,7 +114,7 @@ namespace ConfigEditor.Forms
                     this.cmbDataBits.Text = this._model.DataBits.ToString();
                     this.cmbParity.Text = this._model.Parity;
                     this.cmbStopBits.Text = this._model.StopBits;
-                    this.chkIsEnable.Enabled = this._model.IsEnable;
+                    this.chkIsEnable.Checked = this._model.IsEnable;
 
                     if (this._model.Protocol == ModbusProtocols.ModbusRTU)
                     {
@@ -151,13 +151,13 @@ namespace ConfigEditor.Forms
                 var query = this._parentForm.Project.SerialPorts.Where(obj => obj.PortName.Equals(this.cmbPortName.Text) && obj != this._model);
                 if (query.Any())
                 {
-                    MessageBox.Show("串口号不能重复。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("串口号不能重复。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
                 if (string.IsNullOrEmpty(this.cmbDataBits.Text))
                 {
-                    MessageBox.Show("波特率不能为空。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("波特率不能为空。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
@@ -170,7 +170,7 @@ namespace ConfigEditor.Forms
                     this._model.DataBits = Convert.ToInt32(this.cmbDataBits.Text);
                     this._model.Parity = this.cmbParity.Text;
                     this._model.StopBits = this.cmbStopBits.Text;
-                    this._model.IsEnable = this.chkIsEnable.Enabled;
+                    this._model.IsEnable = this.chkIsEnable.Checked;
 
                     if (this.rdoRtu.Checked)
                     {
@@ -188,7 +188,7 @@ namespace ConfigEditor.Forms
                     this._model.DataBits = Convert.ToInt32(this.cmbDataBits.Text);
                     this._model.Parity = this.cmbParity.Text;
                     this._model.StopBits = this.cmbStopBits.Text;
-                    this._model.IsEnable = this.chkIsEnable.Enabled;
+                    this._model.IsEnable = this.chkIsEnable.Checked;
 
                     if (this.rdoRtu.Checked)
                     {

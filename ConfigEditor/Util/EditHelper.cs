@@ -25,14 +25,20 @@ namespace ConfigEditor.Util
         //常用波特率
         public static readonly int[] COMMON_BAUD_RATE = { 110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400, 56000, 57600, 115200 };
 
-        public static readonly string[] DEVICES = new string[]
+        //支持的设备型号
+        public static readonly string[] SUPPORT_DEVICES = new string[]
         {
             "标准",
+            "Lighthouse R5104",
+            "Lighthouse R5104V",
+            "康耐德C2000 MD44",
+            "康耐德C2000 MDIA"
         };
 
 
         public EditHelper()
         {
         }
+        
     }
 }

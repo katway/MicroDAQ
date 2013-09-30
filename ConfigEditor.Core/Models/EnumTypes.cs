@@ -76,12 +76,12 @@ namespace ConfigEditor.Core.Models
     /// </summary>
     public enum AccessRights
     {
+        //可读可写
+        ReadWrite,
         //只读
         ReadOnly,
         //只写
         WriteOnly,
-        //可读可写
-        ReadWrite,
     }
 
     /// <summary>

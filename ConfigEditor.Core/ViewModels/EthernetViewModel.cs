@@ -14,21 +14,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ConfigEditor.Core.Models;
 
 namespace ConfigEditor.Core.ViewModels
 {
     /// <summary>
     /// 以太网实体模型
     /// </summary>
-    public class EthernetViewModel
+    public class EthernetViewModel : ChannelBase
     {
-        public EthernetViewModel()
-        {
-        }
+
+        //Modbus通讯协议
+        private ModbusProtocols _protocol;
 
         /// <summary>
-        /// 设备列表
+        /// Modbus通讯协议
         /// </summary>
-        public List<DeviceViewModel> Devices { get; set; }
+        public ModbusProtocols Protocol
+        {
+            get { return _protocol; }
+            set { _protocol = value; }
+        }
+
+        public EthernetViewModel()
+        {
+            Type = ChannelTypes.SerialPort;
+            Protocol = ModbusProtocols.ModbusTCP;
+            Devices = new List<DeviceViewModel>();
+        }
     }
 }

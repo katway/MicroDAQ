@@ -37,5 +37,16 @@ namespace ConfigEditor.Core.ViewModels
         /// 以太网
         /// </summary>
         public EthernetViewModel Ethernet { get; set; }
+
+        /// <summary>
+        /// 全部设备
+        /// </summary>
+        public List<DeviceViewModel> AllDevices
+        {
+            get
+            {
+                return SerialPorts.SelectMany(obj => obj.Devices).Concat(Ethernet.Devices).ToList();
+            }
+        }
     }
 }

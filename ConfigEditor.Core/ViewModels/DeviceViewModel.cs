@@ -45,13 +45,16 @@ namespace ConfigEditor.Core.ViewModels
         private bool _isEnable;
 
         //传输通道
-        private ChannelTypes _channel;
+        private ChannelTypes _channelType;
 
         //Modbus通讯协议
         private ModbusProtocols _protocol;
 
         //变量列表
         private List<ItemViewModel> _items;
+
+        //所属通道
+        private ChannelBase _channel;
 
         /// <summary>
         /// 唯一标识
@@ -119,10 +122,10 @@ namespace ConfigEditor.Core.ViewModels
         /// <summary>
         /// 传输通道
         /// </summary>
-        public ChannelTypes Channel
+        public ChannelTypes ChannelType
         {
-            get { return _channel; }
-            set { _channel = value; }
+            get { return _channelType; }
+            set { _channelType = value; }
         }
 
         /// <summary>
@@ -141,6 +144,15 @@ namespace ConfigEditor.Core.ViewModels
         {
             get { return _items; }
             set { _items = value; }
+        }
+
+        /// <summary>
+        /// 所属通道
+        /// </summary>
+        public ChannelBase Channel
+        {
+            get { return _channel; }
+            set { _channel = value; }
         }
 
         public DeviceViewModel()
