@@ -6,7 +6,7 @@
 using System;
 namespace MicroDAQ.Configuration
 {
-    public class IPSetting
+    public class IPSettingInfo
     {
         public long serialID;
         public string iP;

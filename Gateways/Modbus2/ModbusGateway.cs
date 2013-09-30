@@ -8,11 +8,16 @@ namespace MicroDAQ.Gateways.Modbus2
     public class ModbusGateway : GatewayBase
     {
 
-        /// <param name="ItemManage">Item管理器对象</param>
-        /// <param name="DatabaseManager">Database管理器对象</param>
-        public ModbusGateway(IDataItemManage ItemManager, IDatabase DatabaseManager)
+        public ModbusGateway()
         {
             throw new System.NotImplementedException();
+        }
+        /// <param name="ItemManage">Item管理器对象</param>
+        /// <param name="DatabaseManager">Database管理器对象</param>
+        public ModbusGateway(IList<MicroDAQ.Common.IDataItemManage> ItemManagers, IDatabaseManage DatabaseManager)
+            : base(ItemManagers, DatabaseManager)
+        {
+
         }
 
 

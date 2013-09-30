@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using System.IO.Ports;
 using JonLibrary.Automatic;
 using MicroDAQ.Common;
-using MicroDAQ.Configuration;
+
 
 
 namespace MicroDAQ.Gateways.Modbus
@@ -28,8 +28,7 @@ namespace MicroDAQ.Gateways.Modbus
         public List<SerialPortSlaveDevice> SerialManagers { get; set; }
         public List<IPMasterManager> IPManagers { get; set; }
 
-        public IList<IDataItemManage> ItemManagers { get; set; }
-
+        
         /// <summary>
         /// 数据库管理器
         /// </summary>

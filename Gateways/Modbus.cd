@@ -24,38 +24,21 @@
       <Method Name="ProCommandState" Hidden="true" />
       <Method Name="SetTable" Hidden="true" />
     </Members>
-    <AssociationLine Name="SerialManagers" Type="MicroDAQ.Gateways.Modbus.SerialPortSlaveDevice" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="3" Y="2.964" />
-        <Point X="3.99" Y="2.964" />
-        <Point X="3.99" Y="3" />
-        <Point X="6.5" Y="3" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="1.713" Y="0.049" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>BIQgCACgCKAAAgEBIBACAAAwAgAgAiAAICgAAACBRAQ=</HashCode>
+      <HashCode>BIQgCACgCKAAAgEBIBACAAAwAgAgAgAAICgAAACBRAQ=</HashCode>
       <FileName>Moubus\ModbusGateway.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="SerialManagers" />
-      <Property Name="ItemManagers" />
       <Property Name="IPManagers" />
       <Property Name="DatabaseManagers" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="MicroDAQ.Gateways.Modbus.SerialPortSlaveDevice">
+  <Class Name="MicroDAQ.Gateways.Modbus2.SerialPortSlaveDevice">
     <Position X="6.5" Y="2.25" Width="2" />
-    <AssociationLine Name="Items" Type="MicroDAQ.Common.Item">
-      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="0.379" Y="0.081" Height="0.181" Width="0.716" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AgEAAAAABCAACAEAAABAAAAwAAAAAgAAACAAAIEAgCA=</HashCode>
-      <FileName>Moubus\SerialPortSlaveDevice.cs</FileName>
+      <FileName>Modbus2\SerialPortSlaveDevice.cs</FileName>
+      <NewMemberFileName>Moubus\SerialPortSlaveDevice.cs</NewMemberFileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Items" />

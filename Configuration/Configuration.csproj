@@ -37,13 +37,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Device.cs" />
-    <Compile Include="IPSetting.cs" />
-    <Compile Include="ModbusGateway.cs" />
-    <Compile Include="ModbusMaster.cs" />
-    <Compile Include="ModbusSlave.cs" />
+    <Compile Include="IPSettingInfo.cs" />
+    <Compile Include="ModbusGatewayInfo.cs" />
+    <Compile Include="ModbusMasterInfo.cs" />
+    <Compile Include="ModbusSlaveInfo.cs" />
     <Compile Include="ModbusVariable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SerialPort.cs" />
+    <Compile Include="SerialPortInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

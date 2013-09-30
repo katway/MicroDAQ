@@ -34,8 +34,21 @@ namespace MicroDAQ.Common
                 OnStateChanged();
             }
         }
-
         private GatewayState state;
+
+        public GatewayBase()
+        {
+            this.GatewayState = Common.GatewayState.Intilized;
+
+        }
+
+        /// <param name="ItemManage">Item管理器对象</param>
+        /// <param name="DatabaseManager">Database管理器对象</param>
+        public GatewayBase(IList<MicroDAQ.Common.IDataItemManage> ItemManager, IDatabaseManage DatabaseManager)
+        {
+            this.ItemManagers = ItemManagers;
+            this.DatabaseManage = DatabaseManager;
+        }
 
         /// <summary>
         /// 启动
@@ -120,6 +133,7 @@ namespace MicroDAQ.Common
         /// </summary>
         /// <returns></returns>
         public event EventHandler StateChanged;
+
 
 
     }

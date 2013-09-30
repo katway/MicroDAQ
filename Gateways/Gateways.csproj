@@ -48,6 +48,7 @@
     <Compile Include="ItemManageBase.cs" />
     <Compile Include="Modbus2\ModbusGateway.cs" />
     <Compile Include="Modbus2\ModbusItemManager.cs" />
+    <Compile Include="Modbus2\SerialPortSlaveDevice.cs" />
     <Compile Include="Moubus\IPMasterManager.cs" />
     <Compile Include="Moubus\ModbusGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

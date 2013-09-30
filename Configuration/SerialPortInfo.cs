@@ -6,7 +6,7 @@
 using System;
 namespace MicroDAQ.Configuration
 {
-    public class SerialPort
+    public class SerialPortInfo
     {
         public long serialID;
         public string port;
