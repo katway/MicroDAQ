@@ -48,7 +48,7 @@ namespace ConfigEditor.Core.IO
         /// <summary>
         /// 清空项目
         /// </summary>
-        public static void ClearProject()
+        public static void Clear()
         {
 
         }
