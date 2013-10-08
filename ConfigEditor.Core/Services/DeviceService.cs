@@ -38,6 +38,7 @@ namespace ConfigEditor.Core.Services
 
             if (model.ChannelType == ChannelTypes.SerialPort)
             {
+                //串口通道的从站
                 SerialPortViewModel sp = model.Channel as SerialPortViewModel;
 
                 ModbusMasterDao mmDao = new ModbusMasterDao();
@@ -61,6 +62,7 @@ namespace ConfigEditor.Core.Services
             }
             else
             {
+                //以太网通道的从站
                 IPSetting ips = new IPSetting()
                 {
                     IP = model.IpAddress,
@@ -87,6 +89,15 @@ namespace ConfigEditor.Core.Services
 
                 model.Id = dao.GetLastSerialID();
             }
+
+            Device device = new Device()
+            {
+                Name = model.Name,
+                Allias = model.Alias
+            };
+
+            DeviceDao deviceDao = new DeviceDao();
+            deviceDao.Insert(device);
         }
 
         /// <summary>

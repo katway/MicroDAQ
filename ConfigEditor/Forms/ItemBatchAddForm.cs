@@ -35,9 +35,6 @@ namespace ConfigEditor.Forms
         //主窗体
         private MainForm _parentForm;
 
-        //用户操作
-        private UserActions _action;
-
         //视图模型
         private ItemViewModel _model;
         
@@ -65,7 +62,6 @@ namespace ConfigEditor.Forms
         {
             this.Text = "批量添加变量";
             this._parentForm = parentForm;
-            this._action = UserActions.Add;
             this._device = device;
         }
 

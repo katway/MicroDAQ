@@ -69,7 +69,7 @@ namespace ConfigEditor.Core.Database
                     result = true;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }

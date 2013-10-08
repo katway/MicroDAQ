@@ -14,7 +14,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ConfigEditor.Core.Models;
 using ConfigEditor.Core.ViewModels;
+using ConfigEditor.Core.Database;
 
 namespace ConfigEditor.Core.IO
 {
@@ -36,6 +38,21 @@ namespace ConfigEditor.Core.IO
             try
             {
                 ProjectViewModel project = new ProjectViewModel();
+
+                SerialPortDao spDao = new SerialPortDao();
+                IList<SerialPort> spList = spDao.GetAll();
+                foreach (SerialPort sp in spList)
+                {
+                    SerialPortViewModel spvm = new SerialPortViewModel()
+                    {
+                        Id = (int)sp.SerialID,
+                        PortName = sp.Port,
+                        DataBits = sp.Databits,
+                        Parity = sp.Parity
+                    };
+
+                    project.SerialPorts.Add(spvm);
+                }
 
                 return project;
             }
