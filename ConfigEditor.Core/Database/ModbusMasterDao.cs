@@ -270,6 +270,39 @@ namespace ConfigEditor.Core.Database
             }
             return item;
         }
+
+        /// <summary>
+        /// 按串行端口编号查询
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public ModbusMaster GetBySerialPortID(int id)
+        {
+            ModbusMaster item = new ModbusMaster();
+            try
+            {
+                DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
+                string sql = string.Format("SELECT * FROM ModbusMaster where SerialPort_SerialID = {0}", id);
+                DataTable dt = dao.ExecuteQuery(sql);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    DataRow row = dt.Rows[0];
+
+                    item.SerialID = Convert.ToInt32(row["SerialID"]);
+                    item.Name = Convert.ToString(row["Name"]);
+                    item.SerialPort_SerialID = Convert.ToInt32(row["SerialPort_SerialID"]);
+                    item.ModbusGateway_SerialID = Convert.ToInt32(row["ModbusGateway_SerialID"]);
+                    item.Allias = Convert.ToString(row["Allias"]);
+                    item.Enable = Convert.ToString(row["Enable"]);
+                }
+            }
+            catch
+            {
+                throw;
+            }
+            return item;
+        }
+
         /// <summary>
         /// 获取最新SerialID
         /// </summary>

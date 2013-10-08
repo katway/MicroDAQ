@@ -46,7 +46,6 @@ namespace ConfigEditor.Core.Database
 
                 object[] objs = new object[]
                 {
-                    slave.SerialID,
                     slave.ModbusMaster_SerialID,
                     slave.IPSetting_SerialID,
                     slave.Name,
@@ -63,7 +62,7 @@ namespace ConfigEditor.Core.Database
                     result = true;
                 }
             }
-            catch(Exception e)
+            catch
             {
                 throw;
             }

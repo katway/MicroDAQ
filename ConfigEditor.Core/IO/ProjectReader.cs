@@ -44,5 +44,13 @@ namespace ConfigEditor.Core.IO
                 throw new Exception("读取项目数据库过程中发生异常。", ex);
             }
         }
+
+        /// <summary>
+        /// 清空项目
+        /// </summary>
+        public static void ClearProject()
+        {
+
+        }
     }
 }

@@ -305,7 +305,7 @@ namespace ConfigEditor.Forms
                 }
 
                 //更新主界面变量列表
-                this._parentForm.RefreshItemListView(this._model);
+                this._parentForm.SaveAndRefreshItemListView(this._model);
 
             }
             catch (Exception ex)

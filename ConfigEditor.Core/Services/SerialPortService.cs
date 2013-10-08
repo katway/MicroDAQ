@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ConfigEditor.Core.ViewModels;
+using ConfigEditor.Core.Database;
+using ConfigEditor.Core.Models;
 
 namespace ConfigEditor.Core.Services
 {
@@ -33,7 +35,36 @@ namespace ConfigEditor.Core.Services
         /// <param name="model"></param>
         public void AddSerialPort(SerialPortViewModel model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("输入的参数为空。");
+            }
 
+            SerialPort sp = new SerialPort()
+            {
+                Port = model.PortName,
+                BaudRate = model.BaudRate,
+                Databits = model.DataBits,
+                Stopbits = (model.StopBits != "1.5") ? Convert.ToInt32(model.StopBits) : 3,
+                Parity = model.Parity,
+                Enable = model.IsEnable.ToString()
+            };
+
+            SerialPortDao dao = new SerialPortDao();
+            dao.Insert(sp);
+
+            model.Id = dao.GetLastSerialID();
+
+            ModbusMaster mm = new ModbusMaster()
+            {
+                SerialPort_SerialID = model.Id,
+                Name = model.PortName,
+                Allias = model.PortName,                
+                Enable = model.IsEnable.ToString()
+            };
+
+            ModbusMasterDao mmDao = new ModbusMasterDao();
+            mmDao.Insert(mm);
         }
 
         /// <summary>
@@ -42,7 +73,24 @@ namespace ConfigEditor.Core.Services
         /// <param name="model"></param>
         public void EditSerialPort(SerialPortViewModel model)
         {
+            if (model == null || model.Id == 0)
+            {
+                throw new ArgumentNullException("输入的参数为空。");
+            }
 
+            SerialPort sp = new SerialPort()
+            {
+                SerialID = model.Id,
+                Port = model.PortName,
+                BaudRate = model.BaudRate,
+                Databits = model.DataBits,
+                Stopbits = (model.StopBits != "1.5") ? Convert.ToInt32(model.StopBits) : 3,
+                Parity = model.Parity,
+                Enable = model.IsEnable.ToString()
+            };
+
+            SerialPortDao dao = new SerialPortDao();
+            dao.Update(sp);
         }
 
         /// <summary>
@@ -51,7 +99,15 @@ namespace ConfigEditor.Core.Services
         /// <param name="id"></param>
         public void DeleteSerialPort(int id)
         {
+            if (id == 0)
+            {
+                throw new ArgumentNullException("输入的参数为空。");
+            }
 
+            SerialPortDao dao = new SerialPortDao();
+            dao.Delete(id);
+
+            //Todo:删除设备和变量
         }
     }
 }

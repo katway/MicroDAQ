@@ -96,6 +96,9 @@ namespace ConfigEditor
                 if (dr == DialogResult.OK)
                 {
                     SerialPortViewModel model = frm.Model;
+
+                    SerialPortService service = new SerialPortService();
+                    service.AddSerialPort(model);
                     
                     TreeNode node = new TreeNode(model.PortName);
                     node.Tag = model;
@@ -135,6 +138,9 @@ namespace ConfigEditor
                 if (dr == DialogResult.OK)
                 {
                     DeviceViewModel model = frm.Model;
+
+                    DeviceService service = new DeviceService();
+                    service.AddDevice(model);
 
                     TreeNode node = new TreeNode(model.Name);
                     node.Tag = model;
@@ -205,6 +211,9 @@ namespace ConfigEditor
                 {
                     ItemViewModel model = frm.Model;
 
+                    ItemService service = new ItemService();
+                    service.AddItem(model);
+
                     string[] items = new string[] 
                     { 
                         model.Name,
@@ -236,8 +245,11 @@ namespace ConfigEditor
         /// <summary>
         /// 刷新变量列表窗体
         /// </summary>
-        public void RefreshItemListView(ItemViewModel model)
+        public void SaveAndRefreshItemListView(ItemViewModel model)
         {
+            ItemService service = new ItemService();
+            service.AddItem(model);
+
             string[] items = new string[] 
             { 
                 model.Name,
@@ -318,6 +330,13 @@ namespace ConfigEditor
                 DialogResult dr = frm.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
+                    List<ItemViewModel> models = frm.Models;
+                    ItemService service = new ItemService();
+                    foreach (ItemViewModel model in models)
+                    {
+                        service.AddItem(model);
+                    }
+
                     this.RefreshItemListView(device);
                 }
             }
@@ -335,7 +354,15 @@ namespace ConfigEditor
         /// <param name="e"></param>
         private void tsmiEnable_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -358,6 +385,9 @@ namespace ConfigEditor
                     DialogResult dr = frm.ShowDialog();
                     if (dr == DialogResult.OK)
                     {
+                        ItemService service = new ItemService();
+                        service.EditItem(model);
+
                         //更新变量列表的对应行
                         lvi.SubItems[0].Text = model.Name;
                         lvi.SubItems[1].Text = model.Alias;
@@ -385,7 +415,12 @@ namespace ConfigEditor
                         SerialPortViewModel model = node.Tag as SerialPortViewModel;
 
                         SerialPortEditForm frm = new SerialPortEditForm(this, model);
-                        frm.ShowDialog();
+                        DialogResult dr = frm.ShowDialog();
+                        if (dr == DialogResult.OK)
+                        {
+                            SerialPortService service = new SerialPortService();
+                            service.EditSerialPort(model);
+                        }
                     }
                     //设备节点
                     else if (tag.GetType() == typeof(DeviceViewModel))
@@ -394,7 +429,12 @@ namespace ConfigEditor
                         ChannelBase channel = node.Parent.Tag as ChannelBase;
 
                         DeviceEditForm frm = new DeviceEditForm(this, channel, model);
-                        frm.ShowDialog();
+                        DialogResult dr = frm.ShowDialog();
+                        if (dr == DialogResult.OK)
+                        {
+                            DeviceService service = new DeviceService();
+                            service.EditDevice(model);
+                        }
                     }
 
                 }
@@ -431,9 +471,9 @@ namespace ConfigEditor
                         ListViewItem lvi = this.itemListView.Items[index];
                         ItemViewModel model = lvi.Tag as ItemViewModel;
 
-                        this.itemListView.Items.RemoveAt(index);
-                        model.Device.Items.Remove(model);
                         service.DeleteItem(model.Id);
+                        model.Device.Items.Remove(model);
+                        this.itemListView.Items.RemoveAt(index);
                     }
                 }
                 //删除其他
@@ -455,10 +495,11 @@ namespace ConfigEditor
                         }
 
                         SerialPortViewModel model = node.Tag as SerialPortViewModel;
-                        this._project.SerialPorts.Remove(model);
 
                         SerialPortService service = new SerialPortService();
                         service.DeleteSerialPort(model.Id);
+
+                        this._project.SerialPorts.Remove(model);
                     }
                     //设备节点
                     else if (tag.GetType() == typeof(DeviceViewModel))
@@ -469,6 +510,10 @@ namespace ConfigEditor
                         }
 
                         DeviceViewModel model = node.Tag as DeviceViewModel;
+
+                        DeviceService service = new DeviceService();
+                        service.DeleteDevice(model.Id);
+                        
                         if (node.Level == 1)
                         {
                             this._project.Ethernet.Devices.Remove(model);
@@ -478,9 +523,6 @@ namespace ConfigEditor
                             SerialPortViewModel parentModel = node.Parent.Tag as SerialPortViewModel;
                             parentModel.Devices.Remove(model);
                         }
-
-                        DeviceService service = new DeviceService();
-                        service.DeleteDevice(model.Id);
                     }
 
                     this.itemListView.Items.Clear();
