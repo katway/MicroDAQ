@@ -43,6 +43,7 @@ namespace ConfigEditor.Core.Services
 
             ModbusRegister mr = new ModbusRegister()
             {
+                ModbusSlave_SerialID = model.Device.Id,
                 Name = model.Name,
                 Allias = model.Alias,
                 RegesiterType = (int)model.TableName,
@@ -89,6 +90,7 @@ namespace ConfigEditor.Core.Services
             ModbusRegister mr = new ModbusRegister()
             {
                 SerialID = model.Id,
+                ModbusSlave_SerialID = model.Device.Id,
                 Name = model.Name,
                 Allias = model.Alias,
                 RegesiterType = (int)model.TableName,

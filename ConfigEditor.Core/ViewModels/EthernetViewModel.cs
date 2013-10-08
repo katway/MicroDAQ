@@ -25,7 +25,7 @@ namespace ConfigEditor.Core.ViewModels
     {
         public EthernetViewModel()
         {
-            Type = ChannelTypes.SerialPort;
+            Type = ChannelTypes.Ethernet;
             Protocol = ModbusProtocols.ModbusTCP;
             Devices = new List<DeviceViewModel>();
         }

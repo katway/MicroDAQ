@@ -38,7 +38,7 @@ namespace ConfigEditor.Core.Database
             {
                 DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
                 string sql = @" INSERT INTO IPSetting
-                               ( Port,  Enable)
+                               ( IP, Port,  Enable)
                                 VALUES ('{0}','{1}','{2}')  ";
 
                 object[] objs = new object[]
