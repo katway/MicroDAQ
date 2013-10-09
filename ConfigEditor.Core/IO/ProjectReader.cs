@@ -108,7 +108,7 @@ namespace ConfigEditor.Core.IO
                             {
                                 Id = (int)obj.SerialID,
                                 Name = obj.Name,
-                                Code = null,
+                                Code = obj.Code != 0 ? (int?)obj.Code : null,
                                 Alias = obj.Allias,
                                 TableName = (ModbusDataModels)obj.RegesiterType,
                                 Access = EnumHelper.StringToEnum<AccessRights>(obj.Accessibility),
@@ -164,7 +164,7 @@ namespace ConfigEditor.Core.IO
                         {
                             Id = (int)obj.SerialID,
                             Name = obj.Name,
-                            Code = null,
+                            Code = obj.Code != 0 ? (int?)obj.Code : null,
                             Alias = obj.Allias,
                             TableName = (ModbusDataModels)obj.RegesiterType,
                             Access = EnumHelper.StringToEnum<AccessRights>(obj.Accessibility),

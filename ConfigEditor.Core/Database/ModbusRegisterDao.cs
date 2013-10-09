@@ -38,8 +38,8 @@ namespace ConfigEditor.Core.Database
             {
                 DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
                 string sql = @" INSERT INTO ModbusRegister
-                               ( ModbusSlave_SerialID, Allias, Name, RegesiterType, RegesiterAddress,DataType,Length,Accessibility,Value,Enable,ScanPeriod,Minimum,Maximum,OriginalValue,DecimalPlaces,Enable2)
-                                VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}')  ";
+                               ( ModbusSlave_SerialID, Allias, Name, Code, RegesiterType, RegesiterAddress,DataType,Length,Accessibility,Value,Enable,ScanPeriod,Minimum,Maximum,OriginalValue,DecimalPlaces,Enable2)
+                                VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}')  ";
 
                 object[] objs = new object[]
                 {
@@ -47,6 +47,7 @@ namespace ConfigEditor.Core.Database
                     register.ModbusSlave_SerialID,
                     register.Allias,
                     register.Name,
+                    register.Code,
                     register.RegesiterType,                        
                     register.RegesiterAddress,
                     register.DataType,
@@ -91,7 +92,7 @@ namespace ConfigEditor.Core.Database
                 DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
                 string sql = @"
                                 UPDATE ModbusRegister
-                                SET  ModbusSlave_SerialID='{1}', Allias='{2}', Name='{3}', RegesiterType='{4}', RegesiterAddress='{5}',DataType='{6}',Length='{7}',Accessibility='{8}',Value='{9}',Enable='{10}',ScanPeriod='{11}',Minimum='{12}',Maximum='{13}',OriginalValue='{14}',DecimalPlaces='{15}',Enable2='{16}'
+                                SET  ModbusSlave_SerialID='{1}', Allias='{2}', Name='{3}', RegesiterType='{4}', RegesiterAddress='{5}',DataType='{6}',Length='{7}',Accessibility='{8}',Value='{9}',Enable='{10}',ScanPeriod='{11}',Minimum='{12}',Maximum='{13}',OriginalValue='{14}',DecimalPlaces='{15}',Enable2='{16}',Code='{17}'
                                     
                                 WHERE (SerialID = '{0}')
                               ";
@@ -113,7 +114,8 @@ namespace ConfigEditor.Core.Database
                     register.Maximum,
                     register.OriginalValue,
                     register.DecimalPlaces,
-                    register.Enable2
+                    register.Enable2,
+                    register.Code
                 };
 
                 int rowCount = dao.ExecuteNonQuery(string.Format(sql, objs));
@@ -211,6 +213,7 @@ namespace ConfigEditor.Core.Database
                         RegesiterType = Convert.ToInt32(row["RegesiterType"]),
                         RegesiterAddress = Convert.ToInt32(row["RegesiterAddress"]),
                         Allias = Convert.ToString(row["Allias"]),
+                        Code = row["Code"] != DBNull.Value ? Convert.ToInt32(row["Code"]) : 0,
                         DataType = Convert.ToString(row["DataType"]),
                         Length = Convert.ToInt32(row["Length"]),
                         Accessibility = Convert.ToString(row["Accessibility"]),
@@ -259,6 +262,7 @@ namespace ConfigEditor.Core.Database
                         RegesiterType = Convert.ToInt32(row["RegesiterType"]),
                         RegesiterAddress = Convert.ToInt32(row["RegesiterAddress"]),
                         Allias = Convert.ToString(row["Allias"]),
+                        Code = row["Code"] != DBNull.Value ? Convert.ToInt32(row["Code"]) : 0,
                         DataType = Convert.ToString(row["DataType"]),
                         Length = Convert.ToInt32(row["Length"]),
                         Accessibility = Convert.ToString(row["Accessibility"]),

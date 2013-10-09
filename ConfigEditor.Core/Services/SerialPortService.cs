@@ -104,10 +104,11 @@ namespace ConfigEditor.Core.Services
                 throw new ArgumentNullException("输入的参数为空。");
             }
 
+            //Todo:删除设备和变量
+
             SerialPortDao dao = new SerialPortDao();
             dao.Delete(id);
 
-            //Todo:删除设备和变量
         }
     }
 }

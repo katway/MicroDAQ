@@ -61,10 +61,10 @@ namespace ConfigEditor.Core.Models
     /// </summary>
     public enum ModbusDataModels
     {
-        //离散量输入
-        DiscretesInput,
         //线圈
         Coils,
+        //离散量输入
+        DiscretesInput,
         //输入寄存器
         InputRegisters,
         //保持寄存器

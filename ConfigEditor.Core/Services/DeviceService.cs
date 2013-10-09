@@ -90,14 +90,6 @@ namespace ConfigEditor.Core.Services
                 model.Id = dao.GetLastSerialID();
             }
 
-            Device device = new Device()
-            {
-                Name = model.Name,
-                Allias = model.Alias
-            };
-
-            DeviceDao deviceDao = new DeviceDao();
-            deviceDao.Insert(device);
         }
 
         /// <summary>
@@ -163,6 +155,8 @@ namespace ConfigEditor.Core.Services
             {
                 throw new ArgumentNullException("输入的参数为空。");
             }
+
+            //Todo：删除变量
 
             ModbusSlaveDao dao = new ModbusSlaveDao();
             ModbusSlave model = dao.GetByID(id);

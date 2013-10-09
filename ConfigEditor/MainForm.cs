@@ -434,6 +434,8 @@ namespace ConfigEditor
                         lvi.SubItems[5].Text = model.Address;
                         lvi.SubItems[6].Text = model.Length.ToString();
                         lvi.SubItems[7].Text = model.ScanPeriod.ToString();
+
+                        this.itemPropertyGrid.SelectedObject = model;
                     }
                 }
                 //编辑其他

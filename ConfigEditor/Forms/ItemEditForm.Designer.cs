@@ -85,7 +85,7 @@
             "线圈(0x)",
             "离散量输入(1x) ",
             "输入寄存器(3x)",
-            "保存寄存器(4x)"});
+            "保持寄存器(4x)"});
             this.cmbTableName.Location = new System.Drawing.Point(88, 18);
             this.cmbTableName.Name = "cmbTableName";
             this.cmbTableName.Size = new System.Drawing.Size(128, 20);
