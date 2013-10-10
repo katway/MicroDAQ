@@ -529,6 +529,7 @@
             // columnHeader3
             // 
             this.columnHeader3.Text = "识别码";
+            this.columnHeader3.Width = 50;
             // 
             // columnHeader4
             // 
@@ -537,7 +538,7 @@
             // columnHeader5
             // 
             this.columnHeader5.Text = "功能区";
-            this.columnHeader5.Width = 80;
+            this.columnHeader5.Width = 75;
             // 
             // columnHeader6
             // 
@@ -549,6 +550,7 @@
             // 
             this.columnHeader7.Text = "长度";
             this.columnHeader7.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader7.Width = 40;
             // 
             // columnHeader8
             // 

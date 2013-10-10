@@ -20,11 +20,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.Common;
 using System.Data.SqlClient;
-using ConfigEditor.Core.Util;
 using System.Configuration;
-using JonLibrary.Common;
 using System.IO;
+using ConfigEditor.Core.Util;
 using ConfigEditor.Core.ViewModels;
+using JonLibrary.Common;
 
 namespace ConfigEditor.Forms
 {

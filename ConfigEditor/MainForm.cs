@@ -24,6 +24,7 @@ using ConfigEditor.Core.Services;
 using ConfigEditor.Util;
 using ConfigEditor.Core.Util;
 using ConfigEditor.Core.IO;
+using System.Threading;
 
 namespace ConfigEditor
 {
@@ -49,6 +50,11 @@ namespace ConfigEditor
 
         public MainForm()
         {
+            this.Hide();
+            Thread splashthread = new Thread(new ThreadStart(SplashScreen.ShowSplashScreen));
+            splashthread.IsBackground = true;
+            splashthread.Start();
+
             InitializeComponent();
         }
 
@@ -64,6 +70,11 @@ namespace ConfigEditor
                 this.LoadProject();
                 this.naviTreeView.Nodes[1].Tag = this._project.Ethernet;
                 this.naviTreeView.ExpandAll();
+
+                Thread.Sleep(3000);
+                this.Show();
+                SplashScreen.CloseSplashScreen();
+                this.Activate();
             }
             catch (Exception ex)
             {
