@@ -19,7 +19,7 @@ using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Database;
 using ConfigEditor.Core.Util;
 
-=======
+
 using ConfigEditor.Core.ViewModels;
 
 using ConfigEditor.Core.Util;
@@ -55,7 +55,7 @@ namespace ConfigEditor.Core.IO
 
                 IList<SerialPort> spList = spDao.GetAll().OrderBy(obj => obj.Port).ToList();
                 IList<ModbusMaster> mmList = mmDao.GetAll();
-                IList<ModbusSlave> msList = msDao.GetAll().OrderBy(obj => obj.Name).ToList();;
+                IList<ModbusSlave> msList = msDao.GetAll().OrderBy(obj => obj.Name).ToList(); ;
                 IList<ModbusRegister> mrList = mrDao.GetAll().OrderBy(obj => obj.Name).ToList();
                 IList<IPSetting> ipsList = ipsDao.GetAll();
                 IList<Device> deviceList = deviceDao.GetAll();
@@ -202,7 +202,7 @@ namespace ConfigEditor.Core.IO
         /// 清空项目
         /// </summary>
 
-        public static void Clear()
+        public static bool Clear()
         {
             bool result = true;
 
@@ -219,7 +219,7 @@ namespace ConfigEditor.Core.IO
                 string sql8 = "DELETE FROM SerialPort";
                 string sql9 = "UPDATE sqlite_sequence SET seq = 0;VACUUM Database;";
                 dao.ExecuteNonQuery(sql1);
-                dao.ExecuteNonQuery(sql2); 
+                dao.ExecuteNonQuery(sql2);
                 dao.ExecuteNonQuery(sql3);
                 dao.ExecuteNonQuery(sql4);
                 dao.ExecuteNonQuery(sql5);
@@ -235,10 +235,7 @@ namespace ConfigEditor.Core.IO
 
 
             return result;
-=======
-        {
 
->>>>>>> parent of eb9598b... 清空项目方法实现
         }
     }
 }

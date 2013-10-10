@@ -613,6 +613,8 @@ namespace ConfigEditor
         {
             try
             {
+                ProjectReader.Clear();
+                
             }
             catch (Exception ex)
             {
