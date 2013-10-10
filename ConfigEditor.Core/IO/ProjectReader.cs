@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-<<<<<<< HEAD
 using ConfigEditor.Core.Models;
 using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Database;
@@ -22,7 +21,8 @@ using ConfigEditor.Core.Util;
 
 =======
 using ConfigEditor.Core.ViewModels;
->>>>>>> parent of eb9598b... 清空项目方法实现
+
+using ConfigEditor.Core.Util;
 
 namespace ConfigEditor.Core.IO
 {
@@ -201,7 +201,7 @@ namespace ConfigEditor.Core.IO
         /// <summary>
         /// 清空项目
         /// </summary>
-<<<<<<< HEAD
+
         public static void Clear()
         {
             bool result = true;
@@ -236,7 +236,6 @@ namespace ConfigEditor.Core.IO
 
             return result;
 =======
-        public static void ClearProject()
         {
 
 >>>>>>> parent of eb9598b... 清空项目方法实现
