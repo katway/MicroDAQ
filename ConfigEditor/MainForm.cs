@@ -830,5 +830,24 @@ namespace ConfigEditor
         {
             this.tsmiEdit_Click(this, null);
         }
+
+        /// <summary>
+        /// 更新变量到EMS
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmiUpdateEms_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UpdateEmsForm frm = new UpdateEmsForm();
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
