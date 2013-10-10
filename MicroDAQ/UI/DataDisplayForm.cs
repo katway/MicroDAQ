@@ -127,14 +127,14 @@ namespace MicroDAQ.Specifical
                                     DataRow row = NewTable.NewRow();
                                     row["参数ID"] = tmp[0].ToString();
                                     row["参数名称"] = tmp[1].ToString();
-                                    
+
                                     row["数据采集值1"] = tmp[2].ToString();
                                     row["数据采集值2"] = tmp[3].ToString();
-                                    
+
                                     row["单位"] = tmp[4].ToString();
                                     row["刷新时间"] = tmp[5].ToString();
                                     row["存储点"] = tmp[6].ToString();
-                                                                        
+
                                     row["PLC数据值1"] = meter.Value.ToString();
                                     row["PLC设备类型"] = meter.Type.ToString();
                                     row["PLC状态"] = meter.State.ToString();
@@ -163,8 +163,6 @@ namespace MicroDAQ.Specifical
                         }
 
                     }
-
-
                 }
 
                 else
@@ -208,15 +206,8 @@ namespace MicroDAQ.Specifical
                         }
                         this.dgvDB.DataSource = table;
                     }
-
-
                 }
-
-
             }
-
-
-
         }
         #endregion
 
@@ -244,8 +235,6 @@ namespace MicroDAQ.Specifical
             bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
             bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
             bkwConnect.RunWorkerAsync();
-
-
         }
         //打开数据库连接
         void bkwConnect_DoWork(object sender, DoWorkEventArgs e)
@@ -362,8 +351,6 @@ namespace MicroDAQ.Specifical
         #endregion
         private void FormDemo_FormClosing(object sender, FormClosingEventArgs e)
         {
-
-
             try
             {
                 connection.Close();
@@ -372,9 +359,6 @@ namespace MicroDAQ.Specifical
             {
                 MessageBox.Show(ex.Message);
             }
-            if (Program.opcGateway != null)
-                Program.opcGateway.Stop();
-
         }
         #region 配置情况
         /// <summary>
@@ -452,6 +436,21 @@ namespace MicroDAQ.Specifical
                 this.btnDelete.Enabled = false;
                 MessageBox.Show("数据库连接不成功，没有数据可清除！");
             }
+        }
+
+
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (Program.opcGateway != null)
+                if (this.tabControl1.SelectedIndex == 1)
+                {
+                    Program.opcGateway.Pause(Program.opcGateway.RemoteCtrlCycle);
+                }
+                else
+                {
+                    Program.opcGateway.Continue(Program.opcGateway.RemoteCtrlCycle);
+                }
         }
     }
 }

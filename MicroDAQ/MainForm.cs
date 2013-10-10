@@ -384,6 +384,7 @@ namespace MicroDAQ
 
         private void btnPC_Click(object sender, EventArgs e)
         {
+            //MessageBox.Show(Program.opcGateway.RunningState.ToString());
             if (Program.opcGateway.RunningState == Gateway.RunningState.Running)
                 Program.opcGateway.Pause();
             else
