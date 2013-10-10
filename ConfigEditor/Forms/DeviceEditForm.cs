@@ -265,5 +265,12 @@ namespace ConfigEditor.Forms
 
             return ++val;
         }
+
+        private void txtAlias_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+      
     }
 }

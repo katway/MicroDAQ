@@ -163,6 +163,7 @@
             this.txtAlias.Name = "txtAlias";
             this.txtAlias.Size = new System.Drawing.Size(128, 21);
             this.txtAlias.TabIndex = 30;
+            this.txtAlias.TextChanged += new System.EventHandler(this.txtAlias_TextChanged);
             // 
             // txtSlave
             // 
