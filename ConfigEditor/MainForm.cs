@@ -840,7 +840,7 @@ namespace ConfigEditor
         {
             try
             {
-                UpdateEmsForm frm = new UpdateEmsForm();
+                UpdateEmsForm frm = new UpdateEmsForm(this);
                 frm.ShowDialog();
             }
             catch (Exception ex)
