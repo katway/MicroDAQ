@@ -90,6 +90,11 @@ namespace ConfigEditor
         /// </summary>
         private void LoadProject()
         {
+            this.itemPropertyGrid.SelectedObject = null;
+            this.itemListView.Items.Clear();
+            this.naviTreeView.Nodes[0].Nodes.Clear();
+            this.naviTreeView.Nodes[1].Nodes.Clear();
+
             this._project = ProjectReader.Read();
             foreach (SerialPortViewModel spvm in this._project.SerialPorts)
             {
