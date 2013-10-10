@@ -32,28 +32,29 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.txtServer = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.txtUser = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cmbAuth = new System.Windows.Forms.ComboBox();
-            this.label10 = new System.Windows.Forms.Label();
             this.cmbDatabase = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.btnTest = new System.Windows.Forms.Button();
+            this.cmbAuth = new System.Windows.Forms.ComboBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtUser = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtServer = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtLog = new System.Windows.Forms.TextBox();
             this.txtUpdateTime = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtLog = new System.Windows.Forms.TextBox();
+            this.btnTest = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Location = new System.Drawing.Point(11, 346);
+            this.groupBox1.Location = new System.Drawing.Point(11, 352);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(370, 2);
             this.groupBox1.TabIndex = 2;
@@ -61,7 +62,7 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(196, 360);
+            this.btnOk.Location = new System.Drawing.Point(196, 366);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 4;
@@ -72,7 +73,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(297, 360);
+            this.btnCancel.Location = new System.Drawing.Point(297, 366);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -99,68 +100,23 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "数据库连接";
             // 
-            // groupBox3
+            // cmbDatabase
             // 
-            this.groupBox3.Controls.Add(this.txtLog);
-            this.groupBox3.Controls.Add(this.txtUpdateTime);
-            this.groupBox3.Controls.Add(this.label4);
-            this.groupBox3.Location = new System.Drawing.Point(15, 200);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(361, 133);
-            this.groupBox3.TabIndex = 1;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "更新结果";
+            this.cmbDatabase.FormattingEnabled = true;
+            this.cmbDatabase.Location = new System.Drawing.Point(118, 148);
+            this.cmbDatabase.Name = "cmbDatabase";
+            this.cmbDatabase.Size = new System.Drawing.Size(212, 20);
+            this.cmbDatabase.TabIndex = 9;
+            this.cmbDatabase.DropDown += new System.EventHandler(this.cmbDatabase_DropDown);
             // 
-            // txtServer
+            // label3
             // 
-            this.txtServer.Location = new System.Drawing.Point(118, 20);
-            this.txtServer.Name = "txtServer";
-            this.txtServer.Size = new System.Drawing.Size(212, 21);
-            this.txtServer.TabIndex = 1;
-            this.txtServer.Text = "localhost";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(25, 24);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(77, 12);
-            this.label11.TabIndex = 0;
-            this.label11.Text = "服务器名称：";
-            // 
-            // txtUser
-            // 
-            this.txtUser.Location = new System.Drawing.Point(118, 84);
-            this.txtUser.Name = "txtUser";
-            this.txtUser.Size = new System.Drawing.Size(212, 21);
-            this.txtUser.TabIndex = 5;
-            this.txtUser.Text = "sa";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(49, 88);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 12);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "用户名：";
-            // 
-            // txtPassword
-            // 
-            this.txtPassword.Location = new System.Drawing.Point(118, 116);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(212, 21);
-            this.txtPassword.TabIndex = 7;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(61, 120);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 12);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "密码：";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(49, 152);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 12);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "数据库：";
             // 
             // cmbAuth
             // 
@@ -184,33 +140,88 @@
             this.label10.TabIndex = 2;
             this.label10.Text = "身份验证：";
             // 
-            // cmbDatabase
+            // txtPassword
             // 
-            this.cmbDatabase.FormattingEnabled = true;
-            this.cmbDatabase.Location = new System.Drawing.Point(118, 148);
-            this.cmbDatabase.Name = "cmbDatabase";
-            this.cmbDatabase.Size = new System.Drawing.Size(212, 20);
-            this.cmbDatabase.TabIndex = 9;
-            this.cmbDatabase.DropDown += new System.EventHandler(this.cmbDatabase_DropDown);
+            this.txtPassword.Location = new System.Drawing.Point(118, 116);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '*';
+            this.txtPassword.Size = new System.Drawing.Size(212, 21);
+            this.txtPassword.TabIndex = 7;
             // 
-            // label3
+            // label2
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(49, 152);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 12);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "数据库：";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(61, 120);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(41, 12);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "密码：";
             // 
-            // btnTest
+            // txtUser
             // 
-            this.btnTest.Location = new System.Drawing.Point(26, 360);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(75, 23);
-            this.btnTest.TabIndex = 3;
-            this.btnTest.Text = "连接测试";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            this.txtUser.Location = new System.Drawing.Point(118, 84);
+            this.txtUser.Name = "txtUser";
+            this.txtUser.Size = new System.Drawing.Size(212, 21);
+            this.txtUser.TabIndex = 5;
+            this.txtUser.Text = "sa";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(49, 88);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "用户名：";
+            // 
+            // txtServer
+            // 
+            this.txtServer.Location = new System.Drawing.Point(118, 20);
+            this.txtServer.Name = "txtServer";
+            this.txtServer.Size = new System.Drawing.Size(212, 21);
+            this.txtServer.TabIndex = 1;
+            this.txtServer.Text = "localhost";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(25, 24);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(77, 12);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "服务器名称：";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label5);
+            this.groupBox3.Controls.Add(this.txtLog);
+            this.groupBox3.Controls.Add(this.txtUpdateTime);
+            this.groupBox3.Controls.Add(this.label4);
+            this.groupBox3.Location = new System.Drawing.Point(15, 200);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(361, 146);
+            this.groupBox3.TabIndex = 1;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "更新结果";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.label5.Location = new System.Drawing.Point(25, 127);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(281, 12);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "注：待更新的变量，识别码不重复，并且状态为启用";
+            // 
+            // txtLog
+            // 
+            this.txtLog.Location = new System.Drawing.Point(27, 51);
+            this.txtLog.Multiline = true;
+            this.txtLog.Name = "txtLog";
+            this.txtLog.ReadOnly = true;
+            this.txtLog.Size = new System.Drawing.Size(303, 72);
+            this.txtLog.TabIndex = 2;
             // 
             // txtUpdateTime
             // 
@@ -229,21 +240,22 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "最后更新时间：";
             // 
-            // txtLog
+            // btnTest
             // 
-            this.txtLog.Location = new System.Drawing.Point(27, 56);
-            this.txtLog.Multiline = true;
-            this.txtLog.Name = "txtLog";
-            this.txtLog.ReadOnly = true;
-            this.txtLog.Size = new System.Drawing.Size(303, 71);
-            this.txtLog.TabIndex = 2;
+            this.btnTest.Location = new System.Drawing.Point(26, 366);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(75, 23);
+            this.btnTest.TabIndex = 3;
+            this.btnTest.Text = "连接测试";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // UpdateEmsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(394, 395);
+            this.ClientSize = new System.Drawing.Size(394, 402);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -287,5 +299,6 @@
         private System.Windows.Forms.TextBox txtLog;
         private System.Windows.Forms.TextBox txtUpdateTime;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }

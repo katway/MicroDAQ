@@ -20,7 +20,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Configuration;
+using System.IO;
 using ConfigEditor.Core.Util;
+using ConfigEditor.Core.ViewModels;
+using JonLibrary.Common;
 
 namespace ConfigEditor.Forms
 {
@@ -32,12 +36,28 @@ namespace ConfigEditor.Forms
         //日志
         private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        //获取数据库列表脚本
-        private const string SQL_GET_DATABASES = "SELECT name FROM sys.databases ORDER BY name";
+        //主窗体
+        private MainForm _parentForm;
 
-        public UpdateEmsForm()
+        //获取数据库列表脚本
+        private const string SQL_GET_DATABASES = "select name from master..sysdatabases";
+
+        //更新变量脚本
+        private const string SQL_INSERT_ITEMS_FORMAT = @"IF NOT EXISTS(SELECT * FROM ProcessItem WHERE slave = '{3}') INSERT INTO ProcessItem (id, name, code, slave, type, updateRate) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');";
+        private const string SQL_SELECT_ITEM_FORMAT = @"SELECT COUNT(*) FROM ProcessItem WHERE slave = '{0}'";
+
+        //连接名称
+        public const string DefaultConnection = "DefaultConnection";
+
+        private UpdateEmsForm()
         {
             InitializeComponent();
+        }
+
+        public UpdateEmsForm(MainForm parentForm)
+            : this()
+        {
+            this._parentForm = parentForm;
         }
 
         /// <summary>
@@ -52,7 +72,31 @@ namespace ConfigEditor.Forms
                 this.cmbAuth.SelectedIndex = 1;
 
                 //读取配置文件并显示
+                string connectionString = ConfigurationManager.ConnectionStrings[DefaultConnection].ConnectionString;
+                if (!string.IsNullOrEmpty(connectionString))
+                {
+                    SqlConnectionStringBuilder sqlBuilder = new SqlConnectionStringBuilder(connectionString);
+                    this.txtServer.Text = sqlBuilder.DataSource;
 
+                    if (sqlBuilder.IntegratedSecurity)
+                    {
+                        this.cmbAuth.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        this.cmbAuth.SelectedIndex = 1;
+                        this.txtUser.Text = sqlBuilder.UserID;
+                        this.txtPassword.Text = sqlBuilder.Password;
+                    }
+
+                    this.cmbDatabase.Text = sqlBuilder.InitialCatalog;
+                }
+
+                string updateTime = ConfigurationManager.AppSettings["LAST_UPDATE_TIME"];
+                if (!string.IsNullOrEmpty(updateTime))
+                {
+                    this.txtUpdateTime.Text = updateTime;
+                }
             }
             catch (Exception ex)
             {
@@ -149,7 +193,6 @@ namespace ConfigEditor.Forms
 
                 database = this.cmbDatabase.Text;
 
-
                 //生成数据库连接字符串
                 string connectionString = string.Empty;
                 if (this.cmbAuth.SelectedIndex == 0)
@@ -177,14 +220,115 @@ namespace ConfigEditor.Forms
                     connectionString = string.Format(connectionString, objs);
                 }
 
-                //保存数据库连接信息到配置文件
+                //写入应用程序配置文件
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
+                ConnectionStringSettings css = new ConnectionStringSettings(DefaultConnection, connectionString, "System.Data.SqlClient");
+                config.ConnectionStrings.ConnectionStrings.Clear();
+                config.ConnectionStrings.ConnectionStrings.Add(css);
+
+                config.Save(ConfigurationSaveMode.Full);
+                ConfigurationManager.RefreshSection("connectionStrings");
+
+                this.txtLog.Clear();
+
+                //写入INI配置文件
+                this.WriteIniFile(server, user, password, database);
+
+                //更新服务器
+                this.UpdateEmsItems(connectionString);
             }
             catch (Exception ex)
             {
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>
+        /// 写入INI配置文件
+        /// </summary>
+        /// <param name="server"></param>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <param name="database"></param>
+        private void WriteIniFile(string server, string user, string password, string database)
+        {
+            string iniFile = Path.Combine(Application.StartupPath, "MicroDAQ.ini");
+            if (!File.Exists(iniFile))
+            {
+                this.txtLog.AppendText("MicroDAQ.ini 配置文件不存在。" + Environment.NewLine);
+                return;
+            }
+
+            IniFile ini = new IniFile(iniFile);
+            string[] dbs = ini.GetValue("Database", "Members").Trim().Split(',');
+            if (dbs.Length > 0)
+            {
+                ini.SetValue(dbs[0], "Address", server);
+                ini.SetValue(dbs[0], "PersistSecurityInfo", "True");
+                ini.SetValue(dbs[0], "Database", database);
+                ini.SetValue(dbs[0], "Username", user);
+                ini.SetValue(dbs[0], "Password", password);
+            }
+        }
+
+        /// <summary>
+        /// 更新数据库的变量
+        /// </summary>
+        /// <param name="connectionString"></param>
+        private void UpdateEmsItems(string connectionString)
+        {
+            StringBuilder sb = new StringBuilder();
+            ProjectViewModel project = this._parentForm.Project;
+
+            int allCount = 0;
+            int insertCount = 0;
+
+            foreach (DeviceViewModel device in project.AllDevices)
+            {
+                allCount += device.Items.Count;
+                if (!device.IsEnable)
+                {
+                    continue;
+                }
+
+                foreach (ItemViewModel item in device.Items)
+                {
+                    if (item.IsEnable && item.Code.HasValue && item.Code > 0)
+                    {
+                        int result = Convert.ToInt32(SQLServerHelper.ExecuteScalar(connectionString, CommandType.Text, string.Format(SQL_SELECT_ITEM_FORMAT, item.Code), null));
+                        if (result > 0)
+                        {
+                            continue;
+                        }
+
+                        insertCount++;
+
+                        string id = Guid.NewGuid().ToString().Replace("-", string.Empty);
+                        string sql = string.Format(SQL_INSERT_ITEMS_FORMAT, id, item.Name, item.Code, item.Code, item.DataType, item.ScanPeriod);
+                        sb.AppendLine(sql);
+                    }
+                }
+            }
+
+            if (sb.Length > 0)
+            {
+                SQLServerHelper.ExecuteNonQuery(connectionString, CommandType.Text, sb.ToString(), null);
+            }
+
+            //写入应用程序配置文件
+            DateTime now = DateTime.Now;
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.AppSettings.Settings["LAST_UPDATE_TIME"].Value = now.ToString("yyyy-MM-dd hh:mm:ss");
+            config.Save(ConfigurationSaveMode.Full);
+            ConfigurationManager.RefreshSection("appSettings");
+
+            this.txtUpdateTime.Text = now.ToString("yyyy-MM-dd hh:mm:ss");
+            this.txtLog.AppendText(string.Format("项目的变量总数：{0} 个；" + Environment.NewLine, allCount));
+            this.txtLog.AppendText(string.Format("更新的变量个数：{0} 个；" + Environment.NewLine, insertCount));
+            this.txtLog.AppendText("更新完成。");
+
         }
 
         /// <summary>
@@ -244,6 +388,42 @@ namespace ConfigEditor.Forms
         /// 构建连接字符串
         /// </summary>
         /// <returns></returns>
+        private string BuildMssqlConnectionString()
+        {
+            string connectionString = string.Empty;
+
+            if (this.cmbAuth.SelectedIndex == 0)
+            {
+                connectionString = "Integrated Security=True;Server={0};Database={1}";
+                object[] objs = new object[]
+                {
+                    this.txtServer.Text,
+                    this.cmbDatabase.Text
+                };
+
+                connectionString = string.Format(connectionString, objs);
+            }
+            else
+            {
+                connectionString = "Server={0};Database={1};User={2};Password={3}";
+                object[] objs = new object[]
+                {
+                    this.txtServer.Text,
+                    this.cmbDatabase.Text,
+                    this.txtUser.Text,
+                    this.txtPassword.Text
+                };
+
+                connectionString = string.Format(connectionString, objs);
+            }
+
+            return connectionString;
+        }
+
+        /// <summary>
+        /// 构建连接字符串
+        /// </summary>
+        /// <returns></returns>
         private string BuildMssqlMasterConnectionString()
         {
             string connectionString = string.Empty;
@@ -275,6 +455,7 @@ namespace ConfigEditor.Forms
 
             return connectionString;
         }
+
 
     }
 }
