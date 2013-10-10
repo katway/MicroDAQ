@@ -100,6 +100,12 @@
     <Compile Include="Forms\ItemBatchAddForm.Designer.cs">
       <DependentUpon>ItemBatchAddForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\UpdateEmsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\UpdateEmsForm.Designer.cs">
+      <DependentUpon>UpdateEmsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +116,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\EditHelper.cs" />
     <Content Include="logo.ico" />
+    <None Include="Resources\update_database.png" />
     <None Include="Resources\new_device.bmp" />
     <None Include="Resources\new_channel.bmp" />
     <None Include="Resources\group.bmp" />
@@ -146,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ItemBatchAddForm.resx">
       <DependentUpon>ItemBatchAddForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UpdateEmsForm.resx">
+      <DependentUpon>UpdateEmsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

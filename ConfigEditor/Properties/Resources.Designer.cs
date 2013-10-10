@@ -150,5 +150,12 @@ namespace ConfigEditor.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap update_database {
+            get {
+                object obj = ResourceManager.GetObject("update_database", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

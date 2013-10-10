@@ -23,6 +23,7 @@ using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Services;
 using ConfigEditor.Util;
 using ConfigEditor.Core.Util;
+using ConfigEditor.Core.IO;
 
 namespace ConfigEditor
 {
@@ -60,8 +61,7 @@ namespace ConfigEditor
         {
             try
             {
-                this._project = new ProjectViewModel();
-
+                this.LoadProject();
                 this.naviTreeView.Nodes[1].Tag = this._project.Ethernet;
                 this.naviTreeView.ExpandAll();
             }
@@ -69,6 +69,43 @@ namespace ConfigEditor
             {
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// 加载项目并初始化界面
+        /// </summary>
+        private void LoadProject()
+        {
+            this._project = ProjectReader.Read();
+            foreach (SerialPortViewModel spvm in this._project.SerialPorts)
+            {
+                TreeNode spNode = new TreeNode(spvm.PortName);
+                spNode.Tag = spvm;
+                spNode.ImageKey = "channel.bmp";
+                spNode.SelectedImageKey = "channel.bmp";
+
+                this.naviTreeView.Nodes[0].Nodes.Add(spNode);
+
+                foreach (DeviceViewModel dvm in spvm.Devices)
+                {
+                    TreeNode deviceNode = new TreeNode(dvm.Name);
+                    deviceNode.Tag = dvm;
+                    deviceNode.ImageKey = "device.bmp";
+                    deviceNode.SelectedImageKey = "device.bmp";
+
+                    spNode.Nodes.Add(deviceNode);
+                }
+            }
+
+            foreach (DeviceViewModel dvm in this._project.Ethernet.Devices)
+            {
+                TreeNode deviceNode = new TreeNode(dvm.Name);
+                deviceNode.Tag = dvm;
+                deviceNode.ImageKey = "device.bmp";
+                deviceNode.SelectedImageKey = "device.bmp";
+
+                this.naviTreeView.Nodes[1].Nodes.Add(deviceNode);
             }
         }
 
@@ -397,6 +434,8 @@ namespace ConfigEditor
                         lvi.SubItems[5].Text = model.Address;
                         lvi.SubItems[6].Text = model.Length.ToString();
                         lvi.SubItems[7].Text = model.ScanPeriod.ToString();
+
+                        this.itemPropertyGrid.SelectedObject = model;
                     }
                 }
                 //编辑其他
@@ -790,6 +829,25 @@ namespace ConfigEditor
         private void itemListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.tsmiEdit_Click(this, null);
+        }
+
+        /// <summary>
+        /// 更新变量到EMS
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmiUpdateEms_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UpdateEmsForm frm = new UpdateEmsForm();
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -43,8 +43,10 @@ namespace ConfigEditor.Core.Services
 
             ModbusRegister mr = new ModbusRegister()
             {
+                ModbusSlave_SerialID = model.Device.Id,
                 Name = model.Name,
                 Allias = model.Alias,
+                Code = model.Code.HasValue ? Convert.ToInt32(model.Code) : 0,
                 RegesiterType = (int)model.TableName,
                 RegesiterAddress = Convert.ToInt32(model.Address, 16),
                 Length = model.Length,
@@ -61,17 +63,6 @@ namespace ConfigEditor.Core.Services
             dao.Insert(mr);
 
             model.Id = dao.GetLastSerialID();
-
-            Item item = new Item()
-            {
-                Name = model.Name,
-                Code = model.Code.HasValue ? Convert.ToInt32(model.Code) : 0,
-                Allias = model.Alias,
-                Enable = model.IsEnable.ToString()
-            };
-
-            ItemDao iDao = new ItemDao();
-            iDao.Insert(item);
         }
 
         /// <summary>
@@ -89,8 +80,10 @@ namespace ConfigEditor.Core.Services
             ModbusRegister mr = new ModbusRegister()
             {
                 SerialID = model.Id,
+                ModbusSlave_SerialID = model.Device.Id,
                 Name = model.Name,
                 Allias = model.Alias,
+                Code = model.Code.HasValue ? Convert.ToInt32(model.Code) : 0,
                 RegesiterType = (int)model.TableName,
                 RegesiterAddress = Convert.ToInt32(model.Address, 16),
                 Length = model.Length,

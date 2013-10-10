@@ -29,19 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("串口");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("以太网");
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.文件FToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiProjectProperty = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
             this.编辑EToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiAddSerialPort = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiAddDevice = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiAddItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiBatchAddItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiEnable = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -53,15 +49,8 @@
             this.帮助HToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolStrip = new System.Windows.Forms.ToolStrip();
-            this.tsbAddSerialPort = new System.Windows.Forms.ToolStripButton();
-            this.tsbAddDevice = new System.Windows.Forms.ToolStripButton();
-            this.tsbAddItem = new System.Windows.Forms.ToolStripButton();
-            this.tsbBatchAddItem = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbEdit = new System.Windows.Forms.ToolStripButton();
-            this.tsbDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbHelp = new System.Windows.Forms.ToolStripButton();
             this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.mainSplitContainer = new System.Windows.Forms.SplitContainer();
@@ -89,6 +78,20 @@
             this.cmsItem = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.编辑ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.删除ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiUpdateEms = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbAddSerialPort = new System.Windows.Forms.ToolStripButton();
+            this.tsbAddDevice = new System.Windows.Forms.ToolStripButton();
+            this.tsbAddItem = new System.Windows.Forms.ToolStripButton();
+            this.tsbBatchAddItem = new System.Windows.Forms.ToolStripButton();
+            this.tsbEdit = new System.Windows.Forms.ToolStripButton();
+            this.tsbDelete = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.tsbHelp = new System.Windows.Forms.ToolStripButton();
+            this.tsmiAddSerialPort = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAddDevice = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAddItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiBatchAddItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuStrip.SuspendLayout();
             this.mainToolStrip.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
@@ -130,19 +133,19 @@
             // tsmiProjectProperty
             // 
             this.tsmiProjectProperty.Name = "tsmiProjectProperty";
-            this.tsmiProjectProperty.Size = new System.Drawing.Size(152, 22);
+            this.tsmiProjectProperty.Size = new System.Drawing.Size(139, 22);
             this.tsmiProjectProperty.Text = "项目属性(&P)";
             this.tsmiProjectProperty.Click += new System.EventHandler(this.tsmiProjectProperty_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(136, 6);
             // 
             // tsmiExit
             // 
             this.tsmiExit.Name = "tsmiExit";
-            this.tsmiExit.Size = new System.Drawing.Size(152, 22);
+            this.tsmiExit.Size = new System.Drawing.Size(139, 22);
             this.tsmiExit.Text = "退出(&X)";
             this.tsmiExit.Click += new System.EventHandler(this.tsmiExit_Click);
             // 
@@ -161,42 +164,6 @@
             this.编辑EToolStripMenuItem.Name = "编辑EToolStripMenuItem";
             this.编辑EToolStripMenuItem.Size = new System.Drawing.Size(59, 21);
             this.编辑EToolStripMenuItem.Text = "编辑(&E)";
-            // 
-            // tsmiAddSerialPort
-            // 
-            this.tsmiAddSerialPort.Image = global::ConfigEditor.Properties.Resources.new_channel;
-            this.tsmiAddSerialPort.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiAddSerialPort.Name = "tsmiAddSerialPort";
-            this.tsmiAddSerialPort.Size = new System.Drawing.Size(164, 22);
-            this.tsmiAddSerialPort.Text = "添加串口(&C)";
-            this.tsmiAddSerialPort.Click += new System.EventHandler(this.tsmiAddSerialPort_Click);
-            // 
-            // tsmiAddDevice
-            // 
-            this.tsmiAddDevice.Image = global::ConfigEditor.Properties.Resources.new_device;
-            this.tsmiAddDevice.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiAddDevice.Name = "tsmiAddDevice";
-            this.tsmiAddDevice.Size = new System.Drawing.Size(164, 22);
-            this.tsmiAddDevice.Text = "添加设备(&I)";
-            this.tsmiAddDevice.Click += new System.EventHandler(this.tsmiAddDevice_Click);
-            // 
-            // tsmiAddItem
-            // 
-            this.tsmiAddItem.Image = global::ConfigEditor.Properties.Resources.new_tag;
-            this.tsmiAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiAddItem.Name = "tsmiAddItem";
-            this.tsmiAddItem.Size = new System.Drawing.Size(164, 22);
-            this.tsmiAddItem.Text = "添加变量(&V)";
-            this.tsmiAddItem.Click += new System.EventHandler(this.tsmiAddItem_Click);
-            // 
-            // tsmiBatchAddItem
-            // 
-            this.tsmiBatchAddItem.Image = global::ConfigEditor.Properties.Resources.new_group;
-            this.tsmiBatchAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiBatchAddItem.Name = "tsmiBatchAddItem";
-            this.tsmiBatchAddItem.Size = new System.Drawing.Size(164, 22);
-            this.tsmiBatchAddItem.Text = "批量添加变量(&B)";
-            this.tsmiBatchAddItem.Click += new System.EventHandler(this.tsmiBatchAddItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -233,7 +200,8 @@
             // 
             this.工具TToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiClearProject,
-            this.tsmiOptions});
+            this.tsmiOptions,
+            this.tsmiUpdateEms});
             this.工具TToolStripMenuItem.Name = "工具TToolStripMenuItem";
             this.工具TToolStripMenuItem.Size = new System.Drawing.Size(59, 21);
             this.工具TToolStripMenuItem.Text = "工具(&T)";
@@ -241,14 +209,14 @@
             // tsmiClearProject
             // 
             this.tsmiClearProject.Name = "tsmiClearProject";
-            this.tsmiClearProject.Size = new System.Drawing.Size(152, 22);
+            this.tsmiClearProject.Size = new System.Drawing.Size(142, 22);
             this.tsmiClearProject.Text = "清空项目(&C)";
             this.tsmiClearProject.Click += new System.EventHandler(this.tsmiClearProject_Click);
             // 
             // tsmiOptions
             // 
             this.tsmiOptions.Name = "tsmiOptions";
-            this.tsmiOptions.Size = new System.Drawing.Size(152, 22);
+            this.tsmiOptions.Size = new System.Drawing.Size(142, 22);
             this.tsmiOptions.Text = "选项(&O)";
             this.tsmiOptions.Click += new System.EventHandler(this.tsmiOptions_Click);
             // 
@@ -263,7 +231,7 @@
             // tsmiAbout
             // 
             this.tsmiAbout.Name = "tsmiAbout";
-            this.tsmiAbout.Size = new System.Drawing.Size(152, 22);
+            this.tsmiAbout.Size = new System.Drawing.Size(125, 22);
             this.tsmiAbout.Text = "关于(&A)...";
             this.tsmiAbout.Click += new System.EventHandler(this.tsmiAbout_Click);
             // 
@@ -278,6 +246,8 @@
             this.tsbEdit,
             this.tsbDelete,
             this.toolStripSeparator7,
+            this.toolStripButton1,
+            this.toolStripSeparator6,
             this.tsbHelp});
             this.mainToolStrip.Location = new System.Drawing.Point(0, 25);
             this.mainToolStrip.Name = "mainToolStrip";
@@ -285,85 +255,15 @@
             this.mainToolStrip.TabIndex = 1;
             this.mainToolStrip.Text = "toolStrip1";
             // 
-            // tsbAddSerialPort
-            // 
-            this.tsbAddSerialPort.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddSerialPort.Image")));
-            this.tsbAddSerialPort.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAddSerialPort.Name = "tsbAddSerialPort";
-            this.tsbAddSerialPort.Size = new System.Drawing.Size(76, 22);
-            this.tsbAddSerialPort.Text = "添加串口";
-            this.tsbAddSerialPort.ToolTipText = "添加串口";
-            this.tsbAddSerialPort.Click += new System.EventHandler(this.tsmiAddSerialPort_Click);
-            // 
-            // tsbAddDevice
-            // 
-            this.tsbAddDevice.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddDevice.Image")));
-            this.tsbAddDevice.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAddDevice.Name = "tsbAddDevice";
-            this.tsbAddDevice.Size = new System.Drawing.Size(76, 22);
-            this.tsbAddDevice.Text = "添加设备";
-            this.tsbAddDevice.ToolTipText = "添加设备";
-            this.tsbAddDevice.Click += new System.EventHandler(this.tsmiAddDevice_Click);
-            // 
-            // tsbAddItem
-            // 
-            this.tsbAddItem.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddItem.Image")));
-            this.tsbAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAddItem.Name = "tsbAddItem";
-            this.tsbAddItem.Size = new System.Drawing.Size(76, 22);
-            this.tsbAddItem.Text = "添加变量";
-            this.tsbAddItem.ToolTipText = "添加变量";
-            this.tsbAddItem.Click += new System.EventHandler(this.tsmiAddItem_Click);
-            // 
-            // tsbBatchAddItem
-            // 
-            this.tsbBatchAddItem.Image = ((System.Drawing.Image)(resources.GetObject("tsbBatchAddItem.Image")));
-            this.tsbBatchAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbBatchAddItem.Name = "tsbBatchAddItem";
-            this.tsbBatchAddItem.Size = new System.Drawing.Size(76, 22);
-            this.tsbBatchAddItem.Text = "批量添加";
-            this.tsbBatchAddItem.ToolTipText = "批量添加变量";
-            this.tsbBatchAddItem.Click += new System.EventHandler(this.tsmiBatchAddItem_Click);
-            // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
             // 
-            // tsbEdit
-            // 
-            this.tsbEdit.Image = ((System.Drawing.Image)(resources.GetObject("tsbEdit.Image")));
-            this.tsbEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbEdit.Name = "tsbEdit";
-            this.tsbEdit.Size = new System.Drawing.Size(52, 22);
-            this.tsbEdit.Text = "编辑";
-            this.tsbEdit.ToolTipText = "编辑";
-            this.tsbEdit.Click += new System.EventHandler(this.tsmiEdit_Click);
-            // 
-            // tsbDelete
-            // 
-            this.tsbDelete.Image = ((System.Drawing.Image)(resources.GetObject("tsbDelete.Image")));
-            this.tsbDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbDelete.Name = "tsbDelete";
-            this.tsbDelete.Size = new System.Drawing.Size(52, 22);
-            this.tsbDelete.Text = "删除";
-            this.tsbDelete.Click += new System.EventHandler(this.tsmiDelete_Click);
-            // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
-            // 
-            // tsbHelp
-            // 
-            this.tsbHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbHelp.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelp.Image")));
-            this.tsbHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbHelp.Name = "tsbHelp";
-            this.tsbHelp.Size = new System.Drawing.Size(23, 22);
-            this.tsbHelp.Text = "关于";
-            this.tsbHelp.ToolTipText = "关于";
-            this.tsbHelp.Click += new System.EventHandler(this.tsmiAbout_Click);
             // 
             // mainStatusStrip
             // 
@@ -609,6 +509,135 @@
             this.删除ToolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
             this.删除ToolStripMenuItem1.Text = "删除";
             // 
+            // tsmiUpdateEms
+            // 
+            this.tsmiUpdateEms.Name = "tsmiUpdateEms";
+            this.tsmiUpdateEms.Size = new System.Drawing.Size(142, 22);
+            this.tsmiUpdateEms.Text = "更新到 EMS";
+            this.tsmiUpdateEms.ToolTipText = "更新变量到 EMS 系统";
+            this.tsmiUpdateEms.Click += new System.EventHandler(this.tsmiUpdateEms_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tsbAddSerialPort
+            // 
+            this.tsbAddSerialPort.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddSerialPort.Image")));
+            this.tsbAddSerialPort.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAddSerialPort.Name = "tsbAddSerialPort";
+            this.tsbAddSerialPort.Size = new System.Drawing.Size(76, 22);
+            this.tsbAddSerialPort.Text = "添加串口";
+            this.tsbAddSerialPort.ToolTipText = "添加串口";
+            this.tsbAddSerialPort.Click += new System.EventHandler(this.tsmiAddSerialPort_Click);
+            // 
+            // tsbAddDevice
+            // 
+            this.tsbAddDevice.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddDevice.Image")));
+            this.tsbAddDevice.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAddDevice.Name = "tsbAddDevice";
+            this.tsbAddDevice.Size = new System.Drawing.Size(76, 22);
+            this.tsbAddDevice.Text = "添加设备";
+            this.tsbAddDevice.ToolTipText = "添加设备";
+            this.tsbAddDevice.Click += new System.EventHandler(this.tsmiAddDevice_Click);
+            // 
+            // tsbAddItem
+            // 
+            this.tsbAddItem.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddItem.Image")));
+            this.tsbAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbAddItem.Name = "tsbAddItem";
+            this.tsbAddItem.Size = new System.Drawing.Size(76, 22);
+            this.tsbAddItem.Text = "添加变量";
+            this.tsbAddItem.ToolTipText = "添加变量";
+            this.tsbAddItem.Click += new System.EventHandler(this.tsmiAddItem_Click);
+            // 
+            // tsbBatchAddItem
+            // 
+            this.tsbBatchAddItem.Image = ((System.Drawing.Image)(resources.GetObject("tsbBatchAddItem.Image")));
+            this.tsbBatchAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbBatchAddItem.Name = "tsbBatchAddItem";
+            this.tsbBatchAddItem.Size = new System.Drawing.Size(76, 22);
+            this.tsbBatchAddItem.Text = "批量添加";
+            this.tsbBatchAddItem.ToolTipText = "批量添加变量";
+            this.tsbBatchAddItem.Click += new System.EventHandler(this.tsmiBatchAddItem_Click);
+            // 
+            // tsbEdit
+            // 
+            this.tsbEdit.Image = ((System.Drawing.Image)(resources.GetObject("tsbEdit.Image")));
+            this.tsbEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbEdit.Name = "tsbEdit";
+            this.tsbEdit.Size = new System.Drawing.Size(52, 22);
+            this.tsbEdit.Text = "编辑";
+            this.tsbEdit.ToolTipText = "编辑";
+            this.tsbEdit.Click += new System.EventHandler(this.tsmiEdit_Click);
+            // 
+            // tsbDelete
+            // 
+            this.tsbDelete.Image = ((System.Drawing.Image)(resources.GetObject("tsbDelete.Image")));
+            this.tsbDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbDelete.Name = "tsbDelete";
+            this.tsbDelete.Size = new System.Drawing.Size(52, 22);
+            this.tsbDelete.Text = "删除";
+            this.tsbDelete.Click += new System.EventHandler(this.tsmiDelete_Click);
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.Image = global::ConfigEditor.Properties.Resources.update_database;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(94, 22);
+            this.toolStripButton1.Text = "更新到 EMS";
+            this.toolStripButton1.ToolTipText = "更新变量到 EMS 系统";
+            this.toolStripButton1.Click += new System.EventHandler(this.tsmiUpdateEms_Click);
+            // 
+            // tsbHelp
+            // 
+            this.tsbHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbHelp.Image = ((System.Drawing.Image)(resources.GetObject("tsbHelp.Image")));
+            this.tsbHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbHelp.Name = "tsbHelp";
+            this.tsbHelp.Size = new System.Drawing.Size(23, 22);
+            this.tsbHelp.Text = "关于";
+            this.tsbHelp.ToolTipText = "关于";
+            this.tsbHelp.Click += new System.EventHandler(this.tsmiAbout_Click);
+            // 
+            // tsmiAddSerialPort
+            // 
+            this.tsmiAddSerialPort.Image = global::ConfigEditor.Properties.Resources.new_channel;
+            this.tsmiAddSerialPort.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsmiAddSerialPort.Name = "tsmiAddSerialPort";
+            this.tsmiAddSerialPort.Size = new System.Drawing.Size(164, 22);
+            this.tsmiAddSerialPort.Text = "添加串口(&C)";
+            this.tsmiAddSerialPort.Click += new System.EventHandler(this.tsmiAddSerialPort_Click);
+            // 
+            // tsmiAddDevice
+            // 
+            this.tsmiAddDevice.Image = global::ConfigEditor.Properties.Resources.new_device;
+            this.tsmiAddDevice.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsmiAddDevice.Name = "tsmiAddDevice";
+            this.tsmiAddDevice.Size = new System.Drawing.Size(164, 22);
+            this.tsmiAddDevice.Text = "添加设备(&I)";
+            this.tsmiAddDevice.Click += new System.EventHandler(this.tsmiAddDevice_Click);
+            // 
+            // tsmiAddItem
+            // 
+            this.tsmiAddItem.Image = global::ConfigEditor.Properties.Resources.new_tag;
+            this.tsmiAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsmiAddItem.Name = "tsmiAddItem";
+            this.tsmiAddItem.Size = new System.Drawing.Size(164, 22);
+            this.tsmiAddItem.Text = "添加变量(&V)";
+            this.tsmiAddItem.Click += new System.EventHandler(this.tsmiAddItem_Click);
+            // 
+            // tsmiBatchAddItem
+            // 
+            this.tsmiBatchAddItem.Image = global::ConfigEditor.Properties.Resources.new_group;
+            this.tsmiBatchAddItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsmiBatchAddItem.Name = "tsmiBatchAddItem";
+            this.tsmiBatchAddItem.Size = new System.Drawing.Size(164, 22);
+            this.tsmiBatchAddItem.Text = "批量添加变量(&B)";
+            this.tsmiBatchAddItem.Click += new System.EventHandler(this.tsmiBatchAddItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -705,6 +734,9 @@
         private System.Windows.Forms.ToolStripMenuItem 编辑ToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem1;
         private System.Windows.Forms.ToolStripButton tsbEdit;
+        private System.Windows.Forms.ToolStripMenuItem tsmiUpdateEms;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
     }
 }
 

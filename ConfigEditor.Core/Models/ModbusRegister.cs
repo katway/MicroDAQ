@@ -31,6 +31,9 @@ namespace ConfigEditor.Core.Models
         //名称
         private string _name;
 
+        //识别码
+        private int _code;
+
         //功能区
         private int _regesiterType;
 
@@ -103,6 +106,15 @@ namespace ConfigEditor.Core.Models
         {
             get { return _name; }
             set { _name = value; }
+        }
+
+        /// <summary>
+        /// 识别码
+        /// </summary>
+        public int Code
+        {
+            get { return _code; }
+            set { _code = value; }
         }
 
         /// <summary>

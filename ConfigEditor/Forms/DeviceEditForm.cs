@@ -180,6 +180,7 @@ namespace ConfigEditor.Forms
                 {
                     this._model = new DeviceViewModel();
                     this._model.Channel = this._channel;
+                    this._model.ChannelType = this._channel.Type;
 
                     this._model.Name = this.txtName.Text;
                     this._model.Alias = this.txtAlias.Text;

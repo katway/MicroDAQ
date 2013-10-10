@@ -38,6 +38,7 @@ namespace ConfigEditor.Core.Services
 
             if (model.ChannelType == ChannelTypes.SerialPort)
             {
+                //串口通道的从站
                 SerialPortViewModel sp = model.Channel as SerialPortViewModel;
 
                 ModbusMasterDao mmDao = new ModbusMasterDao();
@@ -61,6 +62,7 @@ namespace ConfigEditor.Core.Services
             }
             else
             {
+                //以太网通道的从站
                 IPSetting ips = new IPSetting()
                 {
                     IP = model.IpAddress,
@@ -87,6 +89,7 @@ namespace ConfigEditor.Core.Services
 
                 model.Id = dao.GetLastSerialID();
             }
+
         }
 
         /// <summary>
@@ -152,6 +155,8 @@ namespace ConfigEditor.Core.Services
             {
                 throw new ArgumentNullException("输入的参数为空。");
             }
+
+            //Todo：删除变量
 
             ModbusSlaveDao dao = new ModbusSlaveDao();
             ModbusSlave model = dao.GetByID(id);

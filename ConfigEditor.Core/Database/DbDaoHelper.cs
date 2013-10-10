@@ -24,7 +24,6 @@ using log4net;
 using ConfigEditor.Core.Util;
 using ConfigEditor.Core.Models;
 
-
 namespace ConfigEditor.Core.Database
 {
     /// <summary>

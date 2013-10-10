@@ -109,12 +109,12 @@ namespace ConfigEditor.Core.ViewModels
         }
 
         /// <summary>
-        /// 标识码
+        /// 识别码
         /// </summary>
         [Browsable(true)]
         [Category("\t\t基本")]
-        [DisplayName("标识码")]
-        [Description("与EMS系统的仪表参数对应的标识码")]
+        [DisplayName("识别码")]
+        [Description("与EMS系统的仪表参数对应的识别码")]
         [ReadOnly(true)]
         public int? Code
         {
