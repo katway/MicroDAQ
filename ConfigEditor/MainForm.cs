@@ -50,6 +50,7 @@ namespace ConfigEditor
 
         public MainForm()
         {
+            //显示启动画面
             this.Hide();
             Thread splashthread = new Thread(new ThreadStart(SplashScreen.ShowSplashScreen));
             splashthread.IsBackground = true;
@@ -71,6 +72,7 @@ namespace ConfigEditor
                 this.naviTreeView.Nodes[1].Tag = this._project.Ethernet;
                 this.naviTreeView.ExpandAll();
 
+                //关闭启动画面
                 Thread.Sleep(3000);
                 this.Show();
                 SplashScreen.CloseSplashScreen();
@@ -102,8 +104,17 @@ namespace ConfigEditor
                 {
                     TreeNode deviceNode = new TreeNode(dvm.Name);
                     deviceNode.Tag = dvm;
-                    deviceNode.ImageKey = "device.bmp";
-                    deviceNode.SelectedImageKey = "device.bmp";
+
+                    if (dvm.IsEnable)
+                    {
+                        deviceNode.ImageKey = "device.bmp";
+                        deviceNode.SelectedImageKey = "device.bmp";
+                    }
+                    else
+                    {
+                        deviceNode.ImageKey = "disable_device.bmp";
+                        deviceNode.SelectedImageKey = "disable_device.bmp";
+                    }
 
                     spNode.Nodes.Add(deviceNode);
                 }
@@ -113,8 +124,17 @@ namespace ConfigEditor
             {
                 TreeNode deviceNode = new TreeNode(dvm.Name);
                 deviceNode.Tag = dvm;
-                deviceNode.ImageKey = "device.bmp";
-                deviceNode.SelectedImageKey = "device.bmp";
+
+                if (dvm.IsEnable)
+                {
+                    deviceNode.ImageKey = "device.bmp";
+                    deviceNode.SelectedImageKey = "device.bmp";
+                }
+                else
+                {
+                    deviceNode.ImageKey = "disable_device.bmp";
+                    deviceNode.SelectedImageKey = "disable_device.bmp";
+                }
 
                 this.naviTreeView.Nodes[1].Nodes.Add(deviceNode);
             }
@@ -404,7 +424,68 @@ namespace ConfigEditor
         {
             try
             {
+                //编辑变量
+                if (this.itemListView.Focused && this.itemListView.SelectedItems.Count > 0)
+                {
+                    ListViewItem firstLvi = this.itemListView.SelectedItems[0];
+                    bool isEnable = !(firstLvi.Tag as ItemViewModel).IsEnable;
 
+                    ItemService service = new ItemService();
+                    ListView.SelectedIndexCollection indexList = this.itemListView.SelectedIndices;
+                    for (int i = indexList.Count; i > 0; i--)
+                    {
+                        int index = indexList[i - 1];
+                        ListViewItem lvi = this.itemListView.Items[index];
+                        ItemViewModel model = lvi.Tag as ItemViewModel;
+                        model.IsEnable = isEnable;
+
+                        service.EditItem(model);
+                    }
+
+                    this.itemPropertyGrid.SelectedObject = firstLvi.Tag as ItemViewModel;
+
+                }
+                //编辑其他
+                else if (this.naviTreeView.Focused && this.naviTreeView.SelectedNode != null)
+                {
+                    TreeNode node = this.naviTreeView.SelectedNode;
+                    object tag = node.Tag;
+                    if (tag == null)
+                    {
+                        return;
+                    }
+
+                    //串口节点
+                    if (tag.GetType() == typeof(SerialPortViewModel))
+                    {
+                        SerialPortViewModel model = node.Tag as SerialPortViewModel;
+                        model.IsEnable = !model.IsEnable;
+
+                        SerialPortService service = new SerialPortService();
+                        service.EditSerialPort(model);
+                    }
+                    //设备节点
+                    else if (tag.GetType() == typeof(DeviceViewModel))
+                    {
+                        DeviceViewModel model = node.Tag as DeviceViewModel;
+                        model.IsEnable = !model.IsEnable;
+
+                        DeviceService service = new DeviceService();
+                        service.EditDevice(model);
+
+                        if (model.IsEnable)
+                        {
+                            node.ImageKey = "device.bmp";
+                            node.SelectedImageKey = "device.bmp";
+                        }
+                        else
+                        {
+                            node.ImageKey = "disable_device.bmp";
+                            node.SelectedImageKey = "disable_device.bmp";
+                        }
+                    }
+
+                }
             }
             catch (Exception ex)
             {
@@ -703,6 +784,7 @@ namespace ConfigEditor
                         this.tsmiBatchAddItem.Enabled = false;
                         this.tsmiEdit.Enabled = false;
                         this.tsmiDelete.Enabled = false;
+                        this.tsmiEnable.Enabled = false;
                     }
                     else
                     {
@@ -719,6 +801,7 @@ namespace ConfigEditor
                         this.tsmiBatchAddItem.Enabled = false;
                         this.tsmiEdit.Enabled = false;
                         this.tsmiDelete.Enabled = false;
+                        this.tsmiEnable.Enabled = false;
                     }
                 }
                 else if (node.Level == 1)
@@ -740,6 +823,7 @@ namespace ConfigEditor
                         this.tsmiBatchAddItem.Enabled = false;
                         this.tsmiEdit.Enabled = true;
                         this.tsmiDelete.Enabled = true;
+                        this.tsmiEnable.Enabled = true;
                     }
                     else
                     {
@@ -756,6 +840,7 @@ namespace ConfigEditor
                         this.tsmiBatchAddItem.Enabled = true;
                         this.tsmiEdit.Enabled = true;
                         this.tsmiDelete.Enabled = true;
+                        this.tsmiEnable.Enabled = true;
 
                         DeviceViewModel device = node.Tag as DeviceViewModel;
                         this.RefreshItemListView(device);
@@ -778,6 +863,7 @@ namespace ConfigEditor
                     this.tsmiBatchAddItem.Enabled = true;
                     this.tsmiEdit.Enabled = true;
                     this.tsmiDelete.Enabled = true;
+                    this.tsmiEnable.Enabled = true;
 
                     DeviceViewModel device = node.Tag as DeviceViewModel;
                     this.RefreshItemListView(device);
