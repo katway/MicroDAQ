@@ -44,6 +44,7 @@
     <Compile Include="IDatabase.cs" />
     <Compile Include="IDataItemManage.cs" />
     <Compile Include="IGateway.cs" />
+    <Compile Include="IItem.cs" />
     <Compile Include="IOpcItemConnectable.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="ItemState.cs" />

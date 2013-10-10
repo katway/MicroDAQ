@@ -149,9 +149,6 @@
     <None Include="ModbusTransport.cd" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\NModbusPublic.snk">
-      <Link>NModbusPublic.snk</Link>
-    </None>
     <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

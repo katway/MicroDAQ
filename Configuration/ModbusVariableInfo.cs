@@ -6,18 +6,25 @@
 using System;
 namespace MicroDAQ.Configuration
 {
-    public class ModbusVariable
+    public class ModbusVariableInfo
     {
         public long serialID;
+        public int code;
         public string allias;
         public string name;
-        public int regesiterType;
-        public int regesiterAddress;
         public string dataType;
+        public int regesiterType;
         /// <summary>
+        /// 寄存器地址
+        /// NModbus库要求的参数类型，必须为ushort
+        /// </summary>
+        public ushort regesiterAddress;
+        /// <summary>
+        /// 读取长度
         /// 可选的，一般由数据类型决定,不可手动填写。
+        /// NModbus库要求的参数类型，必须为ushort
         /// </summary> 
-        public int length;
+        public ushort length;
         public string accessibility;
         public decimal value;
         public string enable;

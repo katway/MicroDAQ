@@ -12,10 +12,10 @@ namespace MicroDAQ.Configuration
         public string name;
         public string allias;
         public string type;
-        public int slave;
+        public byte slave;
         public string enable;
 
-        public System.Collections.Generic.List<ModbusVariable> modbusVariable;
+        public System.Collections.Generic.List<ModbusVariableInfo> modbusVariables;
 
         public IPSettingInfo iPSetting;
 

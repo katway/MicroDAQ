@@ -1,30 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="MicroDAQ.Gateways.Modbus2.ModbusGateway">
-    <Position X="0.5" Y="2.5" Width="2.5" />
+    <Position X="0.5" Y="3" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAgCAAAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <HashCode>AAAgCIAAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
       <FileName>Modbus2\ModbusGateway.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="MicroDAQ.Gateways.Modbus2.ModbusItemManager" Collapsed="true">
-    <Position X="10.5" Y="0.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Modbus2\ModbusItemManager.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="MicroDAQ.Common.GatewayBase" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="2.5" />
-    <TypeIdentifier />
-    <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="MicroDAQ.Common.Item" Collapsed="true">
-    <Position X="9.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="ModbusMasters" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="MicroDAQ.Gateways.ItemManageBase" BaseTypeListCollapsed="true">
-    <Position X="6" Y="0.5" Width="1.5" />
+    <Position X="7.75" Y="1.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABCAACAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
       <FileName>ItemManageBase.cs</FileName>
@@ -32,7 +19,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="MicroDAQ.Gateways.Modbus.IPMasterManager">
-    <Position X="4" Y="2.5" Width="2" />
+    <Position X="17" Y="0.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAEAAAAABCAACAEAAABAAAAwAAAAAgAAADAAAIEAgCA=</HashCode>
       <FileName>Moubus\IPMasterManager.cs</FileName>
@@ -40,43 +27,124 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="MicroDAQ.Gateways.Modbus.ModbusGateway" Collapsed="true">
-    <Position X="1.75" Y="1.25" Width="1.5" />
+    <Position X="2" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>BIQgCACgCKAAAgEBIBACAAAwAgAgAgAAICgAAACBRAQ=</HashCode>
       <FileName>Moubus\ModbusGateway.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MicroDAQ.Gateways.Modbus2.SerialPortSlaveDevice">
-    <Position X="7.75" Y="5.5" Width="2.25" />
+  <Class Name="MicroDAQ.Gateways.Modbus2.SerialPortSlave">
+    <Position X="7.75" Y="4.25" Width="2.25" />
+    <AssociationLine Name="ModbusSlaveInfo" Type="MicroDAQ.Configuration.ModbusSlaveInfo">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.381" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Variables" Type="MicroDAQ.Gateways.Modbus2.ModbusVariable">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.631" Y="0.104" Height="0.181" Width="0.964" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AgEAAAAABCAACAEAAABAAAAwAAAAAgAAACAAAIEAgCA=</HashCode>
-      <FileName>Modbus2\SerialPortSlaveDevice.cs</FileName>
-      <NewMemberFileName>Moubus\SerialPortSlaveDevice.cs</NewMemberFileName>
+      <HashCode>AAEAAAAABCAAAAEAAABAAAAwAAAAAgAAQCQCAIEAgCA=</HashCode>
+      <FileName>Modbus2\SerialPortSlave.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ModbusSlaveInfo" />
+      <Property Name="ModbusMaster" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Variables" />
+    </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
+  <Class Name="MicroDAQ.Configuration.Device" Collapsed="true">
+    <Position X="20" Y="6" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MicroDAQ.Configuration.IPSettingInfo" Collapsed="true">
+    <Position X="24" Y="3.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MicroDAQ.Configuration.ModbusGatewayInfo" Collapsed="true">
+    <Position X="24.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MicroDAQ.Configuration.ModbusMasterInfo" Collapsed="true">
+    <Position X="19.5" Y="6.75" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MicroDAQ.Configuration.ModbusSlaveInfo">
+    <Position X="11.75" Y="3" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MicroDAQ.Configuration.SerialPortInfo" Collapsed="true">
+    <Position X="20" Y="7.75" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MicroDAQ.Configuration.ModbusVariableInfo">
+    <Position X="15.75" Y="9.5" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MicroDAQ.Gateways.Modbus2.ModbusVariable">
+    <Position X="11.5" Y="7.25" Width="2.5" />
+    <AssociationLine Name="ModbusVariableInfo" Type="MicroDAQ.Configuration.ModbusVariableInfo">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.242" Y="0.112" Height="0.181" Width="1.631" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAiAAQAAAgABgAAAAAAAEAAAAAAAAAQAgBAAAAAA=</HashCode>
+      <FileName>Modbus2\ModbusVariable.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ModbusVariableInfo" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MicroDAQ.Common.GatewayBase" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MicroDAQ.Common.Item" Collapsed="true">
+    <Position X="20.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MicroDAQ.Gateways.ModbusMasterAgent">
+    <Position X="4.25" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Modbus2\SerialMasterAgent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Modbus.Device.IModbusMaster" Collapsed="true">
+    <Position X="4.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
   <Interface Name="MicroDAQ.Common.IDatabaseManage" Collapsed="true">
-    <Position X="9.5" Y="1.75" Width="1.5" />
+    <Position X="20.5" Y="1.75" Width="1.5" />
     <TypeIdentifier />
   </Interface>
   <Interface Name="MicroDAQ.Common.IDataItemManage" Collapsed="true">
-    <Position X="11.25" Y="1.75" Width="1.5" />
+    <Position X="22.25" Y="1.75" Width="1.5" />
     <TypeIdentifier />
   </Interface>
   <Interface Name="MicroDAQ.Common.IGateway" Collapsed="true">
-    <Position X="9.5" Y="2.5" Width="1.5" />
+    <Position X="20.5" Y="2.5" Width="1.5" />
     <TypeIdentifier />
   </Interface>
   <Enum Name="MicroDAQ.Common.GatewayState" Collapsed="true">
-    <Position X="9.5" Y="3.5" Width="1.5" />
+    <Position X="20.5" Y="3.5" Width="1.5" />
     <TypeIdentifier />
   </Enum>
   <Enum Name="MicroDAQ.Common.ItemState" Collapsed="true">
-    <Position X="11.25" Y="3.5" Width="1.5" />
+    <Position X="22.25" Y="3.5" Width="1.5" />
     <TypeIdentifier />
   </Enum>
   <Enum Name="MicroDAQ.Common.ItemType" Collapsed="true">
-    <Position X="9.5" Y="4.25" Width="1.5" />
+    <Position X="22" Y="4.75" Width="1.5" />
     <TypeIdentifier />
   </Enum>
   <Font Name="微软雅黑" Size="9" />

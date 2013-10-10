@@ -41,7 +41,7 @@
     <Compile Include="ModbusGatewayInfo.cs" />
     <Compile Include="ModbusMasterInfo.cs" />
     <Compile Include="ModbusSlaveInfo.cs" />
-    <Compile Include="ModbusVariable.cs" />
+    <Compile Include="ModbusVariableInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialPortInfo.cs" />
   </ItemGroup>

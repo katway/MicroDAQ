@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MicroDAQ.Common;
+using Modbus.Device;
 
 namespace MicroDAQ.Gateways.Modbus2
 {
@@ -18,6 +19,12 @@ namespace MicroDAQ.Gateways.Modbus2
             : base(ItemManagers, DatabaseManager)
         {
 
+        }
+
+        public System.Collections.Generic.IList<ModbusMasterAgent> ModbusMasters
+        {
+            get;
+            set;
         }
 
 

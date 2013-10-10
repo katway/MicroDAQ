@@ -77,7 +77,7 @@ namespace MicroDAQ.Gateways.Modbus
         public DataTable GetSerialMasterDevice()
         {
 
-            string sqlStr = "select a.SerialID,b.BaudRate,b.Databits,b.Parity,b.Stopbits,c.PortName,a.TransferType,a.slave from ModbusSlave a left join SerialPortSetting b on a.SerialPortSetting_SerialID=b.SerialID left join SerialPort c on a.SerialPort_SerialID=c.SerialID where a.Type='serialPort' order by a.TransferType,a.SerialPortSetting_SerialID,c.SerialID  ";
+            string sqlStr = "select a.SerialID,b.BaudRate,b.Databits,b.Parity,b.Stopbits,c.PortName,a.TransferType,a.slave from ModbusSlave a left join SerialPortSetting b on a.SerialPortSetting_SerialID=b.SerialID left join SerialPort c on a.SerialPort_SerialID=c.SerialID where a.Type='SerialPort' order by a.TransferType,a.SerialPortSetting_SerialID,c.SerialID  ";
             Connection.Open();
             SqlDataAdapter da = new SqlDataAdapter(sqlStr, Connection);
             DataSet ds = new DataSet();

@@ -45,8 +45,8 @@ namespace MicroDAQ.DataItem
             //{ port.BaudRate = 19200; }
             //else
             //{ port.BaudRate = 9600; }
-            //serialPort = new SerialPort();
-            //serialPort = port;
+            //SerialPort = new SerialPort();
+            //SerialPort = port;
             #endregion
 
             #region 反射
