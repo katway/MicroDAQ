@@ -18,9 +18,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using ConfigEditor.Core.Models;
 using ConfigEditor.Core.ViewModels;
-using System.Text.RegularExpressions;
 using ConfigEditor.Util;
 
 namespace ConfigEditor.Forms
@@ -181,6 +181,7 @@ namespace ConfigEditor.Forms
                     this._model = new DeviceViewModel();
                     this._model.Channel = this._channel;
                     this._model.ChannelType = this._channel.Type;
+                    this._model.Protocol = this._channel.Protocol;
 
                     this._model.Name = this.txtName.Text;
                     this._model.Alias = this.txtAlias.Text;

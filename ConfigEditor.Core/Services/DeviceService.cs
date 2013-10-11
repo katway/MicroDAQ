@@ -149,6 +149,41 @@ namespace ConfigEditor.Core.Services
         /// 删除设备
         /// </summary>
         /// <param name="id"></param>
+        public void DeleteDevice(DeviceViewModel model)
+        {
+            if (model == null || model.Id == 0)
+            {
+                throw new ArgumentNullException("输入的参数为空。");
+            }
+
+            //删除变量
+            ModbusRegisterDao mrDao = new ModbusRegisterDao();
+            foreach (var item in model.Items)
+            {
+                mrDao.Delete(item.Id);
+            }
+
+            //删除从机
+            ModbusSlaveDao msDao = new ModbusSlaveDao();
+            ModbusSlave ms = msDao.GetByID(model.Id);
+            msDao.Delete(model.Id);
+
+            //删除IP设置
+            IPSettingDao ipsDao = new IPSettingDao();
+            IList<IPSetting> ipsList = ipsDao.GetAll();
+            foreach (IPSetting ips in ipsList)
+            {
+                if (ips.SerialID == ms.IPSetting_SerialID)
+                {
+                    ipsDao.Delete((int)ips.SerialID);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除设备
+        /// </summary>
+        /// <param name="id"></param>
         public void DeleteDevice(int id)
         {
             if (id == 0)

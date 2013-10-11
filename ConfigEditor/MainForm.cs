@@ -633,7 +633,7 @@ namespace ConfigEditor
                         SerialPortViewModel model = node.Tag as SerialPortViewModel;
 
                         SerialPortService service = new SerialPortService();
-                        service.DeleteSerialPort(model.Id);
+                        service.DeleteSerialPort(model);
 
                         this._project.SerialPorts.Remove(model);
                     }
@@ -648,7 +648,7 @@ namespace ConfigEditor
                         DeviceViewModel model = node.Tag as DeviceViewModel;
 
                         DeviceService service = new DeviceService();
-                        service.DeleteDevice(model.Id);
+                        service.DeleteDevice(model);
                         
                         if (node.Level == 1)
                         {

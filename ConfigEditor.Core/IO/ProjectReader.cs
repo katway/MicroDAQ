@@ -19,11 +19,6 @@ using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Database;
 using ConfigEditor.Core.Util;
 
-
-using ConfigEditor.Core.ViewModels;
-
-using ConfigEditor.Core.Util;
-
 namespace ConfigEditor.Core.IO
 {
     /// <summary>
@@ -95,7 +90,7 @@ namespace ConfigEditor.Core.IO
                             Name = item.Name,
                             Alias = item.Allias,
                             ChannelType = ChannelTypes.SerialPort,
-                            Protocol = ModbusProtocols.ModbusRTU,
+                            Protocol = EnumHelper.StringToEnum<ModbusProtocols>(item.Type),
                             Slave = item.Slave,
                             IpAddress = string.Empty,
                             IpPort = 0,
@@ -130,6 +125,12 @@ namespace ConfigEditor.Core.IO
                             ivm.Device = dvm;
                             dvm.Items.Add(ivm);
                         }
+                    }
+
+                    //设置串口通道的默认协议
+                    if (spvm.Devices.Count > 0)
+                    {
+                        spvm.Protocol = spvm.Devices[0].Protocol;
                     }
                 }
                 #endregion
