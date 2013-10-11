@@ -48,7 +48,7 @@
             this.btnCancel.Location = new System.Drawing.Point(333, 265);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 11;
+            this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "取消";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click_1);
@@ -58,7 +58,7 @@
             this.btnOk.Location = new System.Drawing.Point(185, 265);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
-            this.btnOk.TabIndex = 10;
+            this.btnOk.TabIndex = 4;
             this.btnOk.Text = "确定";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
@@ -68,7 +68,7 @@
             this.ProjectLocation.Location = new System.Drawing.Point(108, 25);
             this.ProjectLocation.Name = "ProjectLocation";
             this.ProjectLocation.Size = new System.Drawing.Size(300, 21);
-            this.ProjectLocation.TabIndex = 9;
+            this.ProjectLocation.TabIndex = 1;
             this.ProjectLocation.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label1
@@ -77,7 +77,7 @@
             this.label1.Location = new System.Drawing.Point(36, 28);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(65, 12);
-            this.label1.TabIndex = 8;
+            this.label1.TabIndex = 0;
             this.label1.Text = "项目位置：";
             // 
             // groupBox3
@@ -85,7 +85,7 @@
             this.groupBox3.Location = new System.Drawing.Point(23, 235);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(403, 10);
-            this.groupBox3.TabIndex = 7;
+            this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             // 
             // groupBox2
@@ -99,7 +99,7 @@
             this.groupBox2.Location = new System.Drawing.Point(38, 58);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(370, 171);
-            this.groupBox2.TabIndex = 6;
+            this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "项目统计";
             // 
@@ -116,7 +116,7 @@
             this.txtDeviceNum.Location = new System.Drawing.Point(104, 77);
             this.txtDeviceNum.Name = "txtDeviceNum";
             this.txtDeviceNum.Size = new System.Drawing.Size(163, 21);
-            this.txtDeviceNum.TabIndex = 4;
+            this.txtDeviceNum.TabIndex = 3;
             this.txtDeviceNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // txtSerialNum
@@ -124,7 +124,7 @@
             this.txtSerialNum.Location = new System.Drawing.Point(104, 38);
             this.txtSerialNum.Name = "txtSerialNum";
             this.txtSerialNum.Size = new System.Drawing.Size(163, 21);
-            this.txtSerialNum.TabIndex = 3;
+            this.txtSerialNum.TabIndex = 1;
             this.txtSerialNum.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label4
@@ -133,7 +133,7 @@
             this.label4.Location = new System.Drawing.Point(22, 112);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
-            this.label4.TabIndex = 2;
+            this.label4.TabIndex = 4;
             this.label4.Text = "变量数：";
             // 
             // label3
@@ -142,7 +142,7 @@
             this.label3.Location = new System.Drawing.Point(22, 77);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 12);
-            this.label3.TabIndex = 1;
+            this.label3.TabIndex = 2;
             this.label3.Text = "设备数：";
             // 
             // label2
@@ -156,8 +156,10 @@
             // 
             // ProjectPropertyForm
             // 
+            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(441, 300);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);

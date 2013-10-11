@@ -102,6 +102,20 @@ namespace ConfigEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap disable_port {
+            get {
+                object obj = ResourceManager.GetObject("disable_port", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap disable_tag {
+            get {
+                object obj = ResourceManager.GetObject("disable_tag", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap edit_tag {
             get {
                 object obj = ResourceManager.GetObject("edit_tag", resourceCulture);
