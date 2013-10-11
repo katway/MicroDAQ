@@ -142,9 +142,8 @@ namespace MicroDAQ
                             for (int j = 0; j < Plcs[i].PairsNumber; j++)
                             {
                                 ushort[] value = (ushort[])values[j];
-                                Plcs[i].ItemsNumber[j].BigItems = value[0];
-                                Plcs[i].ItemsNumber[j].SmallItems = value[1];
-
+                                Plcs[i].ItemsNumber[j].SmallItems = value[0];
+                                Plcs[i].ItemsNumber[j].BigItems = value[1];
                             }
                         }
                     }
