@@ -18,13 +18,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 using ConfigEditor.Forms;
 using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Services;
 using ConfigEditor.Util;
 using ConfigEditor.Core.Util;
 using ConfigEditor.Core.IO;
-using System.Threading;
 
 namespace ConfigEditor
 {
@@ -100,8 +100,8 @@ namespace ConfigEditor
             {
                 TreeNode spNode = new TreeNode(spvm.PortName);
                 spNode.Tag = spvm;
-                spNode.ImageKey = "channel.bmp";
-                spNode.SelectedImageKey = "channel.bmp";
+                spNode.ImageKey = "port.png";
+                spNode.SelectedImageKey = "port.png";
 
                 this.naviTreeView.Nodes[0].Nodes.Add(spNode);
 
@@ -175,8 +175,8 @@ namespace ConfigEditor
                     
                     TreeNode node = new TreeNode(model.PortName);
                     node.Tag = model;
-                    node.ImageKey = "channel.bmp";
-                    node.SelectedImageKey = "channel.bmp";
+                    node.ImageKey = "port.png";
+                    node.SelectedImageKey = "port.png";
 
                     this._project.SerialPorts.Add(model);
                     this.naviTreeView.Nodes[0].Nodes.Add(node);
