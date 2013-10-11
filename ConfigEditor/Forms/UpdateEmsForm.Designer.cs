@@ -54,7 +54,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Location = new System.Drawing.Point(11, 352);
+            this.groupBox1.Location = new System.Drawing.Point(11, 359);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(370, 2);
             this.groupBox1.TabIndex = 2;
@@ -62,7 +62,7 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(196, 366);
+            this.btnOk.Location = new System.Drawing.Point(196, 384);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 4;
@@ -73,7 +73,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(297, 366);
+            this.btnCancel.Location = new System.Drawing.Point(297, 384);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -193,7 +193,6 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.txtLog);
             this.groupBox3.Controls.Add(this.txtUpdateTime);
             this.groupBox3.Controls.Add(this.label4);
@@ -208,7 +207,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label5.Location = new System.Drawing.Point(25, 127);
+            this.label5.Location = new System.Drawing.Point(13, 365);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(281, 12);
             this.label5.TabIndex = 3;
@@ -220,7 +219,7 @@
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
-            this.txtLog.Size = new System.Drawing.Size(303, 72);
+            this.txtLog.Size = new System.Drawing.Size(303, 82);
             this.txtLog.TabIndex = 2;
             // 
             // txtUpdateTime
@@ -242,7 +241,7 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(26, 366);
+            this.btnTest.Location = new System.Drawing.Point(26, 384);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(75, 23);
             this.btnTest.TabIndex = 3;
@@ -255,7 +254,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(394, 402);
+            this.ClientSize = new System.Drawing.Size(394, 421);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -275,6 +275,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

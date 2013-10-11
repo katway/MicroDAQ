@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="JonLibrary">
       <HintPath>..\MicroDAQ\Dynamic\JonLibrary.dll</HintPath>
@@ -120,6 +123,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\EditHelper.cs" />
     <Content Include="logo.ico" />
+    <None Include="Resources\new_port_16.png" />
+    <None Include="Resources\delete_16.png" />
+    <None Include="Resources\network_ethernet_16.png" />
+    <None Include="Resources\port_16.png" />
     <None Include="Resources\splash.jpg" />
     <None Include="Resources\update_database.png" />
     <None Include="Resources\new_device.bmp" />
