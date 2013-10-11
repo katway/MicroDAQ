@@ -681,7 +681,7 @@ namespace ConfigEditor
         {
             try
             {
-                ProjectPropertyForm frm = new ProjectPropertyForm();
+                ProjectPropertyForm frm = new ProjectPropertyForm(_project);
                 frm.ShowDialog();
             }
             catch (Exception ex)
@@ -710,7 +710,13 @@ namespace ConfigEditor
         {
             try
             {
+                if (MessageBox.Show("确定要清空项目吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    return;
+                }
                 ProjectReader.Clear();
+                LoadProject();
+                
                 
             }
             catch (Exception ex)
