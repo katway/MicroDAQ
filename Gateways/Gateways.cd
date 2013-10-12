@@ -13,7 +13,7 @@
   <Class Name="MicroDAQ.Gateways.ItemManageBase" BaseTypeListCollapsed="true">
     <Position X="7.75" Y="1.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAABCAACAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+      <HashCode>AAAAAAAABCEACAAAAQAAAAAAAAAAAgAAAAAAAAAAgAA=</HashCode>
       <FileName>ItemManageBase.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -42,16 +42,15 @@
     </AssociationLine>
     <AssociationLine Name="Variables" Type="MicroDAQ.Gateways.Modbus2.ModbusVariable">
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="0.631" Y="0.104" Height="0.181" Width="0.964" />
+        <Position X="2.656" Y="0.485" Height="0.181" Width="0.964" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAEAAAAABCAAAAEAAABAAAAwAAAAAgAAQCQCAIEAgCA=</HashCode>
+      <HashCode>AAAAABAABCAAAAAAAAAAAAAgAAAAAgAAAAQCAAEAgAA=</HashCode>
       <FileName>Modbus2\SerialPortSlave.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="ModbusSlaveInfo" />
-      <Property Name="ModbusMaster" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Variables" />
@@ -88,17 +87,17 @@
   </Class>
   <Class Name="MicroDAQ.Gateways.Modbus2.ModbusVariable">
     <Position X="11.5" Y="7.25" Width="2.5" />
-    <AssociationLine Name="ModbusVariableInfo" Type="MicroDAQ.Configuration.ModbusVariableInfo">
-      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="0.242" Y="0.112" Height="0.181" Width="1.631" />
+    <AssociationLine Name="VariableInfo" Type="MicroDAQ.Configuration.ModbusVariableInfo">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.714" Y="0.039" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAiAAQAAAgABgAAAAAAAEAAAAAAAAAQAgBAAAAAA=</HashCode>
+      <HashCode>AAAAAiAAQAAAgABAAAAAQAAEAAAEACAAAQBgBAAAAAA=</HashCode>
       <FileName>Modbus2\ModbusVariable.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="ModbusVariableInfo" />
+      <Property Name="VariableInfo" />
     </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>

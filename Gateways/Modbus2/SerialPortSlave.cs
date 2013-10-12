@@ -11,11 +11,7 @@ namespace MicroDAQ.Gateways.Modbus2
 {
     public class SerialPortSlave : MicroDAQ.Gateways.ItemManageBase, IDataItemManage
     {
-        DataTable dtMeta;
-        DataTable dtCommands;
-        DataTable dtWriteData;
-        byte slaveAddress;
-        public SqlConnection Connection { get; set; }
+
         /// <summary>
         /// 根据Master对象信息和Salve配置信息生成对象
         /// </summary>
@@ -106,6 +102,9 @@ namespace MicroDAQ.Gateways.Modbus2
                 }
             }
         }
+        /// <summary>
+        /// 写数据
+        /// </summary>
         public void Write()
         {
             foreach (ModbusVariable variable in this.Variables)
@@ -123,27 +122,6 @@ namespace MicroDAQ.Gateways.Modbus2
             Write();
         }
 
-        /// <summary>
-        /// 日志存储过程
-        /// </summary>
-        /// <param name="serialID"></param>
-        /// <param name="state"></param>
-        /// <returns></returns>
-        private int ProCommandState(int serialID, string state)
-        {
-            SqlCommand command = new SqlCommand("proc_RecordCommandLog", Connection);
-            command.CommandType = CommandType.StoredProcedure;
-            command.Parameters.Add(new SqlParameter("@serialID ", SqlDbType.Int));
-            command.Parameters.Add(new SqlParameter("@State ", SqlDbType.VarChar, 10));
-            command.UpdatedRowSource = UpdateRowSource.None;
-            command.Parameters["@serialID "].Value = serialID;
-            command.Parameters["@State "].Value = state;
-            Connection.Open();
-            int i = command.ExecuteNonQuery();
-            Connection.Close();
-            return i;
-        }
-
         public void StartSynchronize()
         {
             new JonLibrary.Automatic.CycleTask().Run(new System.Threading.ThreadStart(ReadWriteData), System.Threading.ThreadPriority.BelowNormal);
@@ -158,27 +136,10 @@ namespace MicroDAQ.Gateways.Modbus2
             throw new System.NotImplementedException();
         }
 
-        public MicroDAQ.Configuration.ModbusSlaveInfo ModbusSlaveInfo
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
-        }
+        public MicroDAQ.Configuration.ModbusSlaveInfo ModbusSlaveInfo { get; set; }
 
-        public IList<MicroDAQ.Gateways.Modbus2.ModbusVariable> Variables
-        {
-            get;
-            set;
-        }
+        public IList<MicroDAQ.Gateways.Modbus2.ModbusVariable> Variables { get; set; }
 
-        public MicroDAQ.Gateways.ModbusMasterAgent ModbusMasterAgent
-        {
-            get;
-            set;
-        }
+        public MicroDAQ.Gateways.ModbusMasterAgent ModbusMasterAgent { get; set; }
     }
 }

@@ -8,14 +8,17 @@ namespace MicroDAQ.Gateways
     {
         public IList<Common.Item> Items
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 用于数据采集的CycleTask对象（线程）
+        /// </summary>
+        public JonLibrary.Automatic.CycleTask SynchronizeCycle
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -31,13 +34,32 @@ namespace MicroDAQ.Gateways
         /// </summary>
         public void StartSynchronize()
         {
-            throw new System.NotImplementedException();
+            if (this.SynchronizeCycle != null)
+                this.SynchronizeCycle.Run(new System.Threading.ThreadStart(this.ReadWrite), System.Threading.ThreadPriority.BelowNormal);
         }
 
         /// <summary>
         /// 停止数据采集和同步
         /// </summary>
         public void StopSynchronize()
+        {
+            if (this.SynchronizeCycle != null)
+                this.SynchronizeCycle.Quit();
+        }
+
+        /// <summary>
+        /// 暂停数据采集和同步
+        /// </summary>
+        public void PauseSynchronize()
+        {
+            if (this.SynchronizeCycle != null)
+                this.SynchronizeCycle.Pause();
+        }
+
+        /// <summary>
+        /// 读取和写入数据
+        /// </summary>
+        public virtual void ReadWrite()
         {
             throw new System.NotImplementedException();
         }
