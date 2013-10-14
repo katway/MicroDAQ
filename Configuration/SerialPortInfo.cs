@@ -13,7 +13,7 @@ namespace MicroDAQ.Configuration
         public int baudRate;
         public string parity;
         public int databits;
-        public int stopbits;
+        public string stopbits;
         public string enable;
 
     }

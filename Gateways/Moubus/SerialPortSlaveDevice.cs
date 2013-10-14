@@ -10,7 +10,7 @@ namespace MicroDAQ.Gateways.Modbus
 {
     public class SerialPortSlaveDevice : IDataItemManage
     {
-        public IList<Item> Items { get; set; }
+        public IList<IItem> Items { get; set; }
         IModbusMaster SerialMaster;
         DataTable dtMeta;
         DataTable dtCommands;
@@ -34,7 +34,7 @@ namespace MicroDAQ.Gateways.Modbus
             dtCommands = commandsData;
             dtMeta = metaData;
             dtWriteData = writeData;
-            Items = new List<Item>();
+            Items = new List<IItem>();
             for (int i = 0; i < metaData.Rows.Count; i++)
             {
                 Items.Add(new Item());
@@ -180,7 +180,7 @@ namespace MicroDAQ.Gateways.Modbus
             Connection.Close();
             return i;
         }
-        
+
         public void StartSynchronize()
         {
             new JonLibrary.Automatic.CycleTask().Run(new System.Threading.ThreadStart(ReadWriteData), System.Threading.ThreadPriority.BelowNormal);

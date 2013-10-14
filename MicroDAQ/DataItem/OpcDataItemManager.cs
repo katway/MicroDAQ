@@ -14,9 +14,9 @@ namespace MicroDAQ.DataItem
     /// </summary>
     public class OpcDataItemManager : IDataItemManage
     {
-        public IList<Item> Items { get; set; }
+        public IList<IItem> Items { get; set; }
         public ConnectionState ConnectionState { get; set; }
-        public Dictionary<int, Item> ItemPair = null;
+        public Dictionary<int, IItem> ItemPair = null;
         /// <summary>
         /// 使用由指定的xx建立管理器
         /// </summary>
@@ -28,8 +28,8 @@ namespace MicroDAQ.DataItem
         {
             machine = new DataItem(this, name, dataHead, data);
             int count = (dataHead.Length < data.Length) ? (dataHead.Length) : (data.Length);
-            Items = new List<Item>();
-            ItemPair = new Dictionary<int, Item>();
+            Items = new List<IItem>();
+            ItemPair = new Dictionary<int, IItem>();
             for (int i = 0; i < count; i++)
                 Items.Add(new Item());
         }
@@ -104,7 +104,7 @@ namespace MicroDAQ.DataItem
 
 
         }
-        protected void UpdateItemPair(int key, Item item)
+        protected void UpdateItemPair(int key, IItem item)
         {
             if (!ItemPair.ContainsKey(key))
             { ItemPair.Add(key, item); }

@@ -36,7 +36,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Device.cs" />
     <Compile Include="IPSettingInfo.cs" />
     <Compile Include="ModbusGatewayInfo.cs" />
     <Compile Include="ModbusMasterInfo.cs" />

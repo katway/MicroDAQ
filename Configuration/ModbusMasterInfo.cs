@@ -14,7 +14,7 @@ namespace MicroDAQ.Configuration
         public string type;
         public string enable;
 
-        public System.Collections.Generic.List<ModbusSlaveInfo> modbusSlave;
+        public System.Collections.Generic.List<ModbusSlaveInfo> modbusSlaves;
 
 
         public SerialPortInfo serialPort;

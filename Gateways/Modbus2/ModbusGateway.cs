@@ -21,36 +21,9 @@ namespace MicroDAQ.Gateways.Modbus2
 
         }
 
-        public System.Collections.Generic.IList<ModbusMasterAgent> ModbusMasters
-        {
-            get;
-            set;
-        }
+
+        public System.Collections.Generic.IList<ModbusMasterAgent> ModbusMasters { get; set; }
 
 
-
-
-        /// <summary>
-        /// 暂停
-        /// </summary>
-        public override void Pause()
-        { }
-
-        /// <summary>
-        /// 继续
-        /// </summary>
-        public override void Continue()
-        { }
-
-        /// <summary>
-        /// 停止
-        /// </summary>
-        public override void Stop()
-        { }
-
-        public override void Dispose()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

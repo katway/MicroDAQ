@@ -9,7 +9,7 @@ using MicroDAQ.Common;
 using MicroDAQ.Configuration;
 namespace MicroDAQ.Gateways.Modbus2
 {
-    public class SerialPortSlave : MicroDAQ.Gateways.ItemManageBase, IDataItemManage
+    public class SerialPortSlaveAgent
     {
 
         /// <summary>
@@ -17,7 +17,7 @@ namespace MicroDAQ.Gateways.Modbus2
         /// </summary>
         /// <param name="masterAgent">所属Master对象</param>
         /// <param name="slaveInfo">配置信息</param>
-        public SerialPortSlave(ModbusMasterAgent masterAgent, ModbusSlaveInfo slaveInfo)
+        public SerialPortSlaveAgent(ModbusMasterAgent masterAgent, ModbusSlaveInfo slaveInfo)
         {
             ///上属Master相关
             this.ModbusMasterAgent = masterAgent;
@@ -116,30 +116,18 @@ namespace MicroDAQ.Gateways.Modbus2
                                      (ushort[])variable.OriginalValue);
             }
         }
-        public void ReadWriteData()
+        public void ReadWrite()
         {
             Read();
             Write();
         }
 
-        public void StartSynchronize()
-        {
-            new JonLibrary.Automatic.CycleTask().Run(new System.Threading.ThreadStart(ReadWriteData), System.Threading.ThreadPriority.BelowNormal);
-        }
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
 
-        public void StopSynchronize()
-        {
-            throw new System.NotImplementedException();
-        }
 
         public MicroDAQ.Configuration.ModbusSlaveInfo ModbusSlaveInfo { get; set; }
 
         public IList<MicroDAQ.Gateways.Modbus2.ModbusVariable> Variables { get; set; }
 
-        public MicroDAQ.Gateways.ModbusMasterAgent ModbusMasterAgent { get; set; }
+        public MicroDAQ.Gateways.Modbus2.ModbusMasterAgent ModbusMasterAgent { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace MicroDAQ.Gateways.Modbus
 {
     public class IPMasterManager : IDataItemManage
     {
-        public IList<Item> Items { get; set; }
+        public IList<IItem> Items { get; set; }
         ModbusIpMaster IpMaster;
         DataTable dtMeta;
         DataTable dtCommands;
@@ -26,7 +26,7 @@ namespace MicroDAQ.Gateways.Modbus
             slaveAddress = Convert.ToByte(slave);
             dtCommands = commandsData;
             dtMeta = metaData;
-            Items = new List<Item>();
+            Items = new List<IItem>();
             for (int i = 0; i < metaData.Rows.Count; i++)
             {
                 Items.Add(new Item());

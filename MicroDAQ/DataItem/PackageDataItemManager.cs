@@ -14,7 +14,7 @@ namespace MicroDAQ.DataItem
     public class PackageDataItemManager : IDataItemManage
     {
 
-        public IList<Item> Items { get; set; }
+        public IList<IItem> Items { get; set; }
         public ConnectionState ConnectionState { get; set; }
         IModbusOperate Imodbus;
         private SerialPort serialPort;
@@ -32,7 +32,7 @@ namespace MicroDAQ.DataItem
             type = ModbusType;
             ConnectionState = ConnectionState.Closed;
             #region 添加属性item
-            Items = new List<Item>();
+            Items = new List<IItem>();
             for (int i = 0; i < dic.Count; i++)
             {
                 Items.Add(new Item());

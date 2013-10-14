@@ -7,9 +7,8 @@ namespace MicroDAQ.Common
 {
     public interface IDataItemManage : IDisposable
     {
-        IList<Item> Items { get; set; }
+        IList<IItem> Items { get; set; }
         void StartSynchronize();
         void StopSynchronize();
     }
-
 }

@@ -11,8 +11,8 @@ namespace MicroDAQ
 {
     class FlowAlertManager : IDataItemManage
     {
-        public IList<Item> Items { get; set; }
-        public Dictionary<int, Item> ItemPair = null;
+        public IList<IItem> Items { get; set; }
+        public Dictionary<int, IItem> ItemPair = null;
         //public FlowAlertManager(string name, string[] dataHead, string[] data)
         //    : base(name, dataHead, data)
         //{ }
@@ -27,8 +27,8 @@ namespace MicroDAQ
             //ItemCtrl = dataHead;
             //ItemStatus = data;
             int count = (dataHead.Length < data.Length) ? (dataHead.Length) : (data.Length);
-            Items = new List<Item>();
-            ItemPair = new Dictionary<int, Item>();
+            Items = new List<IItem>();
+            ItemPair = new Dictionary<int, IItem>();
             for (int i = 0; i < count; i++)
                 Items.Add(new Item());
         }
@@ -39,7 +39,7 @@ namespace MicroDAQ
 
 
 
-        protected void UpdateItemPair(int key, Item item)
+        protected void UpdateItemPair(int key, IItem item)
         {
             if (!ItemPair.ContainsKey(key))
             { ItemPair.Add(key, item); }

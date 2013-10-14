@@ -85,11 +85,7 @@ namespace MicroDAQ.Gateways.Modbus2
         /// <summary>
         /// 变量配置信息
         /// </summary>
-        public MicroDAQ.Configuration.ModbusVariableInfo VariableInfo
-        {
-            get;
-            set;
-        }
+        public MicroDAQ.Configuration.ModbusVariableInfo VariableInfo { get; set; }
 
     }
 }

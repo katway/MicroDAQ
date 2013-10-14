@@ -4,9 +4,9 @@ using System.Text;
 
 namespace MicroDAQ.Gateways
 {
-    public class ItemManageBase : MicroDAQ.Common.IDataItemManage
+    public abstract class ItemManageBase : MicroDAQ.Common.IDataItemManage
     {
-        public IList<Common.Item> Items
+        public IList<Common.IItem> Items
         {
             get;
             set;
@@ -59,9 +59,6 @@ namespace MicroDAQ.Gateways
         /// <summary>
         /// 读取和写入数据
         /// </summary>
-        public virtual void ReadWrite()
-        {
-            throw new System.NotImplementedException();
-        }
+        public abstract void ReadWrite();
     }
 }
