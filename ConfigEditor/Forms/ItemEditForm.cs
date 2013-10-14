@@ -370,12 +370,14 @@ namespace ConfigEditor.Forms
                         this.cmbPrecision.Enabled = false;
                         this.txtMaximum.Enabled = true;
                         this.txtMinimum.Enabled = true;
+                        this.cmbPrecision.Text = null;
                         break;
 
                     case "实型":
                         this.cmbPrecision.Enabled = true;
                         this.txtMaximum.Enabled = true;
                         this.txtMinimum.Enabled = true;
+                        this.cmbPrecision.Text = "2";
                         break;
 
                     case "离散型":
@@ -383,6 +385,7 @@ namespace ConfigEditor.Forms
                         this.cmbPrecision.Enabled = false;
                         this.txtMaximum.Enabled = false;
                         this.txtMinimum.Enabled = false;
+                        this.cmbPrecision.Text = null;
                         break;
                 }
             }

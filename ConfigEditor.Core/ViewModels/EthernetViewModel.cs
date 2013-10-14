@@ -28,6 +28,7 @@ namespace ConfigEditor.Core.ViewModels
             Type = ChannelTypes.Ethernet;
             Protocol = ModbusProtocols.ModbusTCP;
             Devices = new List<DeviceViewModel>();
+            IsEnable = true;
         }
     }
 }

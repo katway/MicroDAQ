@@ -68,12 +68,14 @@ namespace ConfigEditor
         {
             try
             {
+                int tick = Environment.TickCount;
+
                 this.LoadProject();
                 this.naviTreeView.Nodes[1].Tag = this._project.Ethernet;
                 this.naviTreeView.ExpandAll();
 
                 //关闭启动画面
-                Thread.Sleep(3000);
+                Thread.Sleep((Environment.TickCount - tick >= 3000) ? 1 : 3000 - (Environment.TickCount - tick));
                 this.Show();
                 SplashScreen.CloseSplashScreen();
                 this.Activate();
@@ -327,6 +329,7 @@ namespace ConfigEditor
                 return;
             }
 
+            this.itemListView.Items.Clear();
             foreach (ItemViewModel model in device.Items)
             {
                 string[] items = new string[] 
@@ -527,6 +530,7 @@ namespace ConfigEditor
                             SerialPortService service = new SerialPortService();
                             service.EditSerialPort(model);
 
+                            node.Text = model.PortName;
                             node.ImageKey = model.IsEnable ? "port.png" : "disable_port.png";
                             node.SelectedImageKey = model.IsEnable ? "port.png" : "disable_port.png";
                         }
@@ -544,11 +548,17 @@ namespace ConfigEditor
                             DeviceService service = new DeviceService();
                             service.EditDevice(model);
 
+                            node.Text = model.Name;
                             node.ImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
                             node.SelectedImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
                         }
                     }
 
+                }
+                else
+                {
+                    MessageBox.Show("请选择编辑的串口、设备或变量。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
             }
             catch (Exception ex)
@@ -639,6 +649,11 @@ namespace ConfigEditor
 
                     this.itemListView.Items.Clear();
                     node.Parent.Nodes.Remove(node);
+                }
+                else
+                {
+                    MessageBox.Show("请选择删除的串口、设备或变量。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
             }
             catch (Exception ex)
@@ -817,14 +832,14 @@ namespace ConfigEditor
                     else
                     {
                         this.tsbAddSerialPort.Enabled = false;
-                        this.tsbAddDevice.Enabled = true;
+                        this.tsbAddDevice.Enabled = false;
                         this.tsbAddItem.Enabled = true;
                         this.tsbBatchAddItem.Enabled = true;
                         this.tsbEdit.Enabled = true;
                         this.tsbDelete.Enabled = true;
 
                         this.tsmiAddSerialPort.Enabled = false;
-                        this.tsmiAddDevice.Enabled = true;
+                        this.tsmiAddDevice.Enabled = false;
                         this.tsmiAddItem.Enabled = true;
                         this.tsmiBatchAddItem.Enabled = true;
                         this.tsmiEdit.Enabled = true;

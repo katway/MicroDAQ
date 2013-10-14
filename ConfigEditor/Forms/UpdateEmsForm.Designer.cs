@@ -43,10 +43,10 @@
             this.txtServer = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.txtLog = new System.Windows.Forms.TextBox();
             this.txtUpdateTime = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.btnTest = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -203,16 +203,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "更新结果";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label5.Location = new System.Drawing.Point(13, 365);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(281, 12);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "注：待更新的变量，识别码不重复，并且状态为启用";
-            // 
             // txtLog
             // 
             this.txtLog.Location = new System.Drawing.Point(27, 51);
@@ -238,6 +228,16 @@
             this.label4.Size = new System.Drawing.Size(89, 12);
             this.label4.TabIndex = 0;
             this.label4.Text = "最后更新时间：";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.label5.Location = new System.Drawing.Point(13, 365);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(353, 12);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "注：待更新的变量，识别码不为空，不允许重复，并且状态为启用";
             // 
             // btnTest
             // 

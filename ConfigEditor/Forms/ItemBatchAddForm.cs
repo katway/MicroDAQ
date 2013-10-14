@@ -152,6 +152,8 @@ namespace ConfigEditor.Forms
                     return;
                 }
 
+                this._models.Clear();
+
                 StringBuilder sb = new StringBuilder();
                 int count = Convert.ToInt32(this.nupdItemCount.Value);
                 int address = Convert.ToInt32(this.txtAddress.Text.Replace("0x", string.Empty), 16);

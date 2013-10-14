@@ -55,7 +55,7 @@ namespace ConfigEditor.Core.ViewModels
         //刷新周期
         private int _scanPeriod;
 
-        //小数精度
+        //小数位数
         private int? _precision;
 
         //最大值
@@ -231,12 +231,12 @@ namespace ConfigEditor.Core.ViewModels
         }
 
         /// <summary>
-        /// 小数精度
+        /// 小数位数
         /// </summary>
         [Browsable(true)]
         [Category("高级")]
-        [DisplayName("小数精度")]
-        [Description("小数精度")]
+        [DisplayName("小数位数")]
+        [Description("小数位数")]
         [ReadOnly(true)]
         public int? Precision
         {

@@ -86,6 +86,9 @@
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\ProjectViewModel.cs" />
     <Compile Include="ViewModels\SerialPortViewModel.cs" />
+    <Compile Include="Xml\XmlSerializeHelper.cs" />
+    <Compile Include="Xml\XmlItem.cs" />
+    <Compile Include="Xml\XmlDevice.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
