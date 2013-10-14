@@ -330,11 +330,11 @@ namespace ConfigEditor.Forms
             //写入应用程序配置文件
             DateTime now = DateTime.Now;
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings["LAST_UPDATE_TIME"].Value = now.ToString("yyyy-MM-dd hh:mm:ss");
+            config.AppSettings.Settings["LAST_UPDATE_TIME"].Value = now.ToString("yyyy-MM-dd HH:mm:ss");
             config.Save(ConfigurationSaveMode.Full);
             ConfigurationManager.RefreshSection("appSettings");
 
-            this.txtUpdateTime.Text = now.ToString("yyyy-MM-dd hh:mm:ss");
+            this.txtUpdateTime.Text = now.ToString("yyyy-MM-dd HH:mm:ss");
             this.txtLog.AppendText(string.Format("项目的变量总数：{0} 个；" + Environment.NewLine, allCount));
             this.txtLog.AppendText(string.Format("更新的变量个数：{0} 个；" + Environment.NewLine, insertCount));
             this.txtLog.AppendText("更新完成。");
