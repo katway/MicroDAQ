@@ -113,7 +113,7 @@ namespace ConfigEditor.Forms
                     this.cmbBaudRate.Text = this._model.BaudRate.ToString();
                     this.cmbDataBits.Text = this._model.DataBits.ToString();
                     this.cmbParity.Text = this._model.Parity;
-                    this.cmbStopBits.Text = this._model.StopBits;
+                    this.cmbStopBits.Text = (this._model.StopBits == "3" ) ? "1.5" : this._model.StopBits;
                     this.chkIsEnable.Checked = this._model.IsEnable;
 
                     if (this._model.Protocol == ModbusProtocols.ModbusRTU)

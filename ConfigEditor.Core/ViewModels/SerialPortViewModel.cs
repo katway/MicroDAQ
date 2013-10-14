@@ -41,8 +41,6 @@ namespace ConfigEditor.Core.ViewModels
         //停止位
         private string _stopBits;
 
-        //是否启用
-        private bool _isEnable;
 
         /// <summary>
         /// 唯一标识
@@ -98,19 +96,11 @@ namespace ConfigEditor.Core.ViewModels
             set { _stopBits = value; }
         }
 
-        /// <summary>
-        /// 是否启用
-        /// </summary>
-        public bool IsEnable
-        {
-            get { return _isEnable; }
-            set { _isEnable = value; }
-        }
-
         public SerialPortViewModel()
         {
             Type = ChannelTypes.SerialPort;
             Devices = new List<DeviceViewModel>();
+            IsEnable = true;
         }
 
     }

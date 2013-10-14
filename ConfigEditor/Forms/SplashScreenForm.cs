@@ -41,10 +41,6 @@ namespace ConfigEditor.Forms
         {
             InitializeComponent();
             this.lblShowTip.Parent = this.pictureBox1;
-            this.lblShowTip.BackColor = Color.Transparent;
-            lblShowTip.ForeColor = Color.Green;
-
-            prgLoad.Show();
         }
 
         /// <summary>

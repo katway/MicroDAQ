@@ -123,6 +123,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\EditHelper.cs" />
     <Content Include="logo.ico" />
+    <None Include="Resources\disable_port.png" />
+    <None Include="Resources\disable_tag.png" />
     <None Include="Resources\new_port_16.png" />
     <None Include="Resources\delete_16.png" />
     <None Include="Resources\network_ethernet_16.png" />

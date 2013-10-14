@@ -145,6 +145,16 @@ namespace ConfigEditor.Forms
                     connection.Open();
                 }
 
+                //写入应用程序配置文件
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+                ConnectionStringSettings css = new ConnectionStringSettings(DefaultConnection, connectionString, "System.Data.SqlClient");
+                config.ConnectionStrings.ConnectionStrings.Clear();
+                config.ConnectionStrings.ConnectionStrings.Add(css);
+
+                config.Save(ConfigurationSaveMode.Full);
+                ConfigurationManager.RefreshSection("connectionStrings");
+
                 MessageBox.Show("测试数据库连接成功。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
@@ -288,7 +298,7 @@ namespace ConfigEditor.Forms
             foreach (DeviceViewModel device in project.AllDevices)
             {
                 allCount += device.Items.Count;
-                if (!device.IsEnable)
+                if (!device.Channel.IsEnable || !device.IsEnable)
                 {
                     continue;
                 }

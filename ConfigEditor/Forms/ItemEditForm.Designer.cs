@@ -169,7 +169,7 @@
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(65, 12);
             this.label15.TabIndex = 12;
-            this.label15.Text = "小数精度：";
+            this.label15.Text = "小数位数：";
             // 
             // label14
             // 

@@ -68,12 +68,14 @@ namespace ConfigEditor
         {
             try
             {
+                int tick = Environment.TickCount;
+
                 this.LoadProject();
                 this.naviTreeView.Nodes[1].Tag = this._project.Ethernet;
                 this.naviTreeView.ExpandAll();
 
                 //关闭启动画面
-                Thread.Sleep(3000);
+                Thread.Sleep((Environment.TickCount - tick >= 3000) ? 1 : 3000 - (Environment.TickCount - tick));
                 this.Show();
                 SplashScreen.CloseSplashScreen();
                 this.Activate();
@@ -100,8 +102,8 @@ namespace ConfigEditor
             {
                 TreeNode spNode = new TreeNode(spvm.PortName);
                 spNode.Tag = spvm;
-                spNode.ImageKey = "port.png";
-                spNode.SelectedImageKey = "port.png";
+                spNode.ImageKey = spvm.IsEnable ? "port.png" : "disable_port.png";
+                spNode.SelectedImageKey = spvm.IsEnable ? "port.png" : "disable_port.png";
 
                 this.naviTreeView.Nodes[0].Nodes.Add(spNode);
 
@@ -109,17 +111,8 @@ namespace ConfigEditor
                 {
                     TreeNode deviceNode = new TreeNode(dvm.Name);
                     deviceNode.Tag = dvm;
-
-                    if (dvm.IsEnable)
-                    {
-                        deviceNode.ImageKey = "device.bmp";
-                        deviceNode.SelectedImageKey = "device.bmp";
-                    }
-                    else
-                    {
-                        deviceNode.ImageKey = "disable_device.bmp";
-                        deviceNode.SelectedImageKey = "disable_device.bmp";
-                    }
+                    deviceNode.ImageKey = dvm.IsEnable ? "device.bmp" : "disable_device.bmp";
+                    deviceNode.SelectedImageKey = dvm.IsEnable ? "device.bmp" : "disable_device.bmp";
 
                     spNode.Nodes.Add(deviceNode);
                 }
@@ -129,17 +122,8 @@ namespace ConfigEditor
             {
                 TreeNode deviceNode = new TreeNode(dvm.Name);
                 deviceNode.Tag = dvm;
-
-                if (dvm.IsEnable)
-                {
-                    deviceNode.ImageKey = "device.bmp";
-                    deviceNode.SelectedImageKey = "device.bmp";
-                }
-                else
-                {
-                    deviceNode.ImageKey = "disable_device.bmp";
-                    deviceNode.SelectedImageKey = "disable_device.bmp";
-                }
+                deviceNode.ImageKey = dvm.IsEnable ? "device.bmp" : "disable_device.bmp";
+                deviceNode.SelectedImageKey = dvm.IsEnable ? "device.bmp" : "disable_device.bmp";
 
                 this.naviTreeView.Nodes[1].Nodes.Add(deviceNode);
             }
@@ -175,8 +159,8 @@ namespace ConfigEditor
                     
                     TreeNode node = new TreeNode(model.PortName);
                     node.Tag = model;
-                    node.ImageKey = "port.png";
-                    node.SelectedImageKey = "port.png";
+                    node.ImageKey = model.IsEnable ? "port.png" : "disable_port.png";
+                    node.SelectedImageKey = model.IsEnable ? "port.png" : "disable_port.png";
 
                     this._project.SerialPorts.Add(model);
                     this.naviTreeView.Nodes[0].Nodes.Add(node);
@@ -217,17 +201,8 @@ namespace ConfigEditor
 
                     TreeNode node = new TreeNode(model.Name);
                     node.Tag = model;
-
-                    if (model.IsEnable)
-                    {
-                        node.ImageKey = "device.bmp";
-                        node.SelectedImageKey = "device.bmp";
-                    }
-                    else
-                    {
-                        node.ImageKey = "disable_device.bmp";
-                        node.SelectedImageKey = "disable_device.bmp";
-                    }
+                    node.ImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
+                    node.SelectedImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
 
                     //以太网通道设备
                     if (parentNode.Level == 0)
@@ -300,7 +275,7 @@ namespace ConfigEditor
                     };
 
                     ListViewItem lvi = new ListViewItem(items);
-                    lvi.ImageKey = "tag.bmp";
+                    lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
                     lvi.Tag = model;
 
                     this.itemListView.Items.Add(lvi);
@@ -336,7 +311,7 @@ namespace ConfigEditor
             };
 
             ListViewItem lvi = new ListViewItem(items);
-            lvi.ImageKey = "tag.bmp";
+            lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
             lvi.Tag = model;
 
             this.itemListView.Items.Add(lvi);
@@ -354,6 +329,7 @@ namespace ConfigEditor
                 return;
             }
 
+            this.itemListView.Items.Clear();
             foreach (ItemViewModel model in device.Items)
             {
                 string[] items = new string[] 
@@ -369,7 +345,7 @@ namespace ConfigEditor
                 };
 
                 ListViewItem lvi = new ListViewItem(items);
-                lvi.ImageKey = "tag.bmp";
+                lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
                 lvi.Tag = model;
 
                 this.itemListView.Items.Add(lvi);
@@ -447,6 +423,7 @@ namespace ConfigEditor
                         service.EditItem(model);
                     }
 
+                    firstLvi.ImageKey = (firstLvi.Tag as ItemViewModel).IsEnable ? "tag.bmp" : "disable_tag.png";
                     this.itemPropertyGrid.SelectedObject = firstLvi.Tag as ItemViewModel;
 
                 }
@@ -468,6 +445,9 @@ namespace ConfigEditor
 
                         SerialPortService service = new SerialPortService();
                         service.EditSerialPort(model);
+
+                        node.ImageKey = model.IsEnable ? "port.png" : "disable_port.png";
+                        node.SelectedImageKey = model.IsEnable ? "port.png" : "disable_port.png";
                     }
                     //设备节点
                     else if (tag.GetType() == typeof(DeviceViewModel))
@@ -478,16 +458,8 @@ namespace ConfigEditor
                         DeviceService service = new DeviceService();
                         service.EditDevice(model);
 
-                        if (model.IsEnable)
-                        {
-                            node.ImageKey = "device.bmp";
-                            node.SelectedImageKey = "device.bmp";
-                        }
-                        else
-                        {
-                            node.ImageKey = "disable_device.bmp";
-                            node.SelectedImageKey = "disable_device.bmp";
-                        }
+                        node.ImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
+                        node.SelectedImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
                     }
 
                 }
@@ -532,6 +504,7 @@ namespace ConfigEditor
                         lvi.SubItems[6].Text = model.Length.ToString();
                         lvi.SubItems[7].Text = model.ScanPeriod.ToString();
 
+                        lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
                         this.itemPropertyGrid.SelectedObject = model;
                     }
                 }
@@ -556,6 +529,10 @@ namespace ConfigEditor
                         {
                             SerialPortService service = new SerialPortService();
                             service.EditSerialPort(model);
+
+                            node.Text = model.PortName;
+                            node.ImageKey = model.IsEnable ? "port.png" : "disable_port.png";
+                            node.SelectedImageKey = model.IsEnable ? "port.png" : "disable_port.png";
                         }
                     }
                     //设备节点
@@ -570,9 +547,18 @@ namespace ConfigEditor
                         {
                             DeviceService service = new DeviceService();
                             service.EditDevice(model);
+
+                            node.Text = model.Name;
+                            node.ImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
+                            node.SelectedImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
                         }
                     }
 
+                }
+                else
+                {
+                    MessageBox.Show("请选择编辑的串口、设备或变量。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
             }
             catch (Exception ex)
@@ -633,7 +619,7 @@ namespace ConfigEditor
                         SerialPortViewModel model = node.Tag as SerialPortViewModel;
 
                         SerialPortService service = new SerialPortService();
-                        service.DeleteSerialPort(model.Id);
+                        service.DeleteSerialPort(model);
 
                         this._project.SerialPorts.Remove(model);
                     }
@@ -648,7 +634,7 @@ namespace ConfigEditor
                         DeviceViewModel model = node.Tag as DeviceViewModel;
 
                         DeviceService service = new DeviceService();
-                        service.DeleteDevice(model.Id);
+                        service.DeleteDevice(model);
                         
                         if (node.Level == 1)
                         {
@@ -663,6 +649,11 @@ namespace ConfigEditor
 
                     this.itemListView.Items.Clear();
                     node.Parent.Nodes.Remove(node);
+                }
+                else
+                {
+                    MessageBox.Show("请选择删除的串口、设备或变量。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
             }
             catch (Exception ex)
@@ -841,14 +832,14 @@ namespace ConfigEditor
                     else
                     {
                         this.tsbAddSerialPort.Enabled = false;
-                        this.tsbAddDevice.Enabled = true;
+                        this.tsbAddDevice.Enabled = false;
                         this.tsbAddItem.Enabled = true;
                         this.tsbBatchAddItem.Enabled = true;
                         this.tsbEdit.Enabled = true;
                         this.tsbDelete.Enabled = true;
 
                         this.tsmiAddSerialPort.Enabled = false;
-                        this.tsmiAddDevice.Enabled = true;
+                        this.tsmiAddDevice.Enabled = false;
                         this.tsmiAddItem.Enabled = true;
                         this.tsmiBatchAddItem.Enabled = true;
                         this.tsmiEdit.Enabled = true;

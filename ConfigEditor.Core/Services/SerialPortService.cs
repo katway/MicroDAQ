@@ -97,6 +97,33 @@ namespace ConfigEditor.Core.Services
         /// 删除串口
         /// </summary>
         /// <param name="id"></param>
+        public void DeleteSerialPort(SerialPortViewModel model)
+        {
+            if (model == null || model.Id == 0)
+            {
+                throw new ArgumentNullException("输入的参数为空。");
+            }
+
+            //删除设备和变量
+            DeviceService service = new DeviceService();
+            foreach (var device in model.Devices)
+            {
+                service.DeleteDevice(device);
+            }
+
+            //删除主机
+            ModbusMasterDao mmDao = new ModbusMasterDao();
+            ModbusMaster mm = mmDao.GetBySerialPortID(model.Id);
+            mmDao.Delete((int)mm.SerialID);
+
+            SerialPortDao dao = new SerialPortDao();
+            dao.Delete(model.Id);
+        }
+
+        /// <summary>
+        /// 删除串口
+        /// </summary>
+        /// <param name="id"></param>
         public void DeleteSerialPort(int id)
         {
             if (id == 0)
@@ -106,9 +133,13 @@ namespace ConfigEditor.Core.Services
 
             //Todo:删除设备和变量
 
+            //删除主机
+            ModbusMasterDao mmDao = new ModbusMasterDao();
+            ModbusMaster mm = mmDao.GetBySerialPortID(id);
+            mmDao.Delete((int)mm.SerialID);
+
             SerialPortDao dao = new SerialPortDao();
             dao.Delete(id);
-
         }
     }
 }

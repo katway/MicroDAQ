@@ -349,6 +349,8 @@
             this.commonImageList.Images.SetKeyName(17, "view.png");
             this.commonImageList.Images.SetKeyName(18, "ethernet.png");
             this.commonImageList.Images.SetKeyName(19, "port.png");
+            this.commonImageList.Images.SetKeyName(20, "disable_port.png");
+            this.commonImageList.Images.SetKeyName(21, "disable_tag.png");
             // 
             // splitContainer2
             // 
@@ -396,7 +398,7 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "名称";
-            this.columnHeader1.Width = 150;
+            this.columnHeader1.Width = 140;
             // 
             // columnHeader2
             // 
@@ -405,7 +407,6 @@
             // columnHeader3
             // 
             this.columnHeader3.Text = "识别码";
-            this.columnHeader3.Width = 50;
             // 
             // columnHeader4
             // 
