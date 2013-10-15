@@ -135,7 +135,7 @@ namespace ConfigEditor
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
+         {
 
         }
 
@@ -765,6 +765,7 @@ namespace ConfigEditor
             try
             {
                 this.itemListView.Items.Clear();
+                
 
                 TreeNode node = e.Node;
                 object tag = node.Tag;
@@ -828,6 +829,11 @@ namespace ConfigEditor
                         this.tsmiEdit.Enabled = true;
                         this.tsmiDelete.Enabled = true;
                         this.tsmiEnable.Enabled = true;
+
+                        this.itemPropertyGrid.SelectedObject = null;
+                        DeviceViewModel device = node.Tag as DeviceViewModel;
+                        this.RefreshItemListView(device);
+                        return;
                     }
                     else
                     {
@@ -846,10 +852,13 @@ namespace ConfigEditor
                         this.tsmiDelete.Enabled = true;
                         this.tsmiEnable.Enabled = true;
 
+                        this.itemPropertyGrid.SelectedObject = null;
                         DeviceViewModel device = node.Tag as DeviceViewModel;
                         this.RefreshItemListView(device);
                         return;
+                   
                     }
+                   
                 }
                 else
                 {
@@ -869,12 +878,13 @@ namespace ConfigEditor
                     this.tsmiDelete.Enabled = true;
                     this.tsmiEnable.Enabled = true;
 
+                    this.itemPropertyGrid.SelectedObject = null;
                     DeviceViewModel device = node.Tag as DeviceViewModel;
                     this.RefreshItemListView(device);
                     return;
                 }
 
-                this.itemListView.Items.Clear();
+                this.itemListView.Items.Clear(); 
                 this.itemPropertyGrid.SelectedObject = null;
             }
             catch (Exception ex)
