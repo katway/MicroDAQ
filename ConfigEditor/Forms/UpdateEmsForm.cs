@@ -43,7 +43,7 @@ namespace ConfigEditor.Forms
         private const string SQL_GET_DATABASES = "select name from master..sysdatabases";
 
         //更新变量脚本
-        private const string SQL_INSERT_ITEMS_FORMAT = @"IF NOT EXISTS(SELECT * FROM ProcessItem WHERE slave = '{3}') INSERT INTO ProcessItem (id, name, code, slave, type, updateRate) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}');";
+        private const string SQL_INSERT_ITEMS_FORMAT = @"IF NOT EXISTS(SELECT * FROM ProcessItem WHERE slave = '{3}') INSERT INTO ProcessItem (id, name, code, slave, type, updateRate, createTime) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}',GETDATE());";
         private const string SQL_SELECT_ITEM_FORMAT = @"SELECT COUNT(*) FROM ProcessItem WHERE slave = '{0}'";
 
         //连接名称
