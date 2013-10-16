@@ -144,7 +144,7 @@ namespace ConfigEditor.Forms
             {
                 if (!Regex.IsMatch(this.cmbPortName.Text, @"^COM[0-9]+$"))
                 {
-                    MessageBox.Show("串口号格式不正确,正确格式为：“COM+数字”", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("串口号格式不正确,正确格式如：COM1", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 

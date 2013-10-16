@@ -170,7 +170,7 @@ namespace ConfigEditor.Forms
                 return false;
             }
 
-            if (!Regex.IsMatch(this.txtLength.Text, @"^[0-9]+$") && Convert.ToInt32(this.txtLength.Text) > 0)
+            if (!Regex.IsMatch(this.txtLength.Text, @"^[0-9]+$"))
             {
                 MessageBox.Show("寄存器长度必须为正整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
@@ -182,6 +182,17 @@ namespace ConfigEditor.Forms
                 return false;
             }
 
+            if (!Regex.IsMatch(this.txtMaximum.Text, @"^[0-9]+$"))
+            {
+                MessageBox.Show("最大有效值必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
+
+            if (!Regex.IsMatch(this.txtMinimum.Text, @"^[0-9]+$"))
+            {
+                MessageBox.Show("最小有效值必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
             return true;
         }
 
