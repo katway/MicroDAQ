@@ -52,19 +52,37 @@ namespace MicroDAQ.Gateways.Modbus2
             { return value; }
             set
             {
+                ushort[] shorts;
+                byte[] bytes;
                 this.value = value;
                 throw new NotImplementedException("还没写如何转为ushort数组哇");
                 switch (this.VariableInfo.dataType.ToLower())
                 {
                     case "ushort":
-                    case "short":
+                    case "short":  
+                        shorts = new ushort[1] { Convert.ToUInt16(value)};
                         break;
                     case "uint":
                     case "int":
+                        shorts = new ushort[2];
+                        bytes = BitConverter.GetBytes(Convert.ToUInt32(value));
+                        shorts[0]= BitConverter.ToUInt16(bytes, 0);
+                        shorts[1] = BitConverter.ToUInt16(bytes, 2);
                         break;
                     case "float":
+                        shorts = new ushort[2];
+                        bytes = BitConverter.GetBytes(Convert.ToSingle(value));
+                        shorts[0]= BitConverter.ToUInt16(bytes, 0);
+                        shorts[1] = BitConverter.ToUInt16(bytes, 2);
+
                         break;
                     case "double":
+                        shorts = new ushort[4];
+                        bytes = BitConverter.GetBytes(Convert.ToDouble(value));
+                        shorts[0]= BitConverter.ToUInt16(bytes, 0);
+                        shorts[1] = BitConverter.ToUInt16(bytes, 2);
+                        shorts[2]= BitConverter.ToUInt16(bytes, 4);
+                        shorts[3] = BitConverter.ToUInt16(bytes, 6);
                         break;
                     default:
                         break;
