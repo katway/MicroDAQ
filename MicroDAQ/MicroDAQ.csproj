@@ -85,6 +85,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>Dynamic\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -98,9 +101,11 @@
       <DependentUpon>AlarmControl.cs</DependentUpon>
     </Compile>
     <Compile Include="AlertCode.cs" />
+    <Compile Include="Specifical\ConfigLoader.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Database\DatabaseManage.cs" />
     <Compile Include="DataItem\PackageDataItemManager.cs" />
+    <Compile Include="DBUtility\SQLiteHelper.cs" />
     <Compile Include="FlowAlertManager.cs" />
     <Compile Include="DataItem\OpcDataItemManager.cs" />
     <Compile Include="DataDisplayForm.cs">
