@@ -169,6 +169,9 @@ namespace ConfigEditor
                     {
                         this.naviTreeView.Nodes[0].Expand();
                     }
+
+                    MessageBox.Show("添加串口成功。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                  
                 }
             }
             catch (Exception ex)
@@ -611,7 +614,7 @@ namespace ConfigEditor
                     //串口节点
                     if (tag.GetType() == typeof(SerialPortViewModel))
                     {
-                        if (MessageBox.Show("确定删除串口吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        if (MessageBox.Show("确定删除串口及其串口下的全部设备及变量吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                         {
                             return;
                         }
@@ -626,7 +629,7 @@ namespace ConfigEditor
                     //设备节点
                     else if (tag.GetType() == typeof(DeviceViewModel))
                     {
-                        if (MessageBox.Show("确定删除设备吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        if (MessageBox.Show("确定删除设备及其设备下的全部变量吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                         {
                             return;
                         }

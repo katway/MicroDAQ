@@ -66,6 +66,11 @@ namespace ConfigEditor.Forms
                 }
 
                 this.txtItemNum.Text = count.ToString();
+
+                this.ProjectLocation.Enabled = false;
+                this.txtSerialNum.Enabled = false;
+                this.txtDeviceNum.Enabled = false;
+                this.txtItemNum.Enabled = false;
             }
             catch
             {

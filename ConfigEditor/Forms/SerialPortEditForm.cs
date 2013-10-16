@@ -180,6 +180,7 @@ namespace ConfigEditor.Forms
                     {
                         this._model.Protocol = ModbusProtocols.ModbusASCII;
                     }
+
                 }
                 else
                 {
@@ -201,6 +202,7 @@ namespace ConfigEditor.Forms
                 }
 
                 this.DialogResult = DialogResult.OK;
+              
             }
             catch (Exception ex)
             {

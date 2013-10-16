@@ -302,7 +302,7 @@
             // 
             // txtMinimum
             // 
-            this.txtMinimum.Location = new System.Drawing.Point(339, 232);
+            this.txtMinimum.Location = new System.Drawing.Point(101, 233);
             this.txtMinimum.Name = "txtMinimum";
             this.txtMinimum.Size = new System.Drawing.Size(128, 21);
             this.txtMinimum.TabIndex = 21;
@@ -310,7 +310,7 @@
             // 
             // txtMaximum
             // 
-            this.txtMaximum.Location = new System.Drawing.Point(101, 232);
+            this.txtMaximum.Location = new System.Drawing.Point(339, 236);
             this.txtMaximum.Name = "txtMaximum";
             this.txtMaximum.Size = new System.Drawing.Size(128, 21);
             this.txtMaximum.TabIndex = 19;

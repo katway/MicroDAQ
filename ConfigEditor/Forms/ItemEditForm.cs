@@ -146,6 +146,12 @@ namespace ConfigEditor.Forms
                 return false;
             }
 
+            if (string.IsNullOrEmpty(this.txtCode.Text))
+            {
+                MessageBox.Show("识别码不能为空。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
+
             if (!string.IsNullOrEmpty(this.txtCode.Text) && !Regex.IsMatch(this.txtCode.Text, @"^[0-9]+$"))
             {
                 MessageBox.Show("识别码必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -182,13 +188,13 @@ namespace ConfigEditor.Forms
                 return false;
             }
 
-            if (!Regex.IsMatch(this.txtMaximum.Text, @"^[0-9]+$"))
+            if (!string.IsNullOrEmpty(this.txtMaximum.Text) && !Regex.IsMatch(this.txtMaximum.Text, @"^[0-9]+$"))
             {
                 MessageBox.Show("最大有效值必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
             }
 
-            if (!Regex.IsMatch(this.txtMinimum.Text, @"^[0-9]+$"))
+            if (!string.IsNullOrEmpty(this.txtMinimum.Text) && !Regex.IsMatch(this.txtMinimum.Text, @"^[0-9]+$"))
             {
                 MessageBox.Show("最小有效值必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
