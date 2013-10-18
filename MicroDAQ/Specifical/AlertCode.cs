@@ -6,11 +6,11 @@ namespace MicroDAQ.Specifical
 {
     public enum AlertCode : byte
     {
-        
-        Red =1,
+
+        Green = 1,
         Yellow = 2,
-        Green = 4,
+        Red = 4,
         Buzz = 8,
-        BuzzRed = 9
+        BuzzRed = 12
 }
 }
