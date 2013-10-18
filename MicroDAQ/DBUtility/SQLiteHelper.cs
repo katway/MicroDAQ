@@ -204,7 +204,7 @@ namespace MicroDAQ.DBUtility
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public DataTable ExecuteQuery(string sql)
+        public DataSet ExecuteQuery(string sql)
         {
             DataSet ds = new DataSet();
 
@@ -231,7 +231,7 @@ namespace MicroDAQ.DBUtility
                 }
             }
 
-            return ds.Tables[0];
+            return ds;
         }
     }
 }

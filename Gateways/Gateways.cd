@@ -3,7 +3,7 @@
   <Class Name="MicroDAQ.Gateways.Modbus2.ModbusGateway">
     <Position X="0.5" Y="3" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAgCIAAACAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Modbus2\ModbusGateway.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -34,7 +34,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MicroDAQ.Gateways.Modbus2.SerialPortSlaveAgent">
-    <Position X="8.25" Y="4.25" Width="2.25" />
+    <Position X="8.25" Y="4.75" Width="2.25" />
     <AssociationLine Name="Variables" Type="MicroDAQ.Gateways.Modbus2.ModbusVariable">
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
         <Position X="0.246" Y="0.073" Height="0.181" Width="0.964" />
@@ -42,8 +42,10 @@
     </AssociationLine>
     <AssociationLine Name="ModbusMasterAgent" Type="MicroDAQ.Gateways.Modbus2.ModbusMasterAgent" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="8.25" Y="4.75" />
-        <Point X="6.5" Y="4.75" />
+        <Point X="8.25" Y="5.25" />
+        <Point X="7.375" Y="5.25" />
+        <Point X="7.375" Y="5.25" />
+        <Point X="6.5" Y="5.25" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
         <Position X="0.069" Y="-0.21" Height="0.181" Width="1.725" />
@@ -70,16 +72,18 @@
   </Class>
   <Class Name="MicroDAQ.Gateways.Modbus2.ModbusMasterAgent">
     <Position X="4.5" Y="3.75" Width="2" />
-    <InheritanceLine Type="MicroDAQ.Gateways.ItemManageBase" FixedFromPoint="true">
-      <Path>
-        <Point X="5.5" Y="3.131" />
-        <Point X="5.5" Y="3.75" />
-      </Path>
-    </InheritanceLine>
+    <AssociationLine Name="MasterInfo" Type="MicroDAQ.Configuration.ModbusMasterInfo">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.787" Y="0.039" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAgAAQQAACAAAAAA=</HashCode>
       <FileName>Modbus2\SerialMasterAgent.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MasterInfo" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="MicroDAQ.Configuration.Device" Collapsed="true">
     <Position X="20" Y="6" Width="2.25" />
@@ -103,6 +107,10 @@
   </Class>
   <Class Name="MicroDAQ.Configuration.ModbusVariableInfo">
     <Position X="15.75" Y="6.5" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MicroDAQ.Configuration.ModbusMasterInfo" Collapsed="true">
+    <Position X="8.25" Y="3.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="MicroDAQ.Common.GatewayBase" Collapsed="true">

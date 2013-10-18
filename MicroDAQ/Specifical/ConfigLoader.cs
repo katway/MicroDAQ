@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MicroDAQ.DBUtility;
+using System.Data;
 
 namespace MicroDAQ.Specifical
 {
@@ -13,7 +14,7 @@ namespace MicroDAQ.Specifical
 
         static void LoadConfig()
         {
-           sqlite.ExecuteQuery
+            DataSet ds = sqlite.ExecuteQuery("SELECT * FROM modbusgateway");
 
 
 

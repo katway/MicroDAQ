@@ -30,7 +30,6 @@
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="IPManagers" />
-      <Property Name="DatabaseManagers" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="MicroDAQ.Gateways.Modbus2.SerialPortSlaveDevice">
@@ -48,6 +47,7 @@
   <Class Name="MicroDAQ.Common.Item" Collapsed="true">
     <Position X="9.5" Y="4" Width="1.5" />
     <TypeIdentifier />
+    <Lollipop Position="0.2" />
   </Class>
   <Interface Name="MicroDAQ.Common.IDataItemManage" Collapsed="true">
     <Position X="4.25" Y="3.5" Width="1.5" />
