@@ -58,6 +58,19 @@ namespace MicroDAQ.UI
             this.Slave = slave;
         }
 
-
+        public bool Highlight
+        {
+            set
+            {
+                this.highlight = value;
+                if (value == true)
+                    this.mtxtSlave.BackColor = Color.DeepSkyBlue;
+                if (value == false)
+                    this.mtxtSlave.BackColor = SystemColors.Window;
+            }
+            get
+            { return highlight; }
+        }
+        private bool highlight;
     }
 }

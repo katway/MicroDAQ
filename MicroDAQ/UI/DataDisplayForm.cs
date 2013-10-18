@@ -219,22 +219,25 @@ namespace MicroDAQ.Specifical
         /// <param name="e"></param>        
         private void FormDemo_Load(object sender, EventArgs e)
         {
-            //循环遍历数据库
-            List<SqlConnection> sqlcon = new List<SqlConnection>();
-            foreach (IDatabaseManage a in Program.opcGateway.DatabaseManagers)
+            if (Program.opcGateway != null && Program.opcGateway.DatabaseManagers != null)
             {
-                SqlConnection conn = new SqlConnection(a.UpdateConnection.ConnectionString);
-                sqlcon.Add(conn);
-            }
-            for (int i = 0; i < sqlcon.Count; i++)
-            {
-                connection = sqlcon[0];
+                //循环遍历数据库
+                List<SqlConnection> sqlcon = new List<SqlConnection>();
+                foreach (IDatabaseManage a in Program.opcGateway.DatabaseManagers)
+                {
+                    SqlConnection conn = new SqlConnection(a.UpdateConnection.ConnectionString);
+                    sqlcon.Add(conn);
+                }
+                for (int i = 0; i < sqlcon.Count; i++)
+                {
+                    connection = sqlcon[0];
 
-            }
+                }
 
-            bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
-            bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
-            bkwConnect.RunWorkerAsync();
+                bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);
+                bkwConnect.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bkwConnect_RunWorkerCompleted);
+                bkwConnect.RunWorkerAsync();
+            }
         }
         //打开数据库连接
         void bkwConnect_DoWork(object sender, DoWorkEventArgs e)
@@ -297,7 +300,7 @@ namespace MicroDAQ.Specifical
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private int initSlave = 200;
+        private int initSlave = 201;
         private int alarmIndex = 0;
         private List<AlarmControl> alarms = new List<AlarmControl>();
 
@@ -318,7 +321,7 @@ namespace MicroDAQ.Specifical
         private void btnAdd_Click(object sender, EventArgs e)
         {
             AlarmControl alarm = AddAlarm(alarmIndex++ + initSlave, 0);
-            alarm.Location = new Point(30, 40 + 29 * alarmIndex);
+            alarm.Location = new Point(30, 60 + 29 * alarmIndex);
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
@@ -339,13 +342,19 @@ namespace MicroDAQ.Specifical
         {
             if (this.alarms.Count > 0)
             {
+                if (ctrlIndex > 0)
+                    this.alarms[(ctrlIndex - 1) % this.alarms.Count].Highlight = false;
+
                 AlarmControl alarm = this.alarms[ctrlIndex % this.alarms.Count];
-                ctrlIndex++;
+                alarm.Highlight = true;
+
                 foreach (var mt in Program.MeterManager.CTMeters.Values)
                 {
                     runningNum = ++runningNum % ushort.MaxValue;
                     mt.SetCommand(runningNum, alarm.Slave, 1, (int)alarm.AlertCode);
                 }
+                Console.WriteLine(ctrlIndex);
+                ctrlIndex = ++ctrlIndex % short.MaxValue;
             }
         }
         #endregion
@@ -442,17 +451,19 @@ namespace MicroDAQ.Specifical
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Program.opcGateway != null)
-                if (this.tabControl1.SelectedIndex == 1)
-                {
-                    this.tmrRemoteCtrl.Enabled = true;
+
+            if (this.tabControl1.SelectedIndex == 1)
+            {
+                this.tmrRemoteCtrl.Enabled = true;
+                if (Program.opcGateway != null)
                     Program.opcGateway.Pause(Program.opcGateway.RemoteCtrlCycle);
-                }
-                else
-                {
-                    this.tmrRemoteCtrl.Enabled = false;
+            }
+            else
+            {
+                this.tmrRemoteCtrl.Enabled = false;
+                if (Program.opcGateway != null)
                     Program.opcGateway.Continue(Program.opcGateway.RemoteCtrlCycle);
-                }
+            }
         }
     }
 }
