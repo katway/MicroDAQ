@@ -445,10 +445,12 @@ namespace MicroDAQ.Specifical
             if (Program.opcGateway != null)
                 if (this.tabControl1.SelectedIndex == 1)
                 {
+                    this.tmrRemoteCtrl.Enabled = true;
                     Program.opcGateway.Pause(Program.opcGateway.RemoteCtrlCycle);
                 }
                 else
                 {
+                    this.tmrRemoteCtrl.Enabled = false;
                     Program.opcGateway.Continue(Program.opcGateway.RemoteCtrlCycle);
                 }
         }
