@@ -211,6 +211,10 @@
       <Project>{52E0A79B-992D-4BB7-876A-B6F7373D69B8}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Configuration\Configuration.csproj">
+      <Project>{AC06BCF8-1CFE-406A-BBFE-606FC2175617}</Project>
+      <Name>Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gateways\Gateways.csproj">
       <Project>{AFFBE9E4-0C18-471C-AC10-8174AF3B90D7}</Project>
       <Name>Gateways</Name>

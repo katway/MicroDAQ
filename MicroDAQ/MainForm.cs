@@ -18,6 +18,9 @@ using log4net;
 using System.Data.SqlClient;
 using MicroDAQ.Common;
 using MicroDAQ.Gateways.Modbus;
+using MicroDAQ.DBUtility;
+using MicroDAQ.Gateways.Modbus2;
+using MicroDAQ.Configuration;
 
 namespace MicroDAQ
 {
@@ -36,6 +39,10 @@ namespace MicroDAQ
         IniFile ini = null;
 
         ILog log;
+        List<ModbusMasterInfo> masterList;
+        List<ModbusSlaveInfo> slaveList;
+        List<ModbusVariableInfo> Variablelist;
+        List<ModbusMasterAgent> agentlist;
         public MainForm()
         {
             log = LogManager.GetLogger(this.GetType());
@@ -270,6 +277,103 @@ namespace MicroDAQ
             else
             {
                 (frmDataDisplay = new DataDisplayForm()).Show();
+            }
+
+        }
+        private void ModbusMasterTable()
+        {
+
+            string strSql = "select * from ModbusMaster";
+            SQLiteHelper ite = new SQLiteHelper("Project");
+            DataTable dt = ite.ExecuteQuery(strSql);
+            masterList = new List<ModbusMasterInfo>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                ModbusMasterInfo masterInfo = new ModbusMasterInfo();
+                masterInfo.allias = dt.Rows[i]["allias"].ToString();
+                masterInfo.name = dt.Rows[i]["name"].ToString();
+                masterInfo.type = dt.Rows[i][""].ToString();
+                masterInfo.enable = dt.Rows[i][""].ToString();
+                masterInfo.port = dt.Rows[i][""].ToString();
+                masterList.Add(masterInfo);
+            }
+
+
+
+
+
+        }
+        private void ModbusSlaveTable()
+        {
+
+            string strSql = "select * from ModbusSlave";
+            SQLiteHelper ite = new SQLiteHelper("Project");
+            DataTable dt = ite.ExecuteQuery(strSql);
+            slaveList = new List<ModbusSlaveInfo>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                ModbusSlaveInfo slaveInfo = new ModbusSlaveInfo();
+                slaveInfo.serialID = Convert.ToInt64(dt.Rows[i][""]);
+                slaveInfo.name = dt.Rows[i][""].ToString();
+                slaveInfo.serialID = Convert.ToInt64(dt.Rows[i][""]);
+                slaveInfo.type = dt.Rows[i][""].ToString();
+                slaveInfo.slave = Convert.ToByte(dt.Rows[i][""]);
+                slaveInfo.enable = dt.Rows[i][""].ToString();
+                slaveList.Add(slaveInfo);
+            }
+        }
+        private DataTable ModbusVariableTable()
+        {
+
+            string strSql = "select * from ModbusRegister";
+            SQLiteHelper ite = new SQLiteHelper("Project");
+            DataTable dt = ite.ExecuteQuery(strSql);
+            Variablelist = new List<ModbusVariableInfo>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                ModbusVariableInfo variableInfo = new ModbusVariableInfo();
+                //字段赋值
+
+                Variablelist.Add(variableInfo);
+            }
+            return dt;
+
+        }
+        private void GetModbusMasterAgent()
+        {
+            //从站与变量关系
+            foreach (var slave in slaveList)
+            {
+                List<ModbusVariableInfo> listVariable = new List<ModbusVariableInfo>();
+                foreach (var variableInfo in Variablelist)
+                {
+                    if (slave.serialID == variableInfo.serialID)
+                    {
+                        listVariable.Add(variableInfo);
+                        Variablelist.Remove(variableInfo);
+                    }
+
+                }
+                slave.modbusVariables = listVariable;
+            }
+            //主从站关系
+            foreach (var master in masterList)
+            {
+                List<ModbusSlaveInfo> list = new List<ModbusSlaveInfo>();
+                foreach (var slave in slaveList)
+                {
+                    if (master.serialID == slave.serialID)
+                    {
+                        list.Add(slave);
+                        slaveList.Remove(slave);
+                    }//字段不对
+                }
+                master.modbusSlaves = list;
+            }
+            for (int i = 0; i < masterList.Count; i++)
+            {
+                ModbusMasterAgent agent = new ModbusMasterAgent(masterList[i]);
+                agentlist.Add(agent);
             }
 
         }
