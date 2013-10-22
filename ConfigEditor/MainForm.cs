@@ -19,12 +19,15 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using System.IO;
 using ConfigEditor.Forms;
 using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Services;
 using ConfigEditor.Util;
 using ConfigEditor.Core.Util;
 using ConfigEditor.Core.IO;
+using ConfigEditor.Core.Xml;
+using ConfigEditor.Core.Models;
 
 namespace ConfigEditor
 {
@@ -168,10 +171,7 @@ namespace ConfigEditor
                     if (!this.naviTreeView.Nodes[0].IsExpanded)
                     {
                         this.naviTreeView.Nodes[0].Expand();
-                    }
-
-                    MessageBox.Show("添加串口成功。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                  
+                    }                  
                 }
             }
             catch (Exception ex)
@@ -201,6 +201,13 @@ namespace ConfigEditor
 
                     DeviceService service = new DeviceService();
                     service.AddDevice(model);
+
+                    //创建设备默认变量
+                    ItemService itemService = new ItemService();
+                    foreach (ItemViewModel ivm in model.Items)
+                    {
+                        itemService.AddItem(ivm);
+                    }
 
                     TreeNode node = new TreeNode(model.Name);
                     node.Tag = model;
@@ -281,7 +288,14 @@ namespace ConfigEditor
                     lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
                     lvi.Tag = model;
 
+                    foreach (ListViewItem item in this.itemListView.SelectedItems)
+                    {
+                        item.Selected = false;
+                    }
+
                     this.itemListView.Items.Add(lvi);
+                    this.itemListView.Focus();
+                    lvi.Selected = true;
 
                     this.itemPropertyGrid.SelectedObject = model;
                 }
@@ -317,7 +331,14 @@ namespace ConfigEditor
             lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
             lvi.Tag = model;
 
+            foreach (ListViewItem item in this.itemListView.SelectedItems)
+            {
+                item.Selected = false;
+            }
+
             this.itemListView.Items.Add(lvi);
+            this.itemListView.Focus();
+            lvi.Selected = true;
 
             this.itemPropertyGrid.SelectedObject = model;
         }
@@ -956,6 +977,29 @@ namespace ConfigEditor
             {
                 UpdateEmsForm frm = new UpdateEmsForm(this);
                 frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// 测试方法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmiTest_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                XmlFileGenerator.CreateMD44File();
+                XmlFileGenerator.CreateMDIAFile();
+                XmlFileGenerator.CreateR5104File();
+                XmlFileGenerator.CreateR5104VFile();
+
+                MessageBox.Show("成功生成XML文件。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

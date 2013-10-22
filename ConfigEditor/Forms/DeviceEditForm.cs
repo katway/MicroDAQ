@@ -22,6 +22,9 @@ using System.Text.RegularExpressions;
 using ConfigEditor.Core.Models;
 using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Util;
+using System.IO;
+using ConfigEditor.Core.Xml;
+using ConfigEditor.Core.Util;
 
 namespace ConfigEditor.Forms
 {
@@ -189,6 +192,15 @@ namespace ConfigEditor.Forms
                     this._model.IpAddress = this.txtIp.Text;
                     this._model.IpPort = Convert.ToInt32(this.txtPort.Text);
                     this._model.IsEnable = this.chkIsEnable.Checked;
+
+                    //创建具体设备型号的变量
+                    if (this.cmbDeviceModels.Text != EditHelper.SUPPORT_DEVICES[0])
+                    {
+                        if (!this.CreateDefaultItems(this.cmbDeviceModels.Text))
+                        {
+                            return;
+                        }
+                    }
                 }
                 else
                 {
@@ -207,6 +219,54 @@ namespace ConfigEditor.Forms
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>
+        /// 创建默认变量
+        /// </summary>
+        /// <param name="deviceName"></param>
+        private bool CreateDefaultItems(string deviceName)
+        {
+            string xmlFile = Path.Combine(Application.StartupPath , string.Format(@"Devices\{0}.xml", deviceName));
+            if (!File.Exists(xmlFile))
+            {
+                MessageBox.Show("找不到设备驱动模板文件。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            XmlDevice device = XmlSerializeHelper.Deserialize(xmlFile);
+            if (device == null)
+            {
+                MessageBox.Show("设备驱动模板文件的格式错误。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (device.Protocols == null || !device.Protocols.Contains(this._channel.Protocol.ToString()))
+            {
+                MessageBox.Show("设备不支持当前通讯协议。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            foreach (XmlItem item in device.Items)
+            {
+                ItemViewModel ivm = new ItemViewModel()
+                {
+                    Name = item.Name,
+                    TableName = EnumHelper.StringToEnum<ModbusDataModels>(item.DataModel),
+                    Address = item.Address,
+                    Length = item.Length,
+                    DataType = EnumHelper.StringToEnum<DataTypes>(item.DataType),
+                    Access = EnumHelper.StringToEnum<AccessRights>(item.Access),
+                    Alias = string.Empty,
+                    ScanPeriod = 1000,
+                    IsEnable = true,
+                    Device = this._model
+                };
+
+                this._model.Items.Add(ivm);
+            }
+
+            return true;
         }
 
         /// <summary>

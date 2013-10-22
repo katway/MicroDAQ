@@ -24,14 +24,33 @@ namespace ConfigEditor.Core.Xml
     public class XmlItem
     {
         /// <summary>
-        /// 自增长ID
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
         /// 变量名称
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// 数据模型
+        /// </summary>
+        public string DataModel { get; set; }
+
+        /// <summary>
+        /// 寄存器地址
+        /// </summary>
+        public string Address { get; set; }
+
+        /// <summary>
+        /// 寄存器个数
+        /// </summary>
+        public int Length { get; set; }
+
+        /// <summary>
+        /// 数据类型
+        /// </summary>
+        public string DataType { get; set; }
+
+        /// <summary>
+        /// 访问类型
+        /// </summary>
+        public string Access { get; set; }
     }
 }

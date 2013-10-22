@@ -146,12 +146,6 @@ namespace ConfigEditor.Forms
                 return false;
             }
 
-            if (string.IsNullOrEmpty(this.txtCode.Text))
-            {
-                MessageBox.Show("识别码不能为空。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return false;
-            }
-
             if (!string.IsNullOrEmpty(this.txtCode.Text) && !Regex.IsMatch(this.txtCode.Text, @"^[0-9]+$"))
             {
                 MessageBox.Show("识别码必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

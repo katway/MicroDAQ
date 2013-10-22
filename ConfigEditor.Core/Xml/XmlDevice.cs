@@ -28,6 +28,28 @@ namespace ConfigEditor.Core.Xml
         {
         }
 
-        public XmlItem[] Devices { get; set; }
+        public XmlDevice(string name)
+        {
+            Name = name;
+        }
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        [XmlAttribute]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 支持协议
+        /// </summary>
+        [XmlAttribute]
+        public string[] Protocols { get; set; }
+
+        /// <summary>
+        /// 变量列表
+        /// </summary>
+        [XmlArray]
+        [XmlArrayItem(ElementName= "Item")]
+        public XmlItem[] Items { get; set; }
     }
 }
