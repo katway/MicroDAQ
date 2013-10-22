@@ -11,7 +11,7 @@ namespace MicroDAQ.Specifical
     public static class ConfigLoader
     {
 
-        static string dbFile = "sqlite.db";
+        static string dbFile = "processitem.db";
 
         static SQLiteHelper sqlite ;
 
@@ -20,15 +20,22 @@ namespace MicroDAQ.Specifical
             sqlite = new SQLiteHelper(dbFile);
 
             string sql = string.Empty;
-            sql = "SELECT * FROM modbusgateway;" +
+            sql = "SELECT * FROM ModbusGateway ;" +
                     "SELECT * FROM modbusMaster;" +
                     "SELECT * FROM modbusSlave;" +
-                    "SELECT * FROM modbusVaribale;";
+                    "SELECT * FROM ModbusRegister;";
 
-            DataSet ds = sqlite.ExecuteQuery("sql");
+
+            DataSet ds = sqlite.ExecuteQuery(sql);
+            ds.Tables[0].TableName = "ModbusGateway";
+            ds.Tables[1].TableName = "modbusMaster";
+            ds.Tables[2].TableName = "modbusSlave";
+            ds.Tables[3].TableName = "ModbusVariable";
+
+
 
             ModbusGatewayInfo[] gatewayInfo = new ModbusGatewayInfo[10];
-            gatewayInfo[0] = new ModbusGatewayInfo(1, ds);
+            gatewayInfo[0] = new ModbusGatewayInfo(4444, ds);
 
             return gatewayInfo;
 

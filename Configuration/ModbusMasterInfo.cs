@@ -38,15 +38,15 @@ namespace MicroDAQ.Configuration
             this.enable = dt[0]["enable"].ToString();
 
             ///查找下属的Slave纪录
-            filter = "serialid = " + this.serialID;
+            filter = "ModbusMaster_serialid = " + this.serialID;
             DataRow[] dtSlave = config.Tables["ModbusSlave"].Select(filter);
-            for (int i = 0; i < dt.Length; i++)
+            for (int i = 0; i < dtSlave.Length; i++)
             {
                 long serial = (long)dtSlave[i]["serialid"];
                 ModbusSlaveInfo slaveInfo = new ModbusSlaveInfo(serial, config);
                 this.modbusSlaves.Add(slaveInfo);
             }
-
+#warning 请补充加载串口配置信息
             ///SerialPortInfo
             //this.serialPort = new SerialPortInfo(
 
