@@ -7,7 +7,7 @@ using MicroDAQ.Gateway;
 using log4net;
 using MicroDAQ.DataItem;
 using System.Data.SqlClient;
-using MicroDAQ.Gateways.Modbus;
+using MicroDAQ.Gateways.Modbus2;
 namespace MicroDAQ
 {
     static class Program

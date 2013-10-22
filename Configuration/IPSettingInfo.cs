@@ -4,6 +4,7 @@
 // Purpose: Definition of Class IPSetting
 
 using System;
+using System.Data;
 namespace MicroDAQ.Configuration
 {
     public class IPSettingInfo
@@ -12,6 +13,16 @@ namespace MicroDAQ.Configuration
         public string iP;
         public int port;
         public string enable;
+
+        public IPSettingInfo(DataSet config)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IPSettingInfo()
+        {
+            throw new System.NotImplementedException();
+        }
 
     }
 }

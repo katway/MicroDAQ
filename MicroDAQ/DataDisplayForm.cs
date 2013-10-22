@@ -81,36 +81,9 @@ namespace MicroDAQ
                 {
                     DataRow tmp = dt.Rows[i];
 
-                    foreach (SerialPortSlaveDevice mgr in Program.MobusGateway.SerialManagers)
+                    foreach (var masterAgent in Program.MobusGateway.ModbusMasters)
                     {
-                        foreach (Item meter in mgr.Items)
-                        {
-                            if (tmp[0].ToString() == meter.ID.ToString())
-                            {
-                                DataRow row = NewTable.NewRow();
-                                row["参数ID"] = tmp[0].ToString();
-                                row["参数名称"] = tmp[1].ToString();
-                                row["参数类型"] = tmp[2].ToString();
-                                row["数据采集值1"] = tmp[3].ToString();
-                                row["数据采集值2"] = tmp[4].ToString();
-                                row["数据采集值3"] = tmp[5].ToString();
-                                row["单位"] = tmp[6].ToString();
-                                row["刷新时间"] = tmp[7].ToString();
-                                row["存储点"] = tmp[8].ToString();
-
-                                row["PLC的编号ID"] = meter.ID.ToString();
-                                row["PLC数据值1"] = meter.Value.ToString();
-                                row["PLC设备类型"] = meter.Type.ToString();
-                                row["PLC状态"] = meter.State.ToString();
-                                row["PLC可信度"] = meter.Quality.ToString();
-                                NewTable.Rows.Add(row);
-                            }
-                        }
-
-                    }
-                    foreach (IPMasterManager mgr in Program.MobusGateway.IPManagers)
-                    {
-                        foreach (Item meter in mgr.Items)
+                        foreach (Item meter in masterAgent.Items)
                         {
                             if (tmp[0].ToString() == meter.ID.ToString())
                             {
@@ -171,7 +144,7 @@ namespace MicroDAQ
                             new DataColumn("PLC设备类型"),
                             new DataColumn("PLC状态"),
                             new DataColumn("PLC可信度")});
-                if (Program.MobusGateway.IPManagers == null || Program.MobusGateway.SerialManagers == null)
+                if (Program.MobusGateway.ModbusMasters == null)
                 {
                     MessageBox.Show("尚未连接设备！");
                     return;
@@ -199,7 +172,7 @@ namespace MicroDAQ
         {
             //循环遍历数据库
             List<SqlConnection> sqlcon = new List<SqlConnection>();
-            foreach (IDatabase a in Program.MobusGateway.DatabaseManagers)
+            foreach (IDatabase a in Program.MobusGateway.DatabaseManage.DatabaseList)
             {
                 SqlConnection conn = new SqlConnection(a.UpdateConnection.ConnectionString);
                 sqlcon.Add(conn);

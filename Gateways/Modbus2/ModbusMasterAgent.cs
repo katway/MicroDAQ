@@ -4,12 +4,13 @@ using System.Text;
 using System.IO.Ports;
 using Modbus.Device;
 using MicroDAQ.Configuration;
+using MicroDAQ.Common;
 
 namespace MicroDAQ.Gateways.Modbus2
 {
-    public class ModbusMasterAgent : MicroDAQ.Gateways.ItemManageBase
+    public class ModbusMasterAgent : MicroDAQ.Gateways.ItemManageBase, IDataItemManage
     {
-        public ModbusMasterAgent(MicroDAQ.Configuration.ModbusMasterInfo masterInfo)
+        public ModbusMasterAgent(ModbusMasterInfo masterInfo)
         {
             this.MasterInfo = masterInfo;
 

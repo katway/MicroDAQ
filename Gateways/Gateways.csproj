@@ -52,7 +52,7 @@
     <Compile Include="Modbus2\ModbusGateway.cs" />
     <Compile Include="Modbus2\ModbusVariable.cs" />
     <Compile Include="Modbus2\SerialPortSlaveAgent.cs" />
-    <Compile Include="Modbus2\SerialMasterAgent.cs" />
+    <Compile Include="Modbus2\ModbusMasterAgent.cs" />
     <Compile Include="Moubus\IPMasterManager.cs" />
     <Compile Include="Moubus\ModbusGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
