@@ -60,6 +60,13 @@ namespace ConfigEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap about {
+            get {
+                object obj = ResourceManager.GetObject("about", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap channel {
             get {
                 object obj = ResourceManager.GetObject("channel", resourceCulture);
