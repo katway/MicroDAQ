@@ -13,7 +13,10 @@ namespace MicroDAQ.DataItem
         public int SyncTick { get; set; }
         public DateTime DataTime { get; internal protected set; }
         public DateTime SyncTime { get; internal protected set; }
-        public float Value { get; internal protected set; }
+        public object Value { get; internal protected set; }
         public short Quality { get; internal protected set; }
+
+        public Item(int id)
+        { this.ID = id; }
     }
 }

@@ -103,9 +103,9 @@ namespace MicroDAQ.Gateway
             foreach (var item in Program.M_flowAlert.Items)
             {
                 float t = 0.0f;
-                if ((item.Value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
+                if (((int)item.Value == 0) && ((item.State == DataState.正常) || (item.State == DataState.已启动)))
                     t = 28.3f;
-                if (item.Value == 2)
+                if ((int)item.Value == 2)
                     t = 0.0f;
                 Program.DatabaseManager.UpdateMeterValue(item.ID + 10000, (int)16, (int)item.State, t, 0.0f, 0.0f, item.Quality);
                 Console.WriteLine(item.ToString());

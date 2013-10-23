@@ -76,6 +76,12 @@ namespace MicroDAQ.Specifical
             /// 10字节格式的监测点数量
             /// </summary>
             internal int SmallItems;
+
+            internal ConfigItemsNumber(int bigItems, int smallItems)
+            {
+                this.BigItems = bigItems;
+                this.SmallItems = smallItems;
+            }
         }
 
 

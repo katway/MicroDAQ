@@ -29,7 +29,7 @@ namespace MicroDAQ.Specifical
             Items = new List<Item>();
             ItemPair = new Dictionary<int, Item>();
             for (int i = 0; i < count; i++)
-                Items.Add(new Item());
+                Items.Add(new Item(0));
         }
         public bool Connect(string OpcServerProgramID, string OpcServerAddress)
         {

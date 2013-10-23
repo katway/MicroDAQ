@@ -217,7 +217,7 @@ namespace OpcOperate.ASync
                 short[] dataType = new short[itemsName.Length];
                 for (int i = 0; i < itemsName.Length; i++)
                 {
-                    dataType[i] = CanonicalType.GetTypeCode(itemsName[i], serverName);
+                    //dataType[i] = CanonicalType.GetTypeCode(itemsName[i], serverName);
                 }
                 return AddItems(groupName, itemsName, dataType);
             }
@@ -239,7 +239,7 @@ namespace OpcOperate.ASync
                 Items[i].hClient = i;                   //client handle
                 Items[i].dwBlobSize = 0;                // blob size
                 Items[i].pBlob = IntPtr.Zero;           // pointer to blob
-                Items[i].vtRequestedDataType = dataType[i];// GetRqstDataType(itemsName[i]);// DataType[i];      //数据类型
+                //Items[i].vtRequestedDataType = dataType[i];// GetRqstDataType(itemsName[i]);// DataType[i];      //数据类型
             }
             groupItemsPair.Add(groupName, itemsName);
             //初始化输出参数
@@ -259,7 +259,8 @@ namespace OpcOperate.ASync
                     {
                         OPCITEMRESULT result = (OPCITEMRESULT)Marshal.PtrToStructure(pos, typeof(OPCITEMRESULT));
                         //itemsID[i] = result.hServer;
-                        resultItemID.Add(itemsName[i], result.hServer);
+                        if (resultItemID.ContainsKey(itemsName[i]))
+                            resultItemID.Add(itemsName[i], result.hServer);
                         pos = new IntPtr(pos.ToInt32() + Marshal.SizeOf(typeof(OPCITEMRESULT)));
                     }
                     else
@@ -507,6 +508,6 @@ namespace OpcOperate.ASync
             if (WriteComplete != null)
                 WriteComplete();
         }
-  
+
     }
 }

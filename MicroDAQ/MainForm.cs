@@ -79,7 +79,7 @@ namespace MicroDAQ
             }
             ni.Text = this.Text;
         }
-
+        DataTable truckingItemsTable;
         /// <summary>
         /// 读取配置
         /// </summary>
@@ -88,69 +88,10 @@ namespace MicroDAQ
             bool success = false;
             try
             {
-                //读取Item地址格式           
-                string[] getPairsConfigItems = new string[Plcs.Count];
-                wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
-                wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
-                realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
-                if (SyncOpc.AddGroup("Groups"))
-                {
-                    #region 是否多组,有几组
-                    //生成读取是否多组,有几组的Item地址
-                    for (int i = 0; i < Plcs.Count; i++)
-                    {
-                        getPairsConfigItems[i] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 26, 2);
-                    }
-                    //获取是否多组的数据,并转存到PlcStation列表里
-                    int[] itemHandle = new int[Plcs.Count];
-                    object[] values = new object[Plcs.Count];
-                    if (SyncOpc.AddItems("Groups", getPairsConfigItems, itemHandle))
-                    {
-                        SyncOpc.SyncRead("Groups", values, itemHandle);
-                        for (int i = 0; i < Plcs.Count; i++)
-                        {
-                            ushort[] value = (ushort[])values[i];
-                            Plcs[i].MorePair = (value[0] == 2) ? (true) : false;
-                            Plcs[i].PairsNumber = value[1];
-                        }
-                    }
-                    #endregion
-
-                    #region 每个PLC中每个DB组有多少监测点
-                    //读取配置监测点数量的Item,每个PLC的DB1,W30,W32|W34,W36|W38....
-                    //生成读取配置监测点数量的Items
-                    string[][] getItemsNumber = null;   //第一维为PlcStation编号,第二维为数量组的编号
-                    getItemsNumber = new string[Plcs.Count][];
-                    for (int i = 0; i < Plcs.Count; i++)
-                    {
-                        getItemsNumber[i] = new string[Plcs[i].PairsNumber];
-                        for (int j = 0; j < Plcs[i].PairsNumber; j++)
-                        {
-                            getItemsNumber[i][j] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 30 + j * 2, 2);
-                        }
-                    }
-                    //获取每个PLC中,每个DB组中存放的监测点数量
-                    for (int i = 0; i < Plcs.Count; i++)
-                    {
-                        itemHandle = new int[Plcs[i].PairsNumber];
-                        values = new object[Plcs[i].PairsNumber];
-
-                        if (SyncOpc.AddItems("Groups", getItemsNumber[i], itemHandle))
-                        {
-                            SyncOpc.SyncRead("Groups", values, itemHandle);
-                            //取1个PLC中的每个DB组中存放的监测点数量
-                            for (int j = 0; j < Plcs[i].PairsNumber; j++)
-                            {
-                                ushort[] value = (ushort[])values[j];
-                                Plcs[i].ItemsNumber[j].SmallItems = value[0];
-                                Plcs[i].ItemsNumber[j].BigItems = value[1];
-                            }
-                        }
-                    }
-                    #endregion
-                    success = true;
-                }
-
+                DataTable table = new DataTable("table");
+                table.ReadXml("truking.xml");
+                truckingItemsTable = table;
+                success = true;
             }
             catch (Exception ex)
             {
@@ -203,21 +144,60 @@ namespace MicroDAQ
         /// <summary>
         /// 创建数据项管理器
         /// </summary>
-        private IList<IDataItemManage> createItemsMangers()
+        private IList<IDataItemManage> createItemsMangers(DataTable items)
         {
             bool success = false;
             IList<IDataItemManage> listDataItemManger = new List<IDataItemManage>();
             try
             {
-                foreach (var plc in Plcs)
+
+                DataRow[] dtItems = items.Select("[parent]='洗瓶机'");
+                int[] id = new int[dtItems.Length];
+                string[] opcItem = new string[dtItems.Length];
+                for (int i = 0; i < id.Length; i++)
                 {
-                    string[] head = new string[plc.ItemsHead.Count];
-                    string[] data = new string[plc.ItemsHead.Count];
-                    plc.ItemsHead.CopyTo(head, 0);
-                    plc.ItemsData.CopyTo(data, 0);
-                    IDataItemManage dim = new DataItemManager("ItemData", head, data);
-                    listDataItemManger.Add(dim);
+                    id[i] = (int)dtItems[i]["slave"];
+                    opcItem[i] = (string)dtItems[i]["opcItem"];
                 }
+                IDataItemManage dim = new DataItemManager("洗瓶机", id, opcItem);
+                listDataItemManger.Add(dim);
+                Plcs[0].MorePair = false;
+                Plcs[0].PairsNumber = 1;
+                Plcs[0].ItemsNumber[0] = new PLCStationInformation.ConfigItemsNumber(opcItem.Length, 0);
+
+                dtItems = items.Select("[parent]='烘干机'");
+                id = new int[dtItems.Length];
+                opcItem = new string[dtItems.Length];
+                for (int i = 0; i < id.Length; i++)
+                {
+                    id[i] = (int)dtItems[i]["slave"];
+                    opcItem[i] = (string)dtItems[i]["opcItem"];
+                }
+                dim = new DataItemManager("烘干机", id, opcItem);
+                listDataItemManger.Add(dim);
+                Plcs[1].MorePair = false;
+                Plcs[1].PairsNumber = 1;
+                Plcs[1].ItemsNumber[0] = new PLCStationInformation.ConfigItemsNumber(opcItem.Length, 0);
+
+                dtItems = items.Select("[parent]='灌装机'");
+                id = new int[dtItems.Length];
+                opcItem = new string[dtItems.Length];
+                for (int i = 0; i < id.Length; i++)
+                {
+                    id[i] = (int)dtItems[i]["slave"];
+                    opcItem[i] = (string)dtItems[i]["opcItem"];
+                }
+                dim = new DataItemManager("灌装机", id, opcItem);
+                listDataItemManger.Add(dim);
+                Plcs[2].MorePair = false;
+                Plcs[2].PairsNumber = 1;
+                Plcs[2].ItemsNumber[0] = new PLCStationInformation.ConfigItemsNumber(opcItem.Length, 0);
+
+
+
+                //IDataItemManage dim = new DataItemManager("ItemData", id, data);
+                //listDataItemManger.Add(dim);
+
 
                 success = true;
             }
@@ -281,21 +261,23 @@ namespace MicroDAQ
         public void Start()
         {
             //Thread.Sleep(Program.waitMillionSecond);
+            //ReadConfig();
+            //createItemsMangers(truckingItemsTable);
             SyncOpc = new OPCServer();
             string pid = ini.GetValue(opcServerType, "ProgramID");
             if (SyncOpc.Connect(pid, "127.0.0.1"))
                 if (ReadConfig())
-                    if (CreateItems())
-                    {
-                        createCtrl();
-                        Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
-                        Program.opcGateway.StateChanged += new EventHandler(opcGateway_StateChanged);
-                        Program.opcGateway.UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
-                        Program.opcGateway.RemoteCtrlCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrlCycle_WorkStateChanged);
-                        Program.opcGateway.Start();
+                //if (CreateItems())
+                {
+                    //createCtrl();
+                    Program.opcGateway = new OpcGateway(createItemsMangers(truckingItemsTable), createDBManagers());
+                    Program.opcGateway.StateChanged += new EventHandler(opcGateway_StateChanged);
+                    Program.opcGateway.UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
+                    Program.opcGateway.RemoteCtrlCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrlCycle_WorkStateChanged);
+                    Program.opcGateway.Start();
 
 
-                    }
+                }
 
         }
 
@@ -310,17 +292,18 @@ namespace MicroDAQ
                     {
                         //添加获取采集点的数量
                         this.tsddbPLC.DropDownItems.Clear();
-                        foreach (PLCStationInformation plc in Plcs)
+                        for (int pi = 0; pi < Plcs.Count; pi++)
                         {
-                            ToolStripMenuItem tsiPLC = new ToolStripMenuItem(plc.Connection);
+                            PLCStationInformation plc = Plcs[pi];
+                            ToolStripMenuItem tsiPLC = new ToolStripMenuItem(string.Format("连接{0}", pi));
                             this.tsddbPLC.DropDownItems.Add(tsiPLC);
                             for (int i = 0; i < plc.ItemsNumber.Length; i++)
                             {
-                                ToolStripMenuItem tsiItemGrop = new ToolStripMenuItem(string.Format("第{0}对DB块", i + 1));
+                                ToolStripMenuItem tsiItemGrop = new ToolStripMenuItem(string.Format("监测组{0}", i + 1));
                                 tsiPLC.DropDownItems.Add(tsiItemGrop);
 
-                                tsiItemGrop.DropDownItems.Add(string.Format("20字节监测点数：{0}", plc.ItemsNumber[i].BigItems));
-                                tsiItemGrop.DropDownItems.Add(string.Format("10字节监测点数：{0}", plc.ItemsNumber[i].SmallItems));
+                                tsiItemGrop.DropDownItems.Add(string.Format("数量：{0}", plc.ItemsNumber[i].BigItems));
+                                //tsiItemGrop.DropDownItems.Add(string.Format("10字节监测点数：{0}", plc.ItemsNumber[i].SmallItems));
                             }
                         }
                     }

@@ -23,45 +23,48 @@ namespace MicroDAQ.DataItem
         /// <param name="name"></param>
         /// <param name="dataHead"></param>
         /// <param name="data"></param>
-        public DataItemManager(string name, string[] dataHead, string[] data)
+        public DataItemManager(string name, int[] id, string[] data)
             : base()
         {
-            machine = new DataItem(this, name, dataHead, data);
-            int count = (dataHead.Length < data.Length) ? (dataHead.Length) : (data.Length);
+            machine = new DataItem(this, name, id, data);
+            int count = (id.Length < data.Length) ? (id.Length) : (data.Length);
             Items = new List<Item>();
             ItemPair = new Dictionary<int, Item>();
             for (int i = 0; i < count; i++)
-                Items.Add(new Item());
+                Items.Add(new Item(id[i]));
         }
         Machine machine;
         public bool Connect(string OpcServerProgramID, string OPCServerAddress)
         {
             return machine.Connect(OpcServerProgramID, OPCServerAddress);
         }
+        protected void UpdateItemPair(int key, Item item)
+        {
+            if (!ItemPair.ContainsKey(key))
+            { ItemPair.Add(key, item); }
+            ItemPair[key] = item;
+        }
 
         class DataItem : Machine
         {
             DataItemManager Manager;
-
-            public DataItem(DataItemManager manager, string name, string[] dataHead, string[] data)
+            int[] ID;
+            public DataItem(DataItemManager manager, string name, int[] id, string[] data)
                 : base()
             {
                 this.Manager = manager;
                 this.Name = Name;
-                ItemCtrl = dataHead;
+                this.ID = id;
                 ItemStatus = data;
-
             }
 
             internal protected override bool Connect(string OpcServerProgramID, string OPCServerIP)
             {
                 bool success = true;
                 success &= PLC.Connect(OpcServerProgramID, OPCServerIP);
-                success &= PLC.AddGroup(GROUP_NAME_CTRL, 1, 0);
-                success &= PLC.AddItems(GROUP_NAME_CTRL, ItemCtrl);
                 success &= PLC.AddGroup(GROUP_NAME_STATE, 1, 0);
                 success &= PLC.AddItems(GROUP_NAME_STATE, ItemStatus);
-                PLC.SetState(GROUP_NAME_CTRL, true);
+
                 PLC.SetState(GROUP_NAME_STATE, true);
                 ConnectionState = (success) ? (ConnectionState.Open) : (ConnectionState.Closed);
                 return success;
@@ -73,27 +76,14 @@ namespace MicroDAQ.DataItem
                 base.PLC_DataChange(groupName, item, value, Qualities);
                 switch (groupName)
                 {
-                    case GROUP_NAME_CTRL:
-                        for (int i = 0; i < item.Length; i++)
-                        {
-                            ushort[] val = null;
-                            if (value[i] != null)
-                            {
-                                val = (ushort[])value[i];
-                                Manager.Items[item[i]].ID = val[0];
-                                Manager.Items[item[i]].Type = (DataType)val[1];
-                                Manager.Items[item[i]].State = (DataState)val[2];
-                                Manager.Items[item[i]].Quality = Qualities[i];
-                                Manager.UpdateItemPair(Manager.Items[item[i]].ID, Manager.Items[item[i]]);
-                            }
-                        }
-                        break;
+
                     case GROUP_NAME_STATE:
                         for (int i = 0; i < item.Length; i++)
                         {
                             if (value[i] != null)
                             {
-                                Manager.Items[item[i]].Value = (float)value[i];
+                                Manager.Items[item[i]].ID = ID[i];
+                                Manager.Items[item[i]].Value = value[i];
                                 Manager.Items[item[i]].Quality = Qualities[i];
                             }
                         }
@@ -101,14 +91,7 @@ namespace MicroDAQ.DataItem
                 }
                 OnStatusChannge();
             }
-
-
         }
-        protected void UpdateItemPair(int key, Item item)
-        {
-            if (!ItemPair.ContainsKey(key))
-            { ItemPair.Add(key, item); }
-            ItemPair[key] = item;
-        }
+
     }
 }
