@@ -131,6 +131,7 @@ namespace MicroDAQ.Database
 
         public bool UpdateItem(DataItem.Item item)
         {
+            if (item == null) return false;
             bool success = false;
             try
             {
@@ -185,7 +186,17 @@ namespace MicroDAQ.Database
 
                         try
                         {
-                            Command.ExecuteNonQuery();
+
+
+                            if (item.Value != null)
+                            {
+                                Console.Write(item.ToString());
+                                Console.WriteLine(item.Value.GetType());
+                                //Console.WriteLine(item.ToString());
+                                Command.ExecuteNonQuery();
+                            }
+                            else
+                            { Console.WriteLine(item.ToString()); }
                         }
                         catch (Exception ex)
                         {

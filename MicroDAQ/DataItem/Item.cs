@@ -18,5 +18,11 @@ namespace MicroDAQ.DataItem
 
         public Item(int id)
         { this.ID = id; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}\t{1}\t{2}\t{3}\t{4}", this.ID, this.Value, this.Quality, this.DataTime, this.SyncTime);
+
+        }
     }
 }
