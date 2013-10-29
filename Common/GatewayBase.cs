@@ -14,12 +14,14 @@ namespace MicroDAQ.Common
         /// <summary>
         /// 数据库管理器对象
         /// </summary>
-        public IDatabaseManage DatabaseManage { get; set; }
+       // public IDatabaseManage DatabaseManage { get; set; }
+        public IList<IDatabase> DatabaseManagers { get; set; }
 
         /// <summary>
         /// Item管理器对象
         /// </summary>
         public IList<MicroDAQ.Common.IDataItemManage> ItemManagers { get; set; }
+      
 
         /// <summary>
         /// 运行状态
@@ -44,11 +46,11 @@ namespace MicroDAQ.Common
 
         /// <param name="ItemManage">Item管理器对象</param>
         /// <param name="DatabaseManager">Database管理器对象</param>
-        public GatewayBase(IList<MicroDAQ.Common.IDataItemManage> ItemManager, IDatabaseManage DatabaseManager)
-        {
-            this.ItemManagers = ItemManagers;
-            this.DatabaseManage = DatabaseManager;
-        }
+        //public GatewayBase(IList<MicroDAQ.Common.IDataItemManage> ItemManager, IDatabaseManage DatabaseManager)
+        //{
+        //    this.ItemManagers = ItemManagers;
+        //    this.DatabaseManage = DatabaseManager;
+        //}
 
         /// <summary>
         /// 启动
@@ -115,11 +117,14 @@ namespace MicroDAQ.Common
         /// </summary>
         public virtual void Push()
         {
-            foreach (IDatabase db in this.DatabaseManage.DatabaseList)
+            foreach (IDatabase db in DatabaseManagers)
                 foreach (IDataItemManage itemManage in this.ItemManagers)
-                    foreach (Item item in itemManage.Items)
+                    foreach (IItem item in itemManage.Items)
                     {
-                        db.UpdateItem(item);
+                        if (item.Accessibility != "WriteOnly")
+                        {
+                            db.UpdateItem(item);
+                        }
                     }
 
         }

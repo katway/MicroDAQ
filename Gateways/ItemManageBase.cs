@@ -6,11 +6,13 @@ namespace MicroDAQ.Gateways
 {
     public abstract class ItemManageBase : MicroDAQ.Common.IDataItemManage
     {
-        public IList<Common.IItem> Items
+        public List<Common.IItem> Items
         {
             get;
             set;
         }
+       
+        
 
         /// <summary>
         /// 用于数据采集的CycleTask对象（线程）

@@ -14,7 +14,7 @@ namespace MicroDAQ.DataItem
     public class PackageDataItemManager : IDataItemManage
     {
 
-        public IList<IItem> Items { get; set; }
+        public List<IItem> Items { get; set; }
         public ConnectionState ConnectionState { get; set; }
         IModbusOperate Imodbus;
         private SerialPort serialPort;

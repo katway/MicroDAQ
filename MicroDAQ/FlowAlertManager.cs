@@ -11,7 +11,7 @@ namespace MicroDAQ
 {
     class FlowAlertManager : IDataItemManage
     {
-        public IList<IItem> Items { get; set; }
+        public List<IItem> Items { get; set; }
         public Dictionary<int, IItem> ItemPair = null;
         //public FlowAlertManager(string name, string[] dataHead, string[] data)
         //    : base(name, dataHead, data)

@@ -41,9 +41,9 @@ namespace MicroDAQ.Configuration
             this.enable = dt[0]["enable"].ToString();
 
             ///查找下属的Variable纪录
-            filter = "serialid = " + this.serialID;
-            DataRow[] dtSlave = config.Tables["ModbusVariable"].Select(filter);
-            for (int i = 0; i < dt.Length; i++)
+            filter = "ModbusSlave_SerialID = " + this.serialID;
+            DataRow[] dtSlave = config.Tables["ModbusRegister"].Select(filter);
+            for (int i = 0; i < dtSlave.Length; i++)
             {
                 long serial = (long)dtSlave[i]["serialid"];
                 ModbusVariableInfo VariableInfo = new ModbusVariableInfo(serial, config);

@@ -126,7 +126,7 @@ namespace MicroDAQ.Database
 
 
 
-        public bool UpdateItem(Item item)
+        public bool UpdateItem(IItem item)
         {
             bool success = false;
             try
@@ -165,7 +165,7 @@ namespace MicroDAQ.Database
                         param0.Value = item.ID;
                         param1.Value = item.Type;// MeterType;
                         param2.Value = item.State;// MeterState;
-                        param3.Value = item.Value;//
+                        param3.Value = Convert.ToSingle(item.Value);//
                         param4.Value = 0.0f;
                         param5.Value = 0.0f;
                         param8.Value = item.Quality;

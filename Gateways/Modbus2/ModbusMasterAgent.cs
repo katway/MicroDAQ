@@ -12,20 +12,7 @@ namespace MicroDAQ.Gateways.Modbus2
     {
         public ModbusMasterAgent(ModbusMasterInfo masterInfo)
         {
-            this.MasterInfo = masterInfo;
-
-            ///创建下属的SerialPortSlaveAgent对象
-            foreach (ModbusSlaveInfo slaveInfo in masterInfo.modbusSlaves)
-            {
-                SerialPortSlaveAgent newSlave = new SerialPortSlaveAgent(this, slaveInfo);
-                this.SerialPortSlaves.Add(newSlave);
-
-                ///将各个Slave的变量添加到Items列表
-                foreach (ModbusVariable variable in newSlave.Variables)
-                {
-                    this.Items.Add(variable);
-                }
-            }
+            this.MasterInfo = masterInfo;       
 
             ///建立SerialPort对象
             this.SerialPort = new SerialPort(
@@ -36,6 +23,20 @@ namespace MicroDAQ.Gateways.Modbus2
                         (StopBits)Enum.Parse(typeof(StopBits), this.MasterInfo.serialPort.stopbits));
             this.SerialPort.Open();
 
+            ///创建下属的SerialPortSlaveAgent对象
+            this.SerialPortSlaves = new List<SerialPortSlaveAgent>();
+            foreach (ModbusSlaveInfo slaveInfo in masterInfo.modbusSlaves)
+            {
+                SerialPortSlaveAgent newSlave = new SerialPortSlaveAgent(this, slaveInfo);
+                this.SerialPortSlaves.Add(newSlave);
+
+                ///将各个Slave的变量添加到Items列表
+                this.Items =new List<IItem>();
+                foreach (ModbusVariable variable in newSlave.Variables)
+                {
+                    this.Items.Add(variable);
+                }
+            }
             ///创建ModbusMaster对象
 
 

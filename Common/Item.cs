@@ -15,5 +15,6 @@ namespace MicroDAQ.Common
         public DateTime SyncTime { get; set; }
         public object Value { get; set; }
         public short Quality { get; set; }
+        public string Accessibility { get; set; }
     }
 }

@@ -23,19 +23,23 @@ namespace MicroDAQ.Specifical
             sql = "SELECT * FROM ModbusGateway ;" +
                     "SELECT * FROM modbusMaster;" +
                     "SELECT * FROM modbusSlave;" +
-                    "SELECT * FROM ModbusRegister;";
+                    "SELECT * FROM ModbusRegister;"+
+                    "SELECT * FROM SerialPort;"+
+                    "SELECT * FROM IPSetting";
 
 
             DataSet ds = sqlite.ExecuteQuery(sql);
             ds.Tables[0].TableName = "ModbusGateway";
             ds.Tables[1].TableName = "modbusMaster";
             ds.Tables[2].TableName = "modbusSlave";
-            ds.Tables[3].TableName = "ModbusVariable";
+            ds.Tables[3].TableName = "ModbusRegister";
+            ds.Tables[4].TableName = "SerialPort";
+            ds.Tables[5].TableName = "IPSetting";
 
 
 
             ModbusGatewayInfo[] gatewayInfo = new ModbusGatewayInfo[10];
-            gatewayInfo[0] = new ModbusGatewayInfo(4444, ds);
+             gatewayInfo[0] = new ModbusGatewayInfo(4444, ds);
 
             return gatewayInfo;
 

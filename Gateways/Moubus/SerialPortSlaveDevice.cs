@@ -10,7 +10,7 @@ namespace MicroDAQ.Gateways.Modbus
 {
     public class SerialPortSlaveDevice : IDataItemManage
     {
-        public IList<IItem> Items { get; set; }
+        public List<IItem> Items { get; set; }
         IModbusMaster SerialMaster;
         DataTable dtMeta;
         DataTable dtCommands;

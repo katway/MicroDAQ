@@ -15,11 +15,14 @@ namespace MicroDAQ.Configuration
         public string allias;
         public string type;
         public string enable;
+        public string id;
 
         public List<ModbusSlaveInfo> modbusSlaves;
 
 
         public SerialPortInfo serialPort;
+
+        public IPSettingInfo ipSetting;
 
         public ModbusMasterInfo(long serialID, System.Data.DataSet config)
         {
@@ -36,19 +39,32 @@ namespace MicroDAQ.Configuration
             this.name = dt[0]["name"].ToString();
             this.allias = dt[0]["allias"].ToString();
             this.enable = dt[0]["enable"].ToString();
+            this.id =dt[0]["SerialPort_SerialID"].ToString();
 
             ///查找下属的Slave纪录
             filter = "ModbusMaster_serialid = " + this.serialID;
             DataRow[] dtSlave = config.Tables["ModbusSlave"].Select(filter);
             for (int i = 0; i < dtSlave.Length; i++)
             {
-                long serial = (long)dtSlave[i]["serialid"];
-                ModbusSlaveInfo slaveInfo = new ModbusSlaveInfo(serial, config);
+                 long serial = (long)dtSlave[i]["serialid"];
+                 ModbusSlaveInfo slaveInfo = new ModbusSlaveInfo(serial, config);
                 this.modbusSlaves.Add(slaveInfo);
             }
-#warning 请补充加载串口配置信息
-            ///SerialPortInfo
-            //this.serialPort = new SerialPortInfo(
+            //加载串口配置信息
+            if (dt[0]["SerialPort_SerialID"].ToString()!= string.Empty)
+            {
+                long portID =Convert.ToInt64(dt[0]["SerialPort_SerialID"]);
+                this.serialPort = new SerialPortInfo(portID, config);
+            }
+            //加载IP配置信息
+            else
+            {
+                long ipSettingID =Convert.ToInt64(dt[0]["IPSetting_SerialID"]);
+                this.ipSetting = new IPSettingInfo(ipSettingID, config);
+            }
+            
+            
+          
 
 
 

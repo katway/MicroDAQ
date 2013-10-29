@@ -10,7 +10,7 @@ namespace MicroDAQ.Common
     {
         SqlConnection UpdateConnection { set; get; }
         SqlConnection GetdataConnection { set; get; }
-        bool UpdateItem(Item item);
+        bool UpdateItem(IItem item);
         DataRow[] GetRemoteControl();
     }
 }

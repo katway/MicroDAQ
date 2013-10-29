@@ -38,7 +38,7 @@ namespace MicroDAQ.Configuration
             ///查找下属的Modbus纪录
             filter = "ModbusGateway_serialid = " + this.serialID;
             DataRow[] dtMaster = config.Tables["ModbusMaster"].Select(filter);
-            for (int i = 0; i < dt.Length; i++)
+            for (int i = 0; i < dtMaster.Length; i++)
             {
                 long serial = (long)dtMaster[i]["serialid"];
                 ModbusMasterInfo masterInfo = new ModbusMasterInfo(serial, config);

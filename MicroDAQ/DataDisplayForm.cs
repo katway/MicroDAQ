@@ -81,11 +81,11 @@ namespace MicroDAQ
                 {
                     DataRow tmp = dt.Rows[i];
 
-                    foreach (var masterAgent in Program.MobusGateway.ModbusMasters)
+                    foreach (var masterAgent in Program.MobusGateway.ItemManagers)
                     {
-                        foreach (Item meter in masterAgent.Items)
+                        foreach (IItem meter in masterAgent.Items)
                         {
-                            if (tmp[0].ToString() == meter.ID.ToString())
+                            if (tmp[0].ToString() == meter.ID.ToString()&&meter.Accessibility!="WriteOnly")
                             {
                                 DataRow row = NewTable.NewRow();
                                 row["参数ID"] = tmp[0].ToString();
@@ -144,7 +144,7 @@ namespace MicroDAQ
                             new DataColumn("PLC设备类型"),
                             new DataColumn("PLC状态"),
                             new DataColumn("PLC可信度")});
-                if (Program.MobusGateway.ModbusMasters == null)
+                if (Program.MobusGateway.ItemManagers == null)
                 {
                     MessageBox.Show("尚未连接设备！");
                     return;
@@ -172,7 +172,7 @@ namespace MicroDAQ
         {
             //循环遍历数据库
             List<SqlConnection> sqlcon = new List<SqlConnection>();
-            foreach (IDatabase a in Program.MobusGateway.DatabaseManage.DatabaseList)
+            foreach (IDatabase a in Program.MobusGateway.DatabaseManagers)
             {
                 SqlConnection conn = new SqlConnection(a.UpdateConnection.ConnectionString);
                 sqlcon.Add(conn);

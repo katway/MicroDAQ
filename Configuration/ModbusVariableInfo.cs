@@ -43,10 +43,11 @@ namespace MicroDAQ.Configuration
 
             ///查找指定seiralID的纪录
             string filter = "serialid = " + this.serialID;
-            DataRow[] dt = config.Tables["ModbusSlave"].Select(filter);
+            DataRow[] dt = config.Tables["ModbusRegister"].Select(filter);
 
             ///使用各字段中的值为属性赋值
             this.serialID = (long)dt[0]["serialID"];
+            this.code = Convert.ToInt32(dt[0]["code"]);
             this.name = dt[0]["name"].ToString();
             this.allias = dt[0]["allias"].ToString();
             this.dataType = dt[0]["datatype"].ToString();

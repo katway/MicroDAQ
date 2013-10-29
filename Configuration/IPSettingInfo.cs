@@ -14,15 +14,23 @@ namespace MicroDAQ.Configuration
         public int port;
         public string enable;
 
-        public IPSettingInfo(DataSet config)
+        public IPSettingInfo(long serialID, DataSet config)
         {
-            throw new System.NotImplementedException();
+            ///初始化
+            this.serialID = serialID;
+
+            ///查找指定seiralID的纪录
+            string filter = "serialid = " + this.serialID;
+            DataRow[] dt = config.Tables["IPSetting"].Select(filter);
+
+            ///使用各字段中的值为属性赋值
+            this.serialID = (long)dt[0]["serialID"];
+            this.iP = dt[0]["ip"].ToString();
+            this.port = Convert.ToInt32(dt[0]["port"]);
+            this.enable = dt[0]["enable"].ToString();
         }
 
-        public IPSettingInfo()
-        {
-            throw new System.NotImplementedException();
-        }
+       
 
     }
 }

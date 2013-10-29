@@ -73,7 +73,7 @@ namespace MicroDAQ
                             MainForm = new MainForm();
                             Application.Run(MainForm);
                         }
-                        catch (Exception ex)
+                       catch (Exception ex)
                         {
                             log.Error(ex);
                         }

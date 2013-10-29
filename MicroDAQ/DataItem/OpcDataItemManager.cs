@@ -14,7 +14,7 @@ namespace MicroDAQ.DataItem
     /// </summary>
     public class OpcDataItemManager : IDataItemManage
     {
-        public IList<IItem> Items { get; set; }
+        public List<IItem> Items { get; set; }
         public ConnectionState ConnectionState { get; set; }
         public Dictionary<int, IItem> ItemPair = null;
         /// <summary>

@@ -158,7 +158,7 @@ namespace MicroDAQ
             ModbusGatewayInfo[] gatewayInfo = MicroDAQ.Specifical.ConfigLoader.LoadConfig();
 
 
-            ModbusGateway gateway = new ModbusGateway(gatewayInfo[0]);
+            ModbusGateway gateway = new ModbusGateway(gatewayInfo[0],createDBManagers());
 
             Program.MobusGateway = gateway;
             Program.MobusGateway.Start();

@@ -10,7 +10,7 @@ namespace MicroDAQ.Gateways.Modbus
 {
     public class IPMasterManager : IDataItemManage
     {
-        public IList<IItem> Items { get; set; }
+        public List<IItem> Items { get; set; }
         ModbusIpMaster IpMaster;
         DataTable dtMeta;
         DataTable dtCommands;
