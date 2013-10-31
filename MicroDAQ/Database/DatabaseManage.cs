@@ -190,10 +190,29 @@ namespace MicroDAQ.Database
 
                             if (item.Value != null)
                             {
+                                float value = 0.0f;
+                                Type p = item.Value.GetType();
+                                //switch (p.Name.ToUpper())
+                                //{
+                                //    case "UINT32":
+                                //    case "UINT16":
+                                //    case "SINGLE":
+                                //    case "BOOEAL":
+                                //        break;
+                                //}
+                                if (p.IsValueType)
+                                {
+                                    value = Convert.ToSingle(item.Value);
+                                    //Console.WriteLine(string.Format("{0}\t{1}",item.Value,value));
+                                    item.Value = value;
+                                    
+                                }
+
                                 Console.Write(item.ToString());
                                 Console.WriteLine(item.Value.GetType());
                                 //Console.WriteLine(item.ToString());
                                 Command.ExecuteNonQuery();
+                                item.SyncTime = DateTime.Now;
                             }
                             else
                             { Console.WriteLine(item.ToString()); }

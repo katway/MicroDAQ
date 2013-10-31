@@ -664,7 +664,7 @@
     <slave>2120</slave>
     <name>预热区压差 (Pa)    </name>
     <parent>烘干机</parent>
-    <opcItem>Siemens.TCPIP&gt;PLC2&gt;DB3:INT:24</opcItem>
+    <opcItem>Siemens.TCPIP&gt;PLC2&gt;DB2:INT:24</opcItem>
   </Table>
   <Table>
     <slave>2121</slave>
@@ -682,7 +682,7 @@
     <slave>2123</slave>
     <name>灌装与洗瓶压差 (Pa)  </name>
     <parent>烘干机</parent>
-    <opcItem>Siemens.TCPIP&gt;PLC2&gt;DB3:INT:22</opcItem>
+    <opcItem>Siemens.TCPIP&gt;PLC2&gt;DB2:INT:22</opcItem>
   </Table>
   <Table>
     <slave>2201</slave>

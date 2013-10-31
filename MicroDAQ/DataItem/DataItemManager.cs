@@ -82,9 +82,11 @@ namespace MicroDAQ.DataItem
                         {
                             if (value[i] != null)
                             {
-                                Manager.Items[item[i]].ID = ID[i];
+                                Manager.Items[item[i]].ID = ID[item[i]];
                                 Manager.Items[item[i]].Value = value[i];
                                 Manager.Items[item[i]].Quality = Qualities[i];
+                                Manager.Items[item[i]].DataTime = DateTime.Now;
+                                Manager.Items[item[i]].State = DataState.正常;
                             }
                         }
                         break;
