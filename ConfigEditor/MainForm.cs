@@ -79,6 +79,7 @@ namespace ConfigEditor
 
                 //关闭启动画面
                 Thread.Sleep((Environment.TickCount - tick >= 3000) ? 1 : 3000 - (Environment.TickCount - tick));
+                this.WindowState = FormWindowState.Maximized;
                 this.Show();
                 SplashScreen.CloseSplashScreen();
                 this.Activate();

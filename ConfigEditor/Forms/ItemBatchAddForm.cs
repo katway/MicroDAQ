@@ -129,6 +129,40 @@ namespace ConfigEditor.Forms
                 return false;
             }
 
+            //判断寄存器长度是否正确
+            DataTypes dt = (DataTypes)this.cmbDataType.SelectedIndex;
+            int length = Convert.ToInt32(this.txtLength.Text);
+            switch (dt)
+            {
+                case DataTypes.Integer:
+                    if (length != 1 && length != 2 && length != 4)
+                    {
+                        MessageBox.Show("整型变量，其寄存器长度必须1、2或4。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                    break;
+
+                case DataTypes.Real:
+                    if (length != 2 && length != 4)
+                    {
+                        MessageBox.Show("实型变量，其寄存器长度必须2或4。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                    break;
+
+                case DataTypes.Discrete:
+                    if (length != 1)
+                    {
+                        MessageBox.Show("离散型变量，其寄存器长度必须1。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                    break;
+
+                case DataTypes.String:
+                default:
+                    break;
+            }
+
             if (!Regex.IsMatch(this.txtScanPeriod.Text, @"^[0-9]+$"))
             {
                 MessageBox.Show("刷新周期必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);

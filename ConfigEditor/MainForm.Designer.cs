@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("串口");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("以太网");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("串口");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("以太网");
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.文件FToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiProjectProperty = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,6 +51,7 @@
             this.tsmiClearProject = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiUpdateEms = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiTest = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助HToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolStrip = new System.Windows.Forms.ToolStrip();
@@ -92,7 +93,6 @@
             this.cmsItem = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.编辑ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.删除ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiTest = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuStrip.SuspendLayout();
             this.mainToolStrip.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
@@ -270,6 +270,14 @@
             this.tsmiOptions.Visible = false;
             this.tsmiOptions.Click += new System.EventHandler(this.tsmiOptions_Click);
             // 
+            // tsmiTest
+            // 
+            this.tsmiTest.Name = "tsmiTest";
+            this.tsmiTest.Size = new System.Drawing.Size(163, 22);
+            this.tsmiTest.Text = "测试";
+            this.tsmiTest.Visible = false;
+            this.tsmiTest.Click += new System.EventHandler(this.tsmiTest_Click);
+            // 
             // 帮助HToolStripMenuItem
             // 
             this.帮助HToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -442,19 +450,19 @@
             this.naviTreeView.ImageList = this.commonImageList;
             this.naviTreeView.Location = new System.Drawing.Point(0, 0);
             this.naviTreeView.Name = "naviTreeView";
-            treeNode1.ImageKey = "port.png";
-            treeNode1.Name = "节点0";
-            treeNode1.SelectedImageKey = "port.png";
-            treeNode1.Tag = "SerialPorts";
-            treeNode1.Text = "串口";
-            treeNode2.ImageKey = "ethernet.png";
-            treeNode2.Name = "节点1";
-            treeNode2.SelectedImageKey = "ethernet.png";
-            treeNode2.Tag = "Ethernet";
-            treeNode2.Text = "以太网";
+            treeNode3.ImageKey = "port.png";
+            treeNode3.Name = "节点0";
+            treeNode3.SelectedImageKey = "port.png";
+            treeNode3.Tag = "SerialPorts";
+            treeNode3.Text = "串口";
+            treeNode4.ImageKey = "ethernet.png";
+            treeNode4.Name = "节点1";
+            treeNode4.SelectedImageKey = "ethernet.png";
+            treeNode4.Tag = "Ethernet";
+            treeNode4.Text = "以太网";
             this.naviTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2});
+            treeNode3,
+            treeNode4});
             this.naviTreeView.SelectedImageKey = "device.bmp";
             this.naviTreeView.Size = new System.Drawing.Size(220, 610);
             this.naviTreeView.TabIndex = 0;
@@ -654,14 +662,6 @@
             this.删除ToolStripMenuItem1.Name = "删除ToolStripMenuItem1";
             this.删除ToolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
             this.删除ToolStripMenuItem1.Text = "删除";
-            // 
-            // tsmiTest
-            // 
-            this.tsmiTest.Name = "tsmiTest";
-            this.tsmiTest.Size = new System.Drawing.Size(163, 22);
-            this.tsmiTest.Text = "测试";
-            this.tsmiTest.Visible = false;
-            this.tsmiTest.Click += new System.EventHandler(this.tsmiTest_Click);
             // 
             // MainForm
             // 

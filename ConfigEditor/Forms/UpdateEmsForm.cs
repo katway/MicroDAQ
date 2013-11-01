@@ -25,6 +25,7 @@ using System.IO;
 using ConfigEditor.Core.Util;
 using ConfigEditor.Core.ViewModels;
 using JonLibrary.Common;
+using ConfigEditor.Util;
 
 namespace ConfigEditor.Forms
 {
@@ -175,7 +176,6 @@ namespace ConfigEditor.Forms
             try
             {
                 string server = this.txtServer.Text;
-                int port = 1433;
                 string user = this.txtUser.Text;
                 string password = this.txtPassword.Text;
                 string database = string.Empty;
@@ -295,6 +295,8 @@ namespace ConfigEditor.Forms
             int allCount = 0;
             int insertCount = 0;
 
+            List<ItemViewModel> successUpdateItems = new List<ItemViewModel>();
+
             foreach (DeviceViewModel device in project.AllDevices)
             {
                 allCount += device.Items.Count;
@@ -307,7 +309,10 @@ namespace ConfigEditor.Forms
                 {
                     if (item.IsEnable && item.Code.HasValue && item.Code > 0)
                     {
-                        int result = Convert.ToInt32(SQLServerHelper.ExecuteScalar(connectionString, CommandType.Text, string.Format(SQL_SELECT_ITEM_FORMAT, item.Code), null));
+                        Dictionary<string, object> pars1 = new Dictionary<string, object>();
+                        pars1["slave"] = item.Code;
+
+                        int result = Convert.ToInt32(SQLServerHelper.ExecuteScalar(connectionString, CommandType.Text, SqlMapHelper.Format(SqlMapHelper.CountItems, pars1), null));
                         if (result > 0)
                         {
                             continue;
@@ -316,8 +321,18 @@ namespace ConfigEditor.Forms
                         insertCount++;
 
                         string id = Guid.NewGuid().ToString().Replace("-", string.Empty);
-                        string sql = string.Format(SQL_INSERT_ITEMS_FORMAT, id, item.Name, item.Code, item.Code, item.DataType, item.ScanPeriod);
+                        Dictionary<string, object> pars2 = new Dictionary<string, object>();
+                        pars2["id"] = id;
+                        pars2["name"] = item.Name;
+                        pars2["code"] = item.Code;
+                        pars2["slave"] = item.Code;
+                        pars2["type"] = item.DataType.ToString();
+                        pars2["updateRate"] = item.ScanPeriod;
+
+                        string sql = SqlMapHelper.Format(SqlMapHelper.CreateItems, pars2);
                         sb.AppendLine(sql);
+
+                        successUpdateItems.Add(item);
                     }
                 }
             }
@@ -337,6 +352,16 @@ namespace ConfigEditor.Forms
             this.txtUpdateTime.Text = now.ToString("yyyy-MM-dd HH:mm:ss");
             this.txtLog.AppendText(string.Format("项目的变量总数：{0} 个；" + Environment.NewLine, allCount));
             this.txtLog.AppendText(string.Format("更新的变量个数：{0} 个；" + Environment.NewLine, insertCount));
+
+            this.txtLog.AppendText("-".PadRight(45, '-') + Environment.NewLine);
+            this.txtLog.AppendText("设备名称".PadRightEx(20, ' ') + "变量名称".PadRightEx(20, ' ') + "标识码" + Environment.NewLine);
+            foreach (ItemViewModel item in successUpdateItems)
+            {
+                string line = item.Device.Name.PadRightEx(20, ' ') + item.Name.PadRightEx(20, ' ') + item.Code.Value.ToString() + Environment.NewLine;
+                this.txtLog.AppendText(line);
+            }
+
+            this.txtLog.AppendText("-".PadRight(45, '-') + Environment.NewLine);
             this.txtLog.AppendText("更新完成。");
 
         }

@@ -79,6 +79,7 @@
     <Compile Include="Util\LogHelper.cs" />
     <Compile Include="Util\SerializeHelper.cs" />
     <Compile Include="Util\SQLServerHelper.cs" />
+    <Compile Include="Util\StringExtend.cs" />
     <Compile Include="Util\StringHelper.cs" />
     <Compile Include="ViewModels\ChannelBase.cs" />
     <Compile Include="ViewModels\DeviceViewModel.cs" />

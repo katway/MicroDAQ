@@ -122,7 +122,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\EditHelper.cs" />
+    <Compile Include="Util\SqlMapHelper.cs" />
     <Content Include="logo.ico" />
+    <Content Include="slqmap.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\about.png" />
     <None Include="Resources\disable_port.png" />
     <None Include="Resources\disable_tag.png" />
