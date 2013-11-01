@@ -126,7 +126,7 @@ namespace MicroDAQ
                         getItemsNumber[i] = new string[Plcs[i].PairsNumber];
                         for (int j = 0; j < Plcs[i].PairsNumber; j++)
                         {
-                            getItemsNumber[i][j] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 30 + j * 2, 2);
+                            getItemsNumber[i][j] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 30 + j * 4, 2);
                         }
                     }
                     //获取每个PLC中,每个DB组中存放的监测点数量
@@ -319,8 +319,8 @@ namespace MicroDAQ
                                 ToolStripMenuItem tsiItemGrop = new ToolStripMenuItem(string.Format("第{0}对DB块", i + 1));
                                 tsiPLC.DropDownItems.Add(tsiItemGrop);
 
-                                tsiItemGrop.DropDownItems.Add(string.Format("20字节监测点数：{0}", plc.ItemsNumber[i].BigItems));
                                 tsiItemGrop.DropDownItems.Add(string.Format("10字节监测点数：{0}", plc.ItemsNumber[i].SmallItems));
+                                tsiItemGrop.DropDownItems.Add(string.Format("20字节监测点数：{0}", plc.ItemsNumber[i].BigItems));
                             }
                         }
                     }
