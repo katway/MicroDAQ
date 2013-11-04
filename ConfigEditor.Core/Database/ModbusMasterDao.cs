@@ -278,7 +278,7 @@ namespace ConfigEditor.Core.Database
         /// <returns></returns>
         public ModbusMaster GetBySerialPortID(int id)
         {
-            ModbusMaster item = new ModbusMaster();
+            ModbusMaster item = null;
             try
             {
                 DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
@@ -286,6 +286,7 @@ namespace ConfigEditor.Core.Database
                 DataTable dt = dao.ExecuteQuery(sql);
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    item = new ModbusMaster();
                     DataRow row = dt.Rows[0];
 
                     item.SerialID = Convert.ToInt32(row["SerialID"]);

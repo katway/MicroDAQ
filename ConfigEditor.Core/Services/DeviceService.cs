@@ -63,6 +63,23 @@ namespace ConfigEditor.Core.Services
             else
             {
                 //以太网通道的从站
+                ModbusMasterDao mmDao = new ModbusMasterDao();
+                ModbusMaster mm = mmDao.GetBySerialPortID(0);
+                if (mm == null)
+                {
+                    //插入记录
+                    mm = new ModbusMaster()
+                    {
+                        SerialPort_SerialID = 0,
+                        Name = "TCP",
+                        Allias = "TCP",
+                        Enable = model.IsEnable.ToString()
+                    };
+
+                    mmDao.Insert(mm);
+                    mm.SerialID = mmDao.GetLastSerialID();
+                }
+
                 IPSetting ips = new IPSetting()
                 {
                     IP = model.IpAddress,
@@ -79,7 +96,7 @@ namespace ConfigEditor.Core.Services
                     Allias = model.Alias,
                     Type = model.Protocol.ToString(),
                     Slave = model.Slave,
-                    ModbusMaster_SerialID = 0,
+                    ModbusMaster_SerialID = (mm != null) ? mm.SerialID : 0,
                     IPSetting_SerialID = ipsDao.GetLastSerialID(),
                     Enable = model.IsEnable.ToString()
                 };
