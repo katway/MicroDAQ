@@ -32,6 +32,11 @@ namespace MicroDAQ.Gateways.Modbus2
                     this.ModbusMasterAgent.ModbusMaster
                        = ModbusSerialMaster.CreateAscii(this.ModbusMasterAgent.SerialPort);
                     break;
+                case "MODBUSTCP":
+                    this.ModbusMasterAgent.ModbusMaster
+                       = ModbusIpMaster.CreateIp(slaveInfo.tcpClient);
+                    break;
+                    
                 default:
                     throw new InvalidOperationException(string.Format("无法识别的Modbus从机类型-{0}", slaveInfo.type));
 

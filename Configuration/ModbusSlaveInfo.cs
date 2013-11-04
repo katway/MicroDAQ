@@ -6,6 +6,7 @@
 using System;
 using System.Data;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace MicroDAQ.Configuration
 {
@@ -17,6 +18,7 @@ namespace MicroDAQ.Configuration
         public string type;
         public byte slave;
         public string enable;
+        public TcpClient tcpClient;
 
         public System.Collections.Generic.List<ModbusVariableInfo> modbusVariables;
 
@@ -48,6 +50,13 @@ namespace MicroDAQ.Configuration
                 long serial = (long)dtSlave[i]["serialid"];
                 ModbusVariableInfo VariableInfo = new ModbusVariableInfo(serial, config);
                 this.modbusVariables.Add(VariableInfo);
+            }
+            //º”‘ÿIP≈‰÷√–≈œ¢
+            if (dt[0]["IPSetting_SerialID"].ToString() != "0")
+            {
+                long ipSettingID = Convert.ToInt64(dt[0]["IPSetting_SerialID"]);
+                this.iPSetting = new IPSettingInfo(ipSettingID, config);
+                this.tcpClient = iPSetting.tcpClient;
             }
         }
 

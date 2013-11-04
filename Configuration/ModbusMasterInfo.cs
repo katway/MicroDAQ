@@ -22,7 +22,7 @@ namespace MicroDAQ.Configuration
 
         public SerialPortInfo serialPort;
 
-        public IPSettingInfo ipSetting;
+     
 
         public ModbusMasterInfo(long serialID, System.Data.DataSet config)
         {
@@ -56,12 +56,7 @@ namespace MicroDAQ.Configuration
                 long portID =Convert.ToInt64(dt[0]["SerialPort_SerialID"]);
                 this.serialPort = new SerialPortInfo(portID, config);
             }
-            //º”‘ÿIP≈‰÷√–≈œ¢
-            else
-            {
-                long ipSettingID =Convert.ToInt64(dt[0]["IPSetting_SerialID"]);
-                this.ipSetting = new IPSettingInfo(ipSettingID, config);
-            }
+            
             
             
           

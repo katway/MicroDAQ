@@ -23,7 +23,7 @@ namespace MicroDAQ.Configuration
             ///初始化
             this.modbusMaster = new List<ModbusMasterInfo>();
             this.serialID = serialID;
-
+             
             ///查找指定seiralID的纪录
             string filter = "serialid = " + this.serialID;
             DataRow[] dt = config.Tables["ModbusGateway"].Select(filter);
