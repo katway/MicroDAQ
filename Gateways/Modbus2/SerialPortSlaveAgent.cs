@@ -24,11 +24,11 @@ namespace MicroDAQ.Gateways.Modbus2
             this.ModbusMasterAgent = masterAgent;
             switch (slaveInfo.type.ToUpper())
             {
-                case "RTU":
+                case "MODBUSRTU":
                     this.ModbusMasterAgent.ModbusMaster
                         = ModbusSerialMaster.CreateRtu(this.ModbusMasterAgent.SerialPort);
                     break;
-                case "ASCII":
+                case "MODBUSASCII":
                     this.ModbusMasterAgent.ModbusMaster
                        = ModbusSerialMaster.CreateAscii(this.ModbusMasterAgent.SerialPort);
                     break;
@@ -89,18 +89,35 @@ namespace MicroDAQ.Gateways.Modbus2
                     ///转化数据
                     switch (variable.VariableInfo.dataType.ToLower())
                     {
-                        case "int":
-                        case "short":
-                            variable.Value = tmpVal[0];
+                        case "integer":
+                            switch (variable.VariableInfo.length)
+                            {
+                                case  1:
+                                    variable.Value = tmpVal[0];
+                                    break;
+                                case  2:
+                                    variable.Value = ModbusUtility.GetUInt32(tmpVal[0], tmpVal[1]);
+                                    break;
+                                case  4:
+                                    byte[] byte1 = BitConverter.GetBytes(tmpVal[0]);
+                                    byte[] byte2 = BitConverter.GetBytes(tmpVal[1]);
+                                    byte[] byte3 = BitConverter.GetBytes(tmpVal[2]);
+                                    byte[] byte4 = BitConverter.GetBytes(tmpVal[3]);
+                                    byte[] bytes = new byte[8] { byte1[0], byte1[1], byte2[0], byte2[1], byte3[0], byte3[1], byte4[0], byte4[1]};
+                                    variable.Value = BitConverter.ToInt64(bytes, 0);
+                                    break;
+                                default:
+                                throw new NotImplementedException(string.Format("无法识别的数据类型-{0}", variable.VariableInfo.dataType));
+                            }
                             break;
-                        case "float":
-                            variable.Value = ModbusUtility.GetSingle(tmpVal[0], tmpVal[1]);
-                            break;
-                        case "long":
-                            variable.Value = ModbusUtility.GetUInt32(tmpVal[0], tmpVal[1]);
-                            break;
+                        case "real":
+                           variable.Value = ModbusUtility.GetSingle(tmpVal[0], tmpVal[1]);
+                           break;
+                        case "bool":
+                           variable.Value = tmpVal[0];
+                           break;
                         default:
-                            throw new NotImplementedException(string.Format("无法识别的数据类型-{0}", variable.VariableInfo.dataType));
+                       throw new NotImplementedException(string.Format("无法识别的数据类型-{0}", variable.VariableInfo.dataType));
                     }
                 }
      
