@@ -40,6 +40,28 @@ namespace ConfigEditor.Core.Services
                 throw new ArgumentNullException("输入的参数为空。");
             }
 
+            //创建ModbusGateway对象
+            ModbusGatewayDao mgDao = new ModbusGatewayDao();
+            IList<ModbusGateway> mgList = mgDao.GetAll();
+            ModbusGateway mg = null;
+            if (mgList != null)
+            {
+                mg = mgList.SingleOrDefault(obj => obj.Name == "Modbus");
+                if (mg == null)
+                {
+                    mg = new ModbusGateway()
+                    {
+                        Name = "Modbus",
+                        Allias = "Modbus",
+                        Enable = "True"
+                    };
+
+                    mgDao.Insert(mg);
+
+                    mg.SerialID = mgDao.GetLastSerialID();
+                }
+            }
+
             SerialPort sp = new SerialPort()
             {
                 Port = model.PortName,
@@ -58,8 +80,9 @@ namespace ConfigEditor.Core.Services
             ModbusMaster mm = new ModbusMaster()
             {
                 SerialPort_SerialID = model.Id,
+                ModbusGateway_SerialID = (mg != null) ? mg.SerialID : 0,
                 Name = model.PortName,
-                Allias = model.PortName,                
+                Allias = model.PortName,
                 Enable = model.IsEnable.ToString()
             };
 

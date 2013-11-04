@@ -62,6 +62,28 @@ namespace ConfigEditor.Core.Services
             }
             else
             {
+                //创建ModbusGateway对象
+                ModbusGatewayDao mgDao = new ModbusGatewayDao();
+                IList<ModbusGateway> mgList = mgDao.GetAll();
+                ModbusGateway mg = null;
+                if (mgList != null)
+                {
+                    mg = mgList.SingleOrDefault(obj => obj.Name == "Modbus");
+                    if (mg == null)
+                    {
+                        mg = new ModbusGateway()
+                        {
+                            Name = "Modbus",
+                            Allias = "Modbus",
+                            Enable = "True"
+                        };
+
+                        mgDao.Insert(mg);
+
+                        mg.SerialID = mgDao.GetLastSerialID();
+                    }
+                }
+
                 //以太网通道的从站
                 ModbusMasterDao mmDao = new ModbusMasterDao();
                 ModbusMaster mm = mmDao.GetBySerialPortID(0);
@@ -71,6 +93,7 @@ namespace ConfigEditor.Core.Services
                     mm = new ModbusMaster()
                     {
                         SerialPort_SerialID = 0,
+                        ModbusGateway_SerialID = (mg != null) ? mg.SerialID : 0,
                         Name = "TCP",
                         Allias = "TCP",
                         Enable = model.IsEnable.ToString()
