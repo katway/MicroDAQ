@@ -142,9 +142,7 @@ namespace MicroDAQ.Specifical
                                     NewTable.Rows.Add(row);
                                 }
                             }
-
                         }
-
                     }
 
                     this.dgvDB.DataSource = NewTable;
@@ -231,7 +229,6 @@ namespace MicroDAQ.Specifical
                 for (int i = 0; i < sqlcon.Count; i++)
                 {
                     connection = sqlcon[0];
-
                 }
 
                 bkwConnect.DoWork += new DoWorkEventHandler(bkwConnect_DoWork);

@@ -45,6 +45,7 @@ namespace MicroDAQ
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            Console.WriteLine(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             ni.Icon = this.Icon;
             ni.Text = this.Text;
 
@@ -54,7 +55,7 @@ namespace MicroDAQ
                 ini = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "MicroDAQ.ini");
                 this.Text = ini.GetValue("General", "Title");
                 this.tsslProject.Text = "项目代码：" + ini.GetValue("General", "ProjetCode");
-                this.tsslVersion.Text = "接口版本：" + ini.GetValue("General", "VersionCode");
+                this.tsslVersion.Text = "程序版本：" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
                 int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
                 opcServerType = ini.GetValue("OpcServer", "Type").Trim();
@@ -293,8 +294,6 @@ namespace MicroDAQ
                         Program.opcGateway.UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
                         Program.opcGateway.RemoteCtrlCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrlCycle_WorkStateChanged);
                         Program.opcGateway.Start();
-
-
                     }
 
         }
@@ -447,11 +446,6 @@ namespace MicroDAQ
             {
                 (frmDataDisplay = new DataDisplayForm()).Show();
             }
-
         }
-
-
-
     }
-
 }
