@@ -44,6 +44,10 @@
             this.txtSlave = new System.Windows.Forms.TextBox();
             this.txtIp = new System.Windows.Forms.TextBox();
             this.txtPort = new System.Windows.Forms.TextBox();
+            this.cmbProtocol = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -188,6 +192,37 @@
             this.txtPort.TabIndex = 33;
             this.txtPort.Text = "502";
             // 
+            // cmbProtocol
+            // 
+            this.cmbProtocol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbProtocol.FormattingEnabled = true;
+            this.cmbProtocol.Items.AddRange(new object[] {
+            "Modbus RTU",
+            "Modbus ASCII",
+            "Modbus TCP"});
+            this.cmbProtocol.Location = new System.Drawing.Point(50, 8);
+            this.cmbProtocol.Name = "cmbProtocol";
+            this.cmbProtocol.Size = new System.Drawing.Size(128, 20);
+            this.cmbProtocol.TabIndex = 35;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 11);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(41, 12);
+            this.label5.TabIndex = 34;
+            this.label5.Text = "协议：";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.cmbProtocol);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Location = new System.Drawing.Point(236, 8);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(189, 37);
+            this.panel1.TabIndex = 36;
+            // 
             // DeviceEditForm
             // 
             this.AcceptButton = this.btnOk;
@@ -195,6 +230,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(443, 288);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.txtPort);
             this.Controls.Add(this.txtIp);
             this.Controls.Add(this.txtSlave);
@@ -219,6 +255,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "添加设备";
             this.Load += new System.EventHandler(this.DeviceEditForm_Load);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -242,5 +280,8 @@
         private System.Windows.Forms.TextBox txtSlave;
         private System.Windows.Forms.TextBox txtIp;
         private System.Windows.Forms.TextBox txtPort;
+        private System.Windows.Forms.ComboBox cmbProtocol;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel panel1;
     }
 }

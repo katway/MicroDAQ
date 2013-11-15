@@ -152,7 +152,7 @@ namespace ConfigEditor.Core.IO
                         Name = item.ms.Name,
                         Alias = item.ms.Allias,
                         ChannelType = ChannelTypes.Ethernet,
-                        Protocol = ModbusProtocols.ModbusTCP,
+                        Protocol = EnumHelper.StringToEnum<ModbusProtocols>(item.ms.Type),
                         Slave = item.ms.Slave,
                         IpAddress = item.ips.IP,
                         IpPort = item.ips.Port,

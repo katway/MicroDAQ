@@ -558,6 +558,14 @@ namespace ConfigEditor
                             node.Text = model.PortName;
                             node.ImageKey = model.IsEnable ? "port.png" : "disable_port.png";
                             node.SelectedImageKey = model.IsEnable ? "port.png" : "disable_port.png";
+
+                            //更新串口下设备的通讯协议
+                            DeviceService ds = new DeviceService();
+                            foreach (DeviceViewModel dvm in model.Devices)
+                            {
+                                dvm.Protocol = model.Protocol;
+                                ds.EditDevice(dvm);
+                            }
                         }
                     }
                     //设备节点
@@ -732,8 +740,8 @@ namespace ConfigEditor
                 }
                 ProjectReader.Clear();
                 LoadProject();
-                
-                
+
+                this.naviTreeView.SelectedNode = this.naviTreeView.Nodes[0];
             }
             catch (Exception ex)
             {

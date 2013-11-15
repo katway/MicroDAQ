@@ -82,11 +82,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 59);
+            this.label3.Location = new System.Drawing.Point(36, 59);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 12);
+            this.label3.Size = new System.Drawing.Size(41, 12);
             this.label3.TabIndex = 2;
-            this.label3.Text = "协议类型：";
+            this.label3.Text = "协议：";
             // 
             // cmbStopBits
             // 

@@ -101,6 +101,7 @@ namespace ConfigEditor.Forms
                 if (this._action == UserActions.Add)
                 {
                     this.cmbDeviceModels.SelectedIndex = 0;
+                    this.cmbProtocol.SelectedIndex = (int)this._channel.Protocol;
                     this.txtName.Text = this.GetNewDeviceName();
                     this.txtSlave.Text = this.GetNewSlave().ToString();
 
@@ -108,16 +109,19 @@ namespace ConfigEditor.Forms
                     {
                         this.txtIp.Enabled = true;
                         this.txtPort.Enabled = true;
+                        this.panel1.Visible = true;
                     }
                     else
                     {
                         this.txtIp.Enabled = false;
                         this.txtPort.Enabled = false;
+                        this.panel1.Visible = false;
                     }
                 }
                 else if (this._action == UserActions.Edit)
                 {
                     this.cmbDeviceModels.Enabled = false;
+                    this.cmbProtocol.SelectedIndex = (int)this._model.Protocol;
                     this.txtName.Text = this._model.Name;
                     this.txtAlias.Text = this._model.Alias;
                     this.txtSlave.Text = this._model.Slave.ToString();
@@ -125,15 +129,17 @@ namespace ConfigEditor.Forms
                     this.txtPort.Text = this._model.IpPort.ToString();
                     this.chkIsEnable.Checked = this._model.IsEnable;
 
-                    if (this._model.Protocol == ModbusProtocols.ModbusTCP)
+                    if (this._channel.Protocol == ModbusProtocols.ModbusTCP)
                     {
                         this.txtIp.Enabled = true;
                         this.txtPort.Enabled = true;
+                        this.panel1.Visible = true;
                     }
                     else
                     {
                         this.txtIp.Enabled = false;
                         this.txtPort.Enabled = false;
+                        this.panel1.Visible = false;
                     }
                 }
             }
@@ -184,7 +190,7 @@ namespace ConfigEditor.Forms
                     this._model = new DeviceViewModel();
                     this._model.Channel = this._channel;
                     this._model.ChannelType = this._channel.Type;
-                    this._model.Protocol = this._channel.Protocol;
+                    this._model.Protocol = (this._channel.Protocol != ModbusProtocols.ModbusTCP) ? this._channel.Protocol : (ModbusProtocols)this.cmbProtocol.SelectedIndex;
 
                     this._model.Name = this.txtName.Text;
                     this._model.Alias = this.txtAlias.Text;
@@ -204,6 +210,8 @@ namespace ConfigEditor.Forms
                 }
                 else
                 {
+                    this._model.Protocol = (this._model.Protocol != ModbusProtocols.ModbusTCP) ? this._model.Protocol : (ModbusProtocols)this.cmbProtocol.SelectedIndex;
+                    
                     this._model.Name = this.txtName.Text;
                     this._model.Alias = this.txtAlias.Text;
                     this._model.Slave = Convert.ToInt32(this.txtSlave.Text);
