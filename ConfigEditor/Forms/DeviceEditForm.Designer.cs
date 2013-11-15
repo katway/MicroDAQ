@@ -197,8 +197,8 @@
             this.cmbProtocol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProtocol.FormattingEnabled = true;
             this.cmbProtocol.Items.AddRange(new object[] {
-            "Modbus RTU",
-            "Modbus ASCII",
+            "Modbus RTU over TCP",
+            "Modbus ASCII over TCP",
             "Modbus TCP"});
             this.cmbProtocol.Location = new System.Drawing.Point(50, 8);
             this.cmbProtocol.Name = "cmbProtocol";
