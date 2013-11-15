@@ -210,7 +210,7 @@ namespace ConfigEditor.Forms
                 }
                 else
                 {
-                    this._model.Protocol = (this._model.Protocol != ModbusProtocols.ModbusTCP) ? this._model.Protocol : (ModbusProtocols)this.cmbProtocol.SelectedIndex;
+                    this._model.Protocol = (this._channel.Protocol != ModbusProtocols.ModbusTCP) ? this._model.Protocol : (ModbusProtocols)this.cmbProtocol.SelectedIndex;
                     
                     this._model.Name = this.txtName.Text;
                     this._model.Alias = this.txtAlias.Text;
