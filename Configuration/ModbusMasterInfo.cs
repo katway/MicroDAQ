@@ -39,6 +39,7 @@ namespace MicroDAQ.Configuration
             this.name = dt[0]["name"].ToString();
             this.allias = dt[0]["allias"].ToString();
             this.enable = dt[0]["enable"].ToString();
+            this.type = dt[0]["name"].ToString();
             this.id =dt[0]["SerialPort_SerialID"].ToString();
 
             ///查找下属的Slave纪录
@@ -51,7 +52,7 @@ namespace MicroDAQ.Configuration
                 this.modbusSlaves.Add(slaveInfo);
             }
             //加载串口配置信息
-            if (dt[0]["SerialPort_SerialID"].ToString()!= string.Empty)
+            if (dt[0]["SerialPort_SerialID"].ToString()!="0")
             {
                 long portID =Convert.ToInt64(dt[0]["SerialPort_SerialID"]);
                 this.serialPort = new SerialPortInfo(portID, config);

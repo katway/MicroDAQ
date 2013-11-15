@@ -26,7 +26,7 @@ namespace MicroDAQ.Gateways.Modbus2
             this.ItemManagers = new List<IDataItemManage>();
             foreach (ModbusMasterInfo masterInfo in gatewayInfo.modbusMaster)
             {
-                ModbusMasterAgent newMaster = new ModbusMasterAgent(masterInfo);
+                 ModbusMasterAgent newMaster = new ModbusMasterAgent(masterInfo);
                 this.ItemManagers.Add(newMaster);
             }
 

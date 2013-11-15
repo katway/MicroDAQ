@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using MicroDAQ.Common;
 using MicroDAQ.Configuration;
 using System.Data;
+using JonLibrary.Common;
 namespace MicroDAQ.Gateways.Modbus2
 {
     public class SerialPortSlaveAgent
@@ -22,19 +23,32 @@ namespace MicroDAQ.Gateways.Modbus2
         {
             ///上属Master相关
             this.ModbusMasterAgent = masterAgent;
-            switch (slaveInfo.type.ToUpper())
+             switch (slaveInfo.type.ToUpper())
             {
                 case "MODBUSRTU":
-                    this.ModbusMasterAgent.ModbusMaster
-                        = ModbusSerialMaster.CreateRtu(this.ModbusMasterAgent.SerialPort);
+                    if (ModbusMasterAgent.MasterInfo.type.ToLower() == "tcp")
+                    {
+                        this.ModbusMasterAgent.ModbusMaster = ModbusSerialMaster.CreateRtu(slaveInfo.tcpClient);
+                    }
+                    else
+                    {
+                        this.ModbusMasterAgent.ModbusMaster= ModbusSerialMaster.CreateRtu(this.ModbusMasterAgent.SerialPort);
+                    }
                     break;
                 case "MODBUSASCII":
-                    this.ModbusMasterAgent.ModbusMaster
-                       = ModbusSerialMaster.CreateAscii(this.ModbusMasterAgent.SerialPort);
+                    if (ModbusMasterAgent.MasterInfo.type.ToLower() == "tcp")
+                    {
+                        this.ModbusMasterAgent.ModbusMaster = ModbusSerialMaster.CreateAscii(slaveInfo.tcpClient);
+                    }
+                    else
+                    {
+                        this.ModbusMasterAgent.ModbusMaster = ModbusSerialMaster.CreateAscii(this.ModbusMasterAgent.SerialPort);
+                    }
                     break;
                 case "MODBUSTCP":
-                    this.ModbusMasterAgent.ModbusMaster
-                       = ModbusIpMaster.CreateIp(slaveInfo.tcpClient);
+                    //this.ModbusMasterAgent.ModbusMaster
+                    //   = ModbusIpMaster.CreateIp(slaveInfo.tcpClient);
+                    this.TcpModbusMaster = ModbusIpMaster.CreateIp(slaveInfo.tcpClient);
                     break;
                     
                 default:
@@ -65,31 +79,61 @@ namespace MicroDAQ.Gateways.Modbus2
                 ushort[] tmpVal = new ushort[variable.VariableInfo.length];
                 if (variable.VariableInfo.accessibility != "WriteOnly")
                 {
-                    ///取出数据
-                    switch (variable.VariableInfo.regesiterType)
+                    if (ModbusSlaveInfo.type.ToUpper() != "MODBUSTCP")
                     {
-                        //TODO:需要修改以下判断值
-                        case 3:
-                            tmpVal = this.ModbusMasterAgent.ModbusMaster.
-                                                            ReadHoldingRegisters(
-                                                                     this.ModbusSlaveInfo.slave,
-                                                                     variable.VariableInfo.regesiterAddress,
-                                                                     variable.VariableInfo.length);
-                            break;
-                        case 2:
-                            tmpVal = this.ModbusMasterAgent.ModbusMaster.
-                                                            ReadInputRegisters(
-                                                                     this.ModbusSlaveInfo.slave,
-                                                                     variable.VariableInfo.regesiterAddress,
-                                                                     variable.VariableInfo.length);
-                            break;
-                        case 1:
-                            break;
-                        case 0:
-                            break;
-                        default:
-                            break;
+                        ///取出数据
+                        switch (variable.VariableInfo.regesiterType)
+                        {
+                            //TODO:需要修改以下判断值
+                            case 3:
+                                tmpVal = this.ModbusMasterAgent.ModbusMaster.
+                                                                ReadHoldingRegisters(
+                                                                         this.ModbusSlaveInfo.slave,
+                                                                         variable.VariableInfo.regesiterAddress,
+                                                                         variable.VariableInfo.length);
+                                break;
+                            case 2:
+                                tmpVal = this.ModbusMasterAgent.ModbusMaster.
+                                                                ReadInputRegisters(
+                                                                         this.ModbusSlaveInfo.slave,
+                                                                         variable.VariableInfo.regesiterAddress,
+                                                                         variable.VariableInfo.length);
+                                break;
+                            case 1:
+                                break;
+                            case 0:
+                                break;
+                            default:
+                                break;
+                        }
                     }
+                    else
+                    {
+                        switch (variable.VariableInfo.regesiterType)
+                        {
+                            //TODO:需要修改以下判断值
+                            case 3:
+                                tmpVal = this.TcpModbusMaster.ReadHoldingRegisters(
+                                                                         this.ModbusSlaveInfo.slave,
+                                                                         variable.VariableInfo.regesiterAddress,
+                                                                         variable.VariableInfo.length);
+                                break;
+                            case 2:
+                                tmpVal = this.TcpModbusMaster.ReadInputRegisters(
+                                                                         this.ModbusSlaveInfo.slave,
+                                                                         variable.VariableInfo.regesiterAddress,
+                                                                         variable.VariableInfo.length);
+                                break;
+                            case 1:
+                                break;
+                            case 0:
+                                break;
+                            default:
+                                break;
+                        }
+ 
+                    }
+
 
                     ///转化数据
                     switch (variable.VariableInfo.dataType.ToLower())
@@ -194,10 +238,18 @@ namespace MicroDAQ.Gateways.Modbus2
             Write();
             Read();
         }
-
+           IniFile ini = null;
+        
         public DataRow SelectControl(int code)
         {
-            string ConnectionString = "server=192.168.1.179;database=opcmes3;uid=microdaq;pwd=microdaq";
+            ini = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "MicroDAQ.ini");
+            string[] dbs = ini.GetValue("Database", "Members").Trim().Split(',');
+            string address = ini.GetValue(dbs[0], "Address");
+            string database = ini.GetValue(dbs[0],"Database");
+            string username = ini.GetValue(dbs[0], "Username");
+            string password = ini.GetValue(dbs[0], "Password");
+            string ConnectionString = string.Format("server={0};database={1};uid={2};pwd={3};", address, database, username, password);
+           // string ConnectionString = "server=192.168.1.179;database=opcmes3;uid=microdaq;pwd=microdaq";
             SqlConnection con = new SqlConnection(ConnectionString);
             con.Open();
             string sqlStr = "select * from v_remoteControl a where a.id= " + code;
@@ -213,5 +265,7 @@ namespace MicroDAQ.Gateways.Modbus2
         public IList<MicroDAQ.Gateways.Modbus2.ModbusVariable> Variables { get; set; }
 
         public MicroDAQ.Gateways.Modbus2.ModbusMasterAgent ModbusMasterAgent { get; set; }
+
+        public IModbusMaster TcpModbusMaster { get; set; }
     }
 }

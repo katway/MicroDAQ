@@ -39,7 +39,7 @@ namespace MicroDAQ.Specifical
 
 
             ModbusGatewayInfo[] gatewayInfo = new ModbusGatewayInfo[10];
-             gatewayInfo[0] = new ModbusGatewayInfo(4444, ds);
+             gatewayInfo[0] = new ModbusGatewayInfo(1, ds);
 
             return gatewayInfo;
 
