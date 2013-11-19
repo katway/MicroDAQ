@@ -32,7 +32,7 @@ namespace OpcOperate
                     case "DWORD": value = 19; break;
                     case "SHORT": value = 2; break;
                     case "CHAR": value = 16; break;
-                    default: throw new Exception("不被支持的数据类型");
+                    default: throw new Exception(string.Format("无法解析项中的数据类型{0}", itemID));
                 }
             }
             else
@@ -48,7 +48,7 @@ namespace OpcOperate
                     case "DWORD": value = 8211; break;
                     case "D": value = 8211; break;
                     case "SHORT": value = 8194; break;
-                    default: throw new Exception("不被支持的数据类型");
+                    default: throw new Exception(string.Format("无法解析项中的数据类型{0}", itemID));
                 }
             }
 
@@ -79,7 +79,7 @@ namespace OpcOperate
                     case "DWORD": value = 19; break;
                     case "SHORT": value = 2; break;
                     case "CHAR": value = 16; break;
-                    default: throw new Exception("不被支持的数据类型");
+                    default: throw new Exception(string.Format("无法解析项中的数据类型{0}", itemID));
                 }
             }
             if (portions.Length == 3)
@@ -94,8 +94,8 @@ namespace OpcOperate
                     case "REAL": value = 8196; break;
                     case "DWORD": value = 8211; break;
                     case "D": value = 8211; break;
-                    case "SHORT":value=8194;break;
-                    default: throw new Exception("不被支持的数据类型");
+                    case "SHORT": value = 8194; break;
+                    default: throw new Exception(string.Format("无法解析项中的数据类型{0}", itemID));
                 }
             }
 
@@ -109,10 +109,10 @@ namespace OpcOperate
                 case "Matrikon.OPC.Universal":
                     return GetRqstDataTypeMatrikon(itemID);
 
-                case "OPC.SimaticNET":
+                case "OPC.SimaticNet":
                     return GetRqstDataTypeSiemens(itemID);
 
-                default: throw new Exception("不被支持的数据类型");
+                default: throw new Exception("无法支持的OPC服务类型");
             }
         }
     }

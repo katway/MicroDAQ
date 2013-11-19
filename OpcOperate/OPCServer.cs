@@ -253,7 +253,7 @@ namespace OpcOperate.Sync
                     {
                         String pstrError;   //需不需要释放？
                         ServerObj.GetErrorString(errors[i], LOCALE_ID, out pstrError);
-                        throw new Exception(string.Format("读Item时出错,Item:{0}", i));
+                        throw new Exception(string.Format("同步读Item时出错,组名：{0},Item:{1}", groupName, i));
                         isRead = false;
                         break;
                     }

@@ -94,7 +94,7 @@ namespace MicroDAQ
                 wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
                 wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
                 realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
-                if (SyncOpc.AddGroup("Groups"))
+                if (SyncOpc.AddGroup("ConfigGroups"))
                 {
                     #region 是否多组,有几组
                     //生成读取是否多组,有几组的Item地址
@@ -105,9 +105,12 @@ namespace MicroDAQ
                     //获取是否多组的数据,并转存到PlcStation列表里
                     int[] itemHandle = new int[Plcs.Count];
                     object[] values = new object[Plcs.Count];
-                    if (SyncOpc.AddItems("Groups", getPairsConfigItems, itemHandle))
+                    if (SyncOpc.AddItems("ConfigGroups", getPairsConfigItems, itemHandle))
                     {
-                        SyncOpc.SyncRead("Groups", values, itemHandle);
+                        foreach (string item in getPairsConfigItems)
+                            log.Info(item);
+
+                        SyncOpc.SyncRead("ConfigGroups", values, itemHandle);
                         for (int i = 0; i < Plcs.Count; i++)
                         {
                             ushort[] value = (ushort[])values[i];
@@ -136,9 +139,12 @@ namespace MicroDAQ
                         itemHandle = new int[Plcs[i].PairsNumber];
                         values = new object[Plcs[i].PairsNumber];
 
-                        if (SyncOpc.AddItems("Groups", getItemsNumber[i], itemHandle))
+                        foreach (string item in getItemsNumber[i])
+                            log.Info(item);
+                        if (SyncOpc.AddItems("ConfigGroups", getItemsNumber[i], itemHandle))
                         {
-                            SyncOpc.SyncRead("Groups", values, itemHandle);
+                           
+                            SyncOpc.SyncRead("ConfigGroups", values, itemHandle);
                             //取1个PLC中的每个DB组中存放的监测点数量
                             for (int j = 0; j < Plcs[i].PairsNumber; j++)
                             {
@@ -293,7 +299,7 @@ namespace MicroDAQ
                         Program.opcGateway.StateChanged += new EventHandler(opcGateway_StateChanged);
                         Program.opcGateway.UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
                         Program.opcGateway.RemoteCtrlCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrlCycle_WorkStateChanged);
-                        Program.opcGateway.Start();
+                        Program.opcGateway.Start(pid);
                     }
 
         }

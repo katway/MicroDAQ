@@ -140,16 +140,21 @@ namespace MicroDAQ.Gateway
         }
 
         #region Start()
+
+        public override void Start()
+        {
+            UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);
+            RemoteCtrlCycle.Run(this.remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
+        }
+
         /// <summary>
         /// 启动
         /// </summary>
-        public override void Start()
+        public void Start(string pid)
         {
-#warning  写死了，Matrikon.OPC.Universal
             foreach (var manager in this.ItemManagers)
-                manager.Connect("Matrikon.OPC.Universal", "127.0.0.1");
-            UpdateCycle.Run(this.Update, System.Threading.ThreadPriority.BelowNormal);
-            RemoteCtrlCycle.Run(this.remoteCtrl, System.Threading.ThreadPriority.BelowNormal);
+                manager.Connect(pid, "127.0.0.1");
+            Start();
         }
         #endregion
 

@@ -326,14 +326,14 @@ namespace OpcOperate.ASync
                         if (errors[i] != 0)
                         {
                             success = false;
-                            throw new Exception(string.Format("读Item时出错,Item:{0}", items[i]));
+                            throw new Exception(string.Format("异步读Item时出错,Item:{0}", items[i]));
                         }
                     }
                 }
                 catch (System.Exception ex)
                 {
                     success = false;
-                    throw new Exception("读Item时出错.", ex);
+                    throw new Exception("异步读Item时出错.", ex);
                 }
             }
             else
