@@ -287,7 +287,7 @@ namespace MicroDAQ
         }
         public void Start()
         {
-            //Thread.Sleep(Program.waitMillionSecond);
+            Thread.Sleep(Program.waitMillionSecond);
             SyncOpc = new OPCServer();
             string pid = ini.GetValue(opcServerType, "ProgramID");
             if (SyncOpc.Connect(pid, "127.0.0.1"))
