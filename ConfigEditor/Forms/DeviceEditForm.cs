@@ -17,12 +17,12 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using ConfigEditor.Core.Models;
 using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Util;
-using System.IO;
 using ConfigEditor.Core.Xml;
 using ConfigEditor.Core.Util;
 
