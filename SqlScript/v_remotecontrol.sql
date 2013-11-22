@@ -1,7 +1,10 @@
 ﻿GO
 /****** Object:  View [dbo].[v_remoteControl]    Script Date: 11/22/2013 10:49:16 ******/
 IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[v_remoteControl]') AND OBJECTPROPERTY(id, N'IsView') = 1)
-DROP VIEW [dbo].[v_remoteControl]
+DROP VIEW [dbo].[v_remoteControl]
+
+
+
 GO
 SET ANSI_NULLS ON
 GO

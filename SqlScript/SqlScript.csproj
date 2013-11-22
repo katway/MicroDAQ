@@ -39,11 +39,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Procedure\DustparticleM3.sql" />
     <Content Include="item_alarm.sql" />
     <Content Include="meters.sql" />
     <Content Include="meters_value.sql" />
     <Content Include="meter_type.sql" />
     <Content Include="meter_uuid.sql" />
+    <Content Include="Procedure\GetParameter.sql" />
+    <Content Include="Procedure\UpdateAlarm.sql" />
+    <Content Include="Procedure\UpdateControlState.sql" />
+    <Content Include="Procedure\UpdateHistoryData2.sql" />
+    <Content Include="Procedure\UpdateHistoryData3.sql" />
+    <Content Include="Procedure\UpdateMeterValue.sql" />
+    <Content Include="Procedure\UpdateRemoteControl.sql" />
+    <Content Include="Procedure\UpdateTransientData2.sql" />
     <Content Include="ValueRate.sql" />
     <Content Include="v_remotecontrol.sql" />
   </ItemGroup>
