@@ -100,8 +100,26 @@ namespace MicroDAQ.Gateways.Modbus2
                                                                          variable.VariableInfo.length);
                                 break;
                             case 1:
+                                
+                                                                          
                                 break;
                             case 0:
+                                 bool[] boolValue=new bool[variable.VariableInfo.length];
+                                 boolValue = this.ModbusMasterAgent.ModbusMaster.ReadCoils(
+                                                                         this.ModbusSlaveInfo.slave,
+                                                                         variable.VariableInfo.regesiterAddress,
+                                                                         variable.VariableInfo.length);
+                                 for (int j = 0; j < boolValue.Length;j++ )
+                                 {
+                                     if (boolValue[i])
+                                     {
+                                         tmpVal[i] = 1;
+                                     }
+                                     else
+                                     {
+                                         tmpVal[i] = 0;
+                                     }
+                                 }
                                 break;
                             default:
                                 break;
