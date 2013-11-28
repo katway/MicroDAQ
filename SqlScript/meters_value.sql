@@ -92,8 +92,8 @@ BEGIN
 	SELECT @value = value1 from inserted;
                      IF(@oldState!= @newState)
                             BEGIN
-		IF( @newState <= 2)
-			BEGIN
+																			IF( @newState >= 2)
+																					BEGIN
                                                 DECLARE @alertid VARCHAR(32);
                                                 DECLARE @uuid VARCHAR(32);
                                                 SET @uuid = (SELECT id FROM processitem WHERE slave =@ID);
@@ -103,6 +103,11 @@ BEGIN
                                                                      VALUES(@alertid, @uuid,GETDATE(),@value,'未确认');  
                                                 UPDATE ProcessItem SET alertRecordId = @alertid WHERE slave = @ID;              
                                            END
+                                       ELSE
+                                       		BEGIN
+                                       			SET @alertid = SELECT TOP1 alertRecordId FROM ProcessItem WHERE slave = @ID;
+                                       			UPDATE ProcessItemAlertRecord SET resettime =GETDATE()  WHERE Id = @alertid;
+                                       		END
                                 END
 END
 GO

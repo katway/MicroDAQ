@@ -1,4 +1,4 @@
-﻿GO
+﻿
 /****** Object:  View [dbo].[v_remoteControl]    Script Date: 11/22/2013 10:49:16 ******/
 IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[v_remoteControl]') AND OBJECTPROPERTY(id, N'IsView') = 1)
 DROP VIEW [dbo].[v_remoteControl]
@@ -17,7 +17,7 @@ WHERE     (slave IS NOT NULL)
 UNION
 
 SELECT
-c.id, (cycle & pr.alertBuzzer) as cycle,command,cmdState,'WLT' AS type
+c.id, ISNULL(cycle & pr.alertBuzzer,cycle) as cycle,command,cmdState,'WLT' AS type
 FROM
 (
 SELECT
@@ -26,7 +26,7 @@ FROM
 (
 SELECT     ia.alarmSlave AS id,  m.alert AS cycle, 1 AS command, 1 AS cmdState
 FROM         dbo.meters_value m INNER JOIN
-                      item_alarm ia ON m.id = ia.itemSlave
+                      item_alarm ia ON m.id = ia.itemSlave and m.alert is not null
 --SELECT     p.alarm AS id,  m.alert AS cycle, 1 AS command, 1 AS cmdState
 --FROM         dbo.meters_value m INNER JOIN
 --                      dbo.ProcessItem p ON m.id = p.slave
