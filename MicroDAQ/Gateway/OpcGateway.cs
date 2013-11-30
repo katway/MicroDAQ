@@ -86,6 +86,7 @@ namespace MicroDAQ.Gateway
                         }
                     }
                 }
+                System.Threading.Thread.Sleep(900);
             }
             catch (Exception ex)
             {
