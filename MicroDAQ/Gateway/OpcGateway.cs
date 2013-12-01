@@ -129,9 +129,9 @@ namespace MicroDAQ.Gateway
                                           int.Parse(row["command"].ToString()),
                                           int.Parse((row["cycle"] != null) ? (row["cycle"].ToString()) : ("0"))
                                           );
-                        Thread.Sleep(500);
+                        Thread.Sleep(990);
                     }
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(1000);
             }
             catch (Exception ex)
             {
