@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Specifical\DataState.cs" />
     <Compile Include="Specifical\DataType.cs" />
+    <Compile Include="Specifical\Loader.cs" />
     <Compile Include="Specifical\RunningState.cs" />
     <Compile Include="Specifical\Scout.cs" />
     <Compile Include="UI\AlarmControl.cs">

@@ -12,6 +12,6 @@
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <StartArguments>/debug /fast</StartArguments>
+    <StartArguments>/fast /debug</StartArguments>
   </PropertyGroup>
 </Project>
