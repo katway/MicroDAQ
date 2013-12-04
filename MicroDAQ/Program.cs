@@ -8,6 +8,8 @@ using log4net;
 using MicroDAQ.DataItem;
 using System.Data.SqlClient;
 using MicroDAQ.Specifical;
+using MicroDAQ.UI;
+
 namespace MicroDAQ
 {
     static class Program

@@ -33,7 +33,6 @@ namespace OpcOperate.Sync
         public OPCServer(string name)
         {
             objName = name;
-
         }
         public OPCServer()
         {

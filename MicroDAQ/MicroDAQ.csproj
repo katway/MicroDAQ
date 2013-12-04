@@ -56,7 +56,7 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Nitrogen Icon 42.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Nitrogen Icon 42.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>MicroDAQ.Program</StartupObject>
@@ -96,6 +96,7 @@
     <Compile Include="Specifical\DataState.cs" />
     <Compile Include="Specifical\DataType.cs" />
     <Compile Include="Specifical\RunningState.cs" />
+    <Compile Include="Specifical\Scout.cs" />
     <Compile Include="UI\AlarmControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -119,10 +120,10 @@
     <Compile Include="Gateway\GatewayBase.cs" />
     <Compile Include="Gateway\IGateway.cs" />
     <Compile Include="Gateway\RunningState.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="UI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="UI\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Machine.cs" />
@@ -146,7 +147,7 @@
     <EmbeddedResource Include="UI\DataDisplayForm.resx">
       <DependentUpon>DataDisplayForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -201,12 +202,11 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Nitrogen Icon 42.ico" />
+    <Content Include="Resources\Nitrogen Icon 42.ico" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configuration\" />
     <Folder Include="Dynamic\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpcOperate\OpcOperate.csproj">
