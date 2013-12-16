@@ -47,6 +47,9 @@ namespace ConfigEditor.Core.IO
                 IPSettingDao ipsDao = new IPSettingDao();
                 DeviceDao deviceDao = new DeviceDao();
                 ItemDao itemDao = new ItemDao();
+                OPCGatewayDao cpcDao = new OPCGatewayDao();
+                DBConfigDao dbconfigDao = new DBConfigDao();
+
 
                 IList<SerialPort> spList = spDao.GetAll().OrderBy(obj => obj.Port).ToList();
                 IList<ModbusMaster> mmList = mmDao.GetAll();
@@ -55,6 +58,7 @@ namespace ConfigEditor.Core.IO
                 IList<IPSetting> ipsList = ipsDao.GetAll();
                 IList<Device> deviceList = deviceDao.GetAll();
                 IList<Item> itemList = itemDao.GetAll();
+                IList<DBConfig> dbconfigList = dbconfigDao.GetAll();
 
                 #region 串口通道设备
                 foreach (SerialPort sp in spList)
@@ -191,6 +195,36 @@ namespace ConfigEditor.Core.IO
 
                 #endregion
 
+                #region OpcItems设备变量
+
+                var query4 = from db in dbconfigList
+                             where db.SerialID == db.SerialID
+                             select db;
+
+                foreach (var item in query4)
+                {
+                    DBConfigViewModel dbfvm = new DBConfigViewModel()
+                    {
+                        SerialID = (int)item.SerialID,
+                        Connection = item.Connection,
+                        DB = item.DB,
+                        DBType = item.DBType,
+                        Accessibility = EnumHelper.StringToEnum<AccessRights>(item.Accessibility),
+                        Address = item.Address ,
+                        Type = ChannelTypes.OpcItems,
+                        Code = item.Code != 0 ? (int?)item.Code : null,
+                        IsEnable = Convert.ToBoolean(item.Enable)
+                    };
+
+                    
+                    project.OpcItems.Add(dbfvm);
+
+                 
+                }
+
+
+                #endregion
+
                 return project;
             }
             catch (Exception ex)
@@ -218,7 +252,11 @@ namespace ConfigEditor.Core.IO
                 string sql6 = "DELETE FROM ModbusRegister";
                 string sql7 = "DELETE FROM ModbusSlave";
                 string sql8 = "DELETE FROM SerialPort";
-                string sql9 = "UPDATE sqlite_sequence SET seq = 0;VACUUM Database;";
+                string sql9 = "DELETE FROM OPCGateWay";
+                string sql10 = "DELETE FROM DBConfig";
+                string sql11 = "UPDATE sqlite_sequence SET seq = 0;VACUUM Database;";
+               
+                
                 dao.ExecuteNonQuery(sql1);
                 dao.ExecuteNonQuery(sql2);
                 dao.ExecuteNonQuery(sql3);
@@ -228,6 +266,8 @@ namespace ConfigEditor.Core.IO
                 dao.ExecuteNonQuery(sql7);
                 dao.ExecuteNonQuery(sql8);
                 dao.ExecuteNonQuery(sql9);
+                dao.ExecuteNonQuery(sql10);
+                dao.ExecuteNonQuery(sql11);
             }
             catch
             {

@@ -63,6 +63,7 @@ namespace ConfigEditor.Core.ViewModels
         /// 设备列表
         /// </summary>
         public List<DeviceViewModel> Devices { get; set; }
+        public List<DBConfigViewModel> DBConfig { get; set; }
 
         public ChannelBase()
         {

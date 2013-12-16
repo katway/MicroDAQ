@@ -26,6 +26,7 @@ namespace ConfigEditor.Core.ViewModels
         {
             SerialPorts = new List<SerialPortViewModel>();
             Ethernet = new EthernetViewModel();
+            OpcItems = new List<DBConfigViewModel>();
         }
 
         /// <summary>
@@ -37,6 +38,11 @@ namespace ConfigEditor.Core.ViewModels
         /// 以太网
         /// </summary>
         public EthernetViewModel Ethernet { get; set; }
+
+        /// <summary>
+        /// DB块
+        /// </summary>
+        public List<DBConfigViewModel> OpcItems { get; set; }
 
         /// <summary>
         /// 全部设备

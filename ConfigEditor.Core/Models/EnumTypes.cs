@@ -25,7 +25,9 @@ namespace ConfigEditor.Core.Models
         //串口
         SerialPort,
         //以太网
-        Ethernet
+        Ethernet,
+        //DB块
+        OpcItems
     }
 
     /// <summary>

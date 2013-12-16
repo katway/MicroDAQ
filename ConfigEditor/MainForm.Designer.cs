@@ -30,8 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("串口");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("以太网");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("串口");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("以太网");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("DB块");
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.文件FToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiProjectProperty = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,6 +73,11 @@
             this.naviTreeView = new System.Windows.Forms.TreeView();
             this.commonImageList = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.opcitemlistView = new System.Windows.Forms.ListView();
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.itemListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -450,19 +456,25 @@
             this.naviTreeView.ImageList = this.commonImageList;
             this.naviTreeView.Location = new System.Drawing.Point(0, 0);
             this.naviTreeView.Name = "naviTreeView";
-            treeNode3.ImageKey = "port.png";
-            treeNode3.Name = "节点0";
-            treeNode3.SelectedImageKey = "port.png";
-            treeNode3.Tag = "SerialPorts";
-            treeNode3.Text = "串口";
-            treeNode4.ImageKey = "ethernet.png";
-            treeNode4.Name = "节点1";
-            treeNode4.SelectedImageKey = "ethernet.png";
-            treeNode4.Tag = "Ethernet";
-            treeNode4.Text = "以太网";
+            treeNode4.ImageKey = "port.png";
+            treeNode4.Name = "串口";
+            treeNode4.SelectedImageKey = "port.png";
+            treeNode4.Tag = "SerialPorts";
+            treeNode4.Text = "串口";
+            treeNode5.ImageKey = "ethernet.png";
+            treeNode5.Name = "以太网";
+            treeNode5.SelectedImageKey = "ethernet.png";
+            treeNode5.Tag = "Ethernet";
+            treeNode5.Text = "以太网";
+            treeNode6.ImageKey = "new_tag.bmp";
+            treeNode6.Name = "DB块";
+            treeNode6.SelectedImageKey = "new_tag.bmp";
+            treeNode6.Tag = "DBConfig";
+            treeNode6.Text = "DB块";
             this.naviTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4});
+            treeNode4,
+            treeNode5,
+            treeNode6});
             this.naviTreeView.SelectedImageKey = "device.bmp";
             this.naviTreeView.Size = new System.Drawing.Size(220, 610);
             this.naviTreeView.TabIndex = 0;
@@ -504,6 +516,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.opcitemlistView);
             this.splitContainer2.Panel1.Controls.Add(this.itemListView);
             // 
             // splitContainer2.Panel2
@@ -512,6 +525,47 @@
             this.splitContainer2.Size = new System.Drawing.Size(784, 610);
             this.splitContainer2.SplitterDistance = 574;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // opcitemlistView
+            // 
+            this.opcitemlistView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader9,
+            this.columnHeader10,
+            this.columnHeader11,
+            this.columnHeader12});
+            this.opcitemlistView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.opcitemlistView.FullRowSelect = true;
+            this.opcitemlistView.HideSelection = false;
+            this.opcitemlistView.Location = new System.Drawing.Point(0, 0);
+            this.opcitemlistView.Name = "opcitemlistView";
+            this.opcitemlistView.Size = new System.Drawing.Size(574, 610);
+            this.opcitemlistView.SmallImageList = this.commonImageList;
+            this.opcitemlistView.StateImageList = this.commonImageList;
+            this.opcitemlistView.TabIndex = 1;
+            this.opcitemlistView.UseCompatibleStateImageBehavior = false;
+            this.opcitemlistView.View = System.Windows.Forms.View.Details;
+            this.opcitemlistView.SelectedIndexChanged += new System.EventHandler(this.opcitemlistView_SelectedIndexChanged);
+            this.opcitemlistView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.opcitemlistView_KeyDown);
+            this.opcitemlistView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.opcitemlistView_MouseDoubleClick);
+            // 
+            // columnHeader9
+            // 
+            this.columnHeader9.Text = "名称";
+            this.columnHeader9.Width = 80;
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "识别码";
+            // 
+            // columnHeader11
+            // 
+            this.columnHeader11.Text = "链接地址";
+            this.columnHeader11.Width = 260;
+            // 
+            // columnHeader12
+            // 
+            this.columnHeader12.Text = "读写属性";
+            this.columnHeader12.Width = 180;
             // 
             // itemListView
             // 
@@ -763,6 +817,11 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem tsmiTest;
+        private System.Windows.Forms.ListView opcitemlistView;
+        private System.Windows.Forms.ColumnHeader columnHeader9;
+        private System.Windows.Forms.ColumnHeader columnHeader10;
+        private System.Windows.Forms.ColumnHeader columnHeader11;
+        private System.Windows.Forms.ColumnHeader columnHeader12;
     }
 }
 
