@@ -234,13 +234,13 @@ namespace MicroDAQ.Gateways.Modbus2
                                 break;
                             default:
                                 shortValues = new ushort[4] { 0, 0, 0, 0 };
-                                throw new NotImplementedException(string.Format("无法识别的指令-{0}", Convert.ToInt32(dr["conmmand"])));
+                                throw new NotImplementedException(string.Format("无法识别的指令-{0}", Convert.ToInt32(dr["command"])));
                         }
                         variable.originalValue = shortValues;
                     }
                     else
                     {
-                        variable.originalValue[0] = Convert.ToUInt16(dr["conmmand"]);
+                        variable.originalValue[0] = Convert.ToUInt16(dr["command"]);
                     }
                      this.ModbusMasterAgent.ModbusMaster.
                                 WriteMultipleRegisters(
