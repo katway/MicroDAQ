@@ -41,8 +41,7 @@ namespace ConfigEditor.Core.Database
                                 VALUES ('{0}','{1}','{2}','{3}','{4}','{5}')  ";
 
                 object[] objs = new object[]
-                {
-                   
+                {                   
                     port.Port,
                     port.BaudRate,
                     port.Parity,
@@ -58,7 +57,7 @@ namespace ConfigEditor.Core.Database
                     result = true;
                 }
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }

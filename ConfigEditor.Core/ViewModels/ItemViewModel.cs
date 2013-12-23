@@ -55,7 +55,7 @@ namespace ConfigEditor.Core.ViewModels
         //刷新周期
         private int _scanPeriod;
 
-        //小数精度
+        //小数位数
         private int? _precision;
 
         //最大值
@@ -109,12 +109,12 @@ namespace ConfigEditor.Core.ViewModels
         }
 
         /// <summary>
-        /// 标识码
+        /// 识别码
         /// </summary>
         [Browsable(true)]
         [Category("\t\t基本")]
-        [DisplayName("标识码")]
-        [Description("与EMS系统的仪表参数对应的标识码")]
+        [DisplayName("识别码")]
+        [Description("与EMS系统的仪表参数对应的识别码")]
         [ReadOnly(true)]
         public int? Code
         {
@@ -231,12 +231,12 @@ namespace ConfigEditor.Core.ViewModels
         }
 
         /// <summary>
-        /// 小数精度
+        /// 小数位数
         /// </summary>
         [Browsable(true)]
         [Category("高级")]
-        [DisplayName("小数精度")]
-        [Description("小数精度")]
+        [DisplayName("小数位数")]
+        [Description("小数位数")]
         [ReadOnly(true)]
         public int? Precision
         {

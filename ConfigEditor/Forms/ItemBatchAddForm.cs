@@ -18,9 +18,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Models;
-using System.Text.RegularExpressions;
 
 namespace ConfigEditor.Forms
 {
@@ -35,14 +35,16 @@ namespace ConfigEditor.Forms
         //主窗体
         private MainForm _parentForm;
 
-        //用户操作
-        private UserActions _action;
-
         //视图模型
         private ItemViewModel _model;
         
         //所属设备
         private DeviceViewModel _device;
+
+        //变量列表
+        private List<ItemViewModel> _models;
+
+        public List<ItemViewModel> Models { get { return _models; } }
 
 
         public ItemBatchAddForm()
@@ -60,7 +62,6 @@ namespace ConfigEditor.Forms
         {
             this.Text = "批量添加变量";
             this._parentForm = parentForm;
-            this._action = UserActions.Add;
             this._device = device;
         }
 
@@ -76,6 +77,8 @@ namespace ConfigEditor.Forms
                 this.cmbTableName.SelectedIndex = 0;
                 this.cmbAccess.SelectedIndex = 0;
                 this.cmbDataType.SelectedIndex = 0;
+
+                this._models = new List<ItemViewModel>();
             }
             catch (Exception ex)
             {
@@ -126,6 +129,40 @@ namespace ConfigEditor.Forms
                 return false;
             }
 
+            //判断寄存器长度是否正确
+            DataTypes dt = (DataTypes)this.cmbDataType.SelectedIndex;
+            int length = Convert.ToInt32(this.txtLength.Text);
+            switch (dt)
+            {
+                case DataTypes.Integer:
+                    if (length != 1 && length != 2 && length != 4)
+                    {
+                        MessageBox.Show("整型变量，其寄存器长度必须1、2或4。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                    break;
+
+                case DataTypes.Real:
+                    if (length != 2 && length != 4)
+                    {
+                        MessageBox.Show("实型变量，其寄存器长度必须2或4。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                    break;
+
+                case DataTypes.Discrete:
+                    if (length != 1)
+                    {
+                        MessageBox.Show("离散型变量，其寄存器长度必须1。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                    break;
+
+                case DataTypes.String:
+                default:
+                    break;
+            }
+
             if (!Regex.IsMatch(this.txtScanPeriod.Text, @"^[0-9]+$"))
             {
                 MessageBox.Show("刷新周期必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -148,6 +185,8 @@ namespace ConfigEditor.Forms
                 {
                     return;
                 }
+
+                this._models.Clear();
 
                 StringBuilder sb = new StringBuilder();
                 int count = Convert.ToInt32(this.nupdItemCount.Value);
@@ -188,6 +227,7 @@ namespace ConfigEditor.Forms
 
                     //更新主界面变量列表
                     this._device.Items.Add(this._model);
+                    this._models.Add(this._model);
                 }
 
                 if (sb.Length > 0)
@@ -195,70 +235,12 @@ namespace ConfigEditor.Forms
                     MessageBox.Show(sb.ToString(), "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
-                this.DialogResult = DialogResult.OK;
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// 继续添加操作
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnAddNext_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (!this.CheckUserInputs())
+                if(this._models.Count == 0)
                 {
                     return;
                 }
 
-                this._model = new ItemViewModel();
-                this._model.Device = this._device;
-
-                this._model.Name = this.txtNamePrefix.Text;
-                this._model.Alias = this.txtAliasPrefix.Text;
-                this._model.Code = string.IsNullOrEmpty(this.txtStartCode.Text) ? null : (int?)Convert.ToInt32(this.txtStartCode.Text);
-
-                this._model.TableName = (ModbusDataModels)this.cmbTableName.SelectedIndex;
-                this._model.Access = (AccessRights)this.cmbAccess.SelectedIndex;
-                this._model.DataType = (DataTypes)this.cmbDataType.SelectedIndex;
-                this._model.Precision = (!this.cmbPrecision.Enabled) || string.IsNullOrEmpty(this.cmbPrecision.Text) ? null : (int?)Convert.ToInt32(this.cmbPrecision.Text);
-
-                this._model.Address = this.txtAddress.Text;
-                this._model.Length = Convert.ToInt32(this.txtLength.Text);
-                this._model.Maximum = (!this.txtMaximum.Enabled) || string.IsNullOrEmpty(this.txtMaximum.Text) ? null : (int?)Convert.ToInt32(this.txtMaximum.Text);
-                this._model.Minimum = (!this.txtMinimum.Enabled) || string.IsNullOrEmpty(this.txtMinimum.Text) ? null : (int?)Convert.ToInt32(this.txtMinimum.Text);
-
-                this._model.ScanPeriod = Convert.ToInt32(this.txtScanPeriod.Text);
-                this._model.IsEnable = this.chkIsEnable.Checked;
-
-                this._device.Items.Add(this._model);
-
-                //初始化下一个变量
-                this.txtNamePrefix.Text = this.GetNewItemName();
-                if (!string.IsNullOrEmpty(this.txtStartCode.Text))
-                {
-                    int code = Convert.ToInt32(this.txtStartCode.Text);
-                    this.txtStartCode.Text = string.Format("{0}", code + 1);
-                }
-
-                if (!string.IsNullOrEmpty(this.txtAddress.Text) && !string.IsNullOrEmpty(this.txtLength.Text))
-                {
-                    int address = Convert.ToInt32(this.txtAddress.Text.Replace("0x", string.Empty), 16);
-                    int length = Convert.ToInt32(this.txtLength.Text);
-
-                    this.txtAddress.Text = string.Format("0x{0:X4}", address + length);
-                }
-
-                //更新主界面变量列表
-                this._parentForm.RefreshItemListView(this._model);
-
+                this.DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {
@@ -322,12 +304,14 @@ namespace ConfigEditor.Forms
                         this.cmbPrecision.Enabled = false;
                         this.txtMaximum.Enabled = true;
                         this.txtMinimum.Enabled = true;
+                        this.cmbPrecision.Text = null;
                         break;
 
                     case "实型":
                         this.cmbPrecision.Enabled = true;
                         this.txtMaximum.Enabled = true;
                         this.txtMinimum.Enabled = true;
+                        this.cmbPrecision.Text = "2";
                         break;
 
                     case "离散型":
@@ -335,6 +319,7 @@ namespace ConfigEditor.Forms
                         this.cmbPrecision.Enabled = false;
                         this.txtMaximum.Enabled = false;
                         this.txtMinimum.Enabled = false;
+                        this.cmbPrecision.Text = null;
                         break;
                 }
             }

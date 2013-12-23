@@ -18,11 +18,16 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
+using System.IO;
 using ConfigEditor.Forms;
 using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Services;
 using ConfigEditor.Util;
 using ConfigEditor.Core.Util;
+using ConfigEditor.Core.IO;
+using ConfigEditor.Core.Xml;
+using ConfigEditor.Core.Models;
 
 namespace ConfigEditor
 {
@@ -48,6 +53,12 @@ namespace ConfigEditor
 
         public MainForm()
         {
+            //显示启动画面
+            this.Hide();
+            Thread splashthread = new Thread(new ThreadStart(SplashScreen.ShowSplashScreen));
+            splashthread.IsBackground = true;
+            splashthread.Start();
+
             InitializeComponent();
         }
 
@@ -60,16 +71,71 @@ namespace ConfigEditor
         {
             try
             {
-                this._project = new ProjectViewModel();
+                int tick = Environment.TickCount;
 
+                this.LoadProject();
                 this.naviTreeView.Nodes[1].Tag = this._project.Ethernet;
+                //this.naviTreeView.Nodes[2].Tag = this._project.OpcItems;
                 this.naviTreeView.ExpandAll();
+              
+
+                //关闭启动画面
+                Thread.Sleep((Environment.TickCount - tick >= 3000) ? 1 : 3000 - (Environment.TickCount - tick));
+                this.WindowState = FormWindowState.Maximized;
+                this.Show();
+                SplashScreen.CloseSplashScreen();
+                this.Activate();
             }
             catch (Exception ex)
             {
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>
+        /// 加载项目并初始化界面
+        /// </summary>
+        private void LoadProject()
+        {
+            this.itemPropertyGrid.SelectedObject = null;
+            this.itemListView.Items.Clear();
+            this.opcitemlistView.Items.Clear();
+            this.naviTreeView.Nodes[0].Nodes.Clear();
+            this.naviTreeView.Nodes[1].Nodes.Clear();
+            this.naviTreeView.Nodes[2].Nodes.Clear();
+
+            this._project = ProjectReader.Read();
+            foreach (SerialPortViewModel spvm in this._project.SerialPorts)
+            {
+                TreeNode spNode = new TreeNode(spvm.PortName);
+                spNode.Tag = spvm;
+                spNode.ImageKey = spvm.IsEnable ? "port.png" : "disable_port.png";
+                spNode.SelectedImageKey = spvm.IsEnable ? "port.png" : "disable_port.png";
+
+                this.naviTreeView.Nodes[0].Nodes.Add(spNode);
+
+                foreach (DeviceViewModel dvm in spvm.Devices)
+                {
+                    TreeNode deviceNode = new TreeNode(dvm.Name);
+                    deviceNode.Tag = dvm;
+                    deviceNode.ImageKey = dvm.IsEnable ? "device.bmp" : "disable_device.bmp";
+                    deviceNode.SelectedImageKey = dvm.IsEnable ? "device.bmp" : "disable_device.bmp";
+
+                    spNode.Nodes.Add(deviceNode);
+                }
+            }
+
+            foreach (DeviceViewModel dvm in this._project.Ethernet.Devices)
+            {
+                TreeNode deviceNode = new TreeNode(dvm.Name);
+                deviceNode.Tag = dvm;
+                deviceNode.ImageKey = dvm.IsEnable ? "device.bmp" : "disable_device.bmp";
+                deviceNode.SelectedImageKey = dvm.IsEnable ? "device.bmp" : "disable_device.bmp";
+
+                this.naviTreeView.Nodes[1].Nodes.Add(deviceNode);
+            }
+
         }
 
         /// <summary>
@@ -97,10 +163,13 @@ namespace ConfigEditor
                 {
                     SerialPortViewModel model = frm.Model;
 
+                    SerialPortService service = new SerialPortService();
+                    service.AddSerialPort(model);
+
                     TreeNode node = new TreeNode(model.PortName);
                     node.Tag = model;
-                    node.ImageKey = "channel.bmp";
-                    node.SelectedImageKey = "channel.bmp";
+                    node.ImageKey = model.IsEnable ? "port.png" : "disable_port.png";
+                    node.SelectedImageKey = model.IsEnable ? "port.png" : "disable_port.png";
 
                     this._project.SerialPorts.Add(model);
                     this.naviTreeView.Nodes[0].Nodes.Add(node);
@@ -136,19 +205,20 @@ namespace ConfigEditor
                 {
                     DeviceViewModel model = frm.Model;
 
+                    DeviceService service = new DeviceService();
+                    service.AddDevice(model);
+
+                    //创建设备默认变量
+                    ItemService itemService = new ItemService();
+                    foreach (ItemViewModel ivm in model.Items)
+                    {
+                        itemService.AddItem(ivm);
+                    }
+
                     TreeNode node = new TreeNode(model.Name);
                     node.Tag = model;
-
-                    if (model.IsEnable)
-                    {
-                        node.ImageKey = "device.bmp";
-                        node.SelectedImageKey = "device.bmp";
-                    }
-                    else
-                    {
-                        node.ImageKey = "disable_device.bmp";
-                        node.SelectedImageKey = "disable_device.bmp";
-                    }
+                    node.ImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
+                    node.SelectedImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
 
                     //以太网通道设备
                     if (parentNode.Level == 0)
@@ -192,20 +262,78 @@ namespace ConfigEditor
         {
             try
             {
+               
                 TreeNode parentNode = this.naviTreeView.SelectedNode;
-                DeviceViewModel device = parentNode.Tag as DeviceViewModel;
-                if (device == null)
+
+                if (parentNode.Name == "DB块")
                 {
-                    return;
+                    itemListView.Visible = false;
+                    opcitemlistView.Visible = true;
+
+                    //DBConfigViewModel dbconfig = parentNode.Tag as DBConfigViewModel;
+                    //if (dbconfig == null)
+                    //{
+                    //    return;
+                    //}
+
+                    DBConfigEditForm frm = new DBConfigEditForm(this);
+                    DialogResult dr = frm.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        DBConfigViewModel model = frm.Model;
+
+                        DBConfigService service = new DBConfigService();
+                        service.AddDB(model);
+
+                        // S7:[S7 connection_1]DB1, X0.0, 1
+                        string[] Opcitems = new string[] 
+                        { 
+                            model.DB,
+                            model.Code.ToString(),
+                            model.Address =  model.Connection + model.DB  +","+ model.DBType  + model.StartAddress  +","+ model.Length,
+                            EnumHelper.EnumToCaption(model.Accessibility),
+                        };
+
+                        ListViewItem lvi = new ListViewItem(Opcitems);
+                        lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
+                        lvi.Tag = model;
+
+                        foreach (ListViewItem item in this.opcitemlistView.SelectedItems)
+                        {
+                            item.Selected = false;
+                        }
+
+                        this.opcitemlistView.Items.Add(lvi);
+                        this.opcitemlistView.Focus();
+                        lvi.Selected = true;
+
+                    }
+
+
+                 
+                  
                 }
 
-                ItemEditForm frm = new ItemEditForm(this, device);
-                DialogResult dr = frm.ShowDialog();
-                if (dr == DialogResult.OK)
+                else
                 {
-                    ItemViewModel model = frm.Model;
+                    opcitemlistView.Visible = false;
+                    itemListView.Visible = true;
 
-                    string[] items = new string[] 
+                    DeviceViewModel device = parentNode.Tag as DeviceViewModel;
+                    if (device == null)
+                    {
+                        return;
+                    }
+                    ItemEditForm frm = new ItemEditForm(this, device);
+                    DialogResult dr = frm.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        ItemViewModel model = frm.Model;
+
+                        ItemService service = new ItemService();
+                        service.AddItem(model);
+
+                        string[] items = new string[] 
                     { 
                         model.Name,
                         model.Alias,
@@ -217,16 +345,26 @@ namespace ConfigEditor
                         model.ScanPeriod.ToString()
                     };
 
-                    ListViewItem lvi = new ListViewItem(items);
-                    lvi.ImageKey = "tag.bmp";
-                    lvi.Tag = model;
+                        ListViewItem lvi = new ListViewItem(items);
+                        lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
+                        lvi.Tag = model;
 
-                    this.itemListView.Items.Add(lvi);
+                        foreach (ListViewItem item in this.itemListView.SelectedItems)
+                        {
+                            item.Selected = false;
+                        }
 
-                    this.itemPropertyGrid.SelectedObject = model;
+                        this.itemListView.Items.Add(lvi);
+                        this.itemListView.Focus();
+                        lvi.Selected = true;
+
+                        this.itemPropertyGrid.SelectedObject = model;
+                    }
+
                 }
             }
             catch (Exception ex)
+
             {
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -236,8 +374,11 @@ namespace ConfigEditor
         /// <summary>
         /// 刷新变量列表窗体
         /// </summary>
-        public void RefreshItemListView(ItemViewModel model)
+        public void SaveAndRefreshItemListView(ItemViewModel model)
         {
+            ItemService service = new ItemService();
+            service.AddItem(model);
+
             string[] items = new string[] 
             { 
                 model.Name,
@@ -251,10 +392,17 @@ namespace ConfigEditor
             };
 
             ListViewItem lvi = new ListViewItem(items);
-            lvi.ImageKey = "tag.bmp";
+            lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
             lvi.Tag = model;
 
+            foreach (ListViewItem item in this.itemListView.SelectedItems)
+            {
+                item.Selected = false;
+            }
+
             this.itemListView.Items.Add(lvi);
+            this.itemListView.Focus();
+            lvi.Selected = true;
 
             this.itemPropertyGrid.SelectedObject = model;
         }
@@ -269,6 +417,7 @@ namespace ConfigEditor
                 return;
             }
 
+            this.itemListView.Items.Clear();
             foreach (ItemViewModel model in device.Items)
             {
                 string[] items = new string[] 
@@ -284,7 +433,7 @@ namespace ConfigEditor
                 };
 
                 ListViewItem lvi = new ListViewItem(items);
-                lvi.ImageKey = "tag.bmp";
+                lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
                 lvi.Tag = model;
 
                 this.itemListView.Items.Add(lvi);
@@ -295,6 +444,84 @@ namespace ConfigEditor
                 this.itemListView.Items[0].Selected = true;
                 ItemViewModel model = this.itemListView.Items[0].Tag as ItemViewModel;
                 this.itemPropertyGrid.SelectedObject = model;
+            }
+        }
+
+        /// <summary>
+        /// 分割字母和数字的方法
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public string[] splitStringAndNumber(String str)
+        {
+            string[] tmp = new string[2];
+          
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (!Char.IsNumber(str, i) )
+                {
+                    tmp[0] += str.Substring(i, 1);
+                }
+                else
+                {
+                        tmp[1] += str.Substring(i, 1);
+                }
+            }
+            return tmp;
+        }
+        /// <summary>
+        /// 刷新OpcItemListView变量窗体
+        /// </summary>
+        /// <param name="dbconfig"></param>
+        public void RefreshOpcItemListView(DBConfigViewModel dbconfig)
+        {
+
+            //if (dbconfig == null)
+            //{
+            //    return;
+            //}
+
+            this.opcitemlistView.Items.Clear();
+
+      
+            foreach (DBConfigViewModel model in this._project.OpcItems)
+            {
+                // S7:[S7 connection_1]DB1, X0.0, 1
+                //根据逗号截取Address里面的字符串为三部分
+                string[] addr = model.Address.Split(new char[] { ',' });
+                string tmp = addr[0].Substring(0, addr[0].LastIndexOf("]")+1);
+                model.Connection = tmp;
+                tmp = addr[0].Substring(tmp.Length, addr[0].Length -tmp.Length);
+                model.DB = tmp;
+
+              //把第二部分的字母和数字分开
+                string[] type = splitStringAndNumber(addr[1]);
+                model.DBType = type[0];
+                model.StartAddress = type[1];//
+
+                model.Length = addr[2];
+                
+                string[] items = new string[] 
+                {  
+                   model.DB,
+                   model.Code.ToString(),
+                   model.Address,
+                   model.Accessibility.ToString(),
+                   //model.IsEnable.ToString()
+                };
+
+                ListViewItem lvi = new ListViewItem(items);
+                lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
+                lvi.Tag = model;
+
+                this.opcitemlistView.Items.Add(lvi);
+            }
+
+            if (this.opcitemlistView.Items.Count > 0)
+            {
+                this.opcitemlistView.Items[0].Selected = true;
+                DBConfigViewModel model = this.opcitemlistView.Items[0].Tag as DBConfigViewModel;
+                //this.itemPropertyGrid.SelectedObject = model;
             }
         }
 
@@ -318,6 +545,13 @@ namespace ConfigEditor
                 DialogResult dr = frm.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
+                    List<ItemViewModel> models = frm.Models;
+                    ItemService service = new ItemService();
+                    foreach (ItemViewModel model in models)
+                    {
+                        service.AddItem(model);
+                    }
+
                     this.RefreshItemListView(device);
                 }
             }
@@ -335,7 +569,72 @@ namespace ConfigEditor
         /// <param name="e"></param>
         private void tsmiEnable_Click(object sender, EventArgs e)
         {
+            try
+            {
+                //编辑变量
+                if (this.itemListView.Focused && this.itemListView.SelectedItems.Count > 0)
+                {
+                    ListViewItem firstLvi = this.itemListView.SelectedItems[0];
+                    bool isEnable = !(firstLvi.Tag as ItemViewModel).IsEnable;
 
+                    ItemService service = new ItemService();
+                    ListView.SelectedIndexCollection indexList = this.itemListView.SelectedIndices;
+                    for (int i = indexList.Count; i > 0; i--)
+                    {
+                        int index = indexList[i - 1];
+                        ListViewItem lvi = this.itemListView.Items[index];
+                        ItemViewModel model = lvi.Tag as ItemViewModel;
+                        model.IsEnable = isEnable;
+
+                        service.EditItem(model);
+                    }
+
+                    firstLvi.ImageKey = (firstLvi.Tag as ItemViewModel).IsEnable ? "tag.bmp" : "disable_tag.png";
+                    this.itemPropertyGrid.SelectedObject = firstLvi.Tag as ItemViewModel;
+
+                }
+                //编辑其他
+                else if (this.naviTreeView.Focused && this.naviTreeView.SelectedNode != null)
+                {
+                    TreeNode node = this.naviTreeView.SelectedNode;
+                    object tag = node.Tag;
+                    if (tag == null)
+                    {
+                        return;
+                    }
+
+                    //串口节点
+                    if (tag.GetType() == typeof(SerialPortViewModel))
+                    {
+                        SerialPortViewModel model = node.Tag as SerialPortViewModel;
+                        model.IsEnable = !model.IsEnable;
+
+                        SerialPortService service = new SerialPortService();
+                        service.EditSerialPort(model);
+
+                        node.ImageKey = model.IsEnable ? "port.png" : "disable_port.png";
+                        node.SelectedImageKey = model.IsEnable ? "port.png" : "disable_port.png";
+                    }
+                    //设备节点
+                    else if (tag.GetType() == typeof(DeviceViewModel))
+                    {
+                        DeviceViewModel model = node.Tag as DeviceViewModel;
+                        model.IsEnable = !model.IsEnable;
+
+                        DeviceService service = new DeviceService();
+                        service.EditDevice(model);
+
+                        node.ImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
+                        node.SelectedImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -358,6 +657,9 @@ namespace ConfigEditor
                     DialogResult dr = frm.ShowDialog();
                     if (dr == DialogResult.OK)
                     {
+                        ItemService service = new ItemService();
+                        service.EditItem(model);
+
                         //更新变量列表的对应行
                         lvi.SubItems[0].Text = model.Name;
                         lvi.SubItems[1].Text = model.Alias;
@@ -367,6 +669,37 @@ namespace ConfigEditor
                         lvi.SubItems[5].Text = model.Address;
                         lvi.SubItems[6].Text = model.Length.ToString();
                         lvi.SubItems[7].Text = model.ScanPeriod.ToString();
+
+                        lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
+                        this.itemPropertyGrid.SelectedObject = model;
+                    }
+                }
+
+                //编辑OpcItem变量
+                else if (this.opcitemlistView.Focused && this.opcitemlistView.SelectedItems.Count > 0)
+                {
+                    ListViewItem lvi = this.opcitemlistView.SelectedItems[0];
+                    DBConfigViewModel model = lvi.Tag as DBConfigViewModel;
+                   
+                 
+                    DBConfigEditForm frm = new DBConfigEditForm(this,model);
+                    DialogResult dr = frm.ShowDialog();
+                    if (dr == DialogResult.OK)
+                    {
+                        DBConfigService service = new DBConfigService();
+                        string tmp = model.Connection  + model.DB + "," + model.DBType + model.StartAddress + "," + model.Length;
+                        model.Address = tmp;
+                        service.EditDB(model);
+
+
+                        //更新变量列表的对应行
+                        lvi.SubItems[0].Text = model.DB;
+                        lvi.SubItems[1].Text = model.Code.ToString();
+                        lvi.SubItems[2].Text = model.Address;
+                        lvi.SubItems[3].Text = EnumHelper.EnumToCaption(model.Accessibility);
+                        //lvi.SubItems[4].Text = model.IsEnable.ToString();
+                        lvi.ImageKey = model.IsEnable ? "tag.bmp" : "disable_tag.png";
+                        //this.itemPropertyGrid.SelectedObject = model;
                     }
                 }
                 //编辑其他
@@ -385,7 +718,24 @@ namespace ConfigEditor
                         SerialPortViewModel model = node.Tag as SerialPortViewModel;
 
                         SerialPortEditForm frm = new SerialPortEditForm(this, model);
-                        frm.ShowDialog();
+                        DialogResult dr = frm.ShowDialog();
+                        if (dr == DialogResult.OK)
+                        {
+                            SerialPortService service = new SerialPortService();
+                            service.EditSerialPort(model);
+
+                            node.Text = model.PortName;
+                            node.ImageKey = model.IsEnable ? "port.png" : "disable_port.png";
+                            node.SelectedImageKey = model.IsEnable ? "port.png" : "disable_port.png";
+
+                            //更新串口下设备的通讯协议
+                            DeviceService ds = new DeviceService();
+                            foreach (DeviceViewModel dvm in model.Devices)
+                            {
+                                dvm.Protocol = model.Protocol;
+                                ds.EditDevice(dvm);
+                            }
+                        }
                     }
                     //设备节点
                     else if (tag.GetType() == typeof(DeviceViewModel))
@@ -394,9 +744,23 @@ namespace ConfigEditor
                         ChannelBase channel = node.Parent.Tag as ChannelBase;
 
                         DeviceEditForm frm = new DeviceEditForm(this, channel, model);
-                        frm.ShowDialog();
+                        DialogResult dr = frm.ShowDialog();
+                        if (dr == DialogResult.OK)
+                        {
+                            DeviceService service = new DeviceService();
+                            service.EditDevice(model);
+
+                            node.Text = model.Name;
+                            node.ImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
+                            node.SelectedImageKey = model.IsEnable ? "device.bmp" : "disable_device.bmp";
+                        }
                     }
 
+                }
+                else
+                {
+                    MessageBox.Show("请选择编辑的串口、设备或变量。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
             }
             catch (Exception ex)
@@ -431,10 +795,32 @@ namespace ConfigEditor
                         ListViewItem lvi = this.itemListView.Items[index];
                         ItemViewModel model = lvi.Tag as ItemViewModel;
 
-                        this.itemListView.Items.RemoveAt(index);
-                        model.Device.Items.Remove(model);
                         service.DeleteItem(model.Id);
+                        model.Device.Items.Remove(model);
+                        this.itemListView.Items.RemoveAt(index);
                     }
+                }
+                 //删除OpcItem变量
+                else if (this.opcitemlistView.Focused && this.opcitemlistView.SelectedItems.Count > 0)
+                {
+                    if (MessageBox.Show("确定删除DB块吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    {
+                        return;
+                    }
+
+                    DBConfigService service = new DBConfigService();
+                    ListView.SelectedIndexCollection indexList = this.opcitemlistView.SelectedIndices;
+                    for (int i = indexList.Count; i > 0; i--)
+                    {
+                        int index = indexList[i - 1];
+                        ListViewItem lvi = this.opcitemlistView.Items[index];
+                        DBConfigViewModel model = lvi.Tag as DBConfigViewModel;
+
+                        service.DeleteDB(model.SerialID);
+                        //model.Device.Items.Remove(model);
+                        this.opcitemlistView.Items.RemoveAt(index);
+                    }
+ 
                 }
                 //删除其他
                 else if (this.naviTreeView.Focused && this.naviTreeView.SelectedNode != null)
@@ -449,26 +835,31 @@ namespace ConfigEditor
                     //串口节点
                     if (tag.GetType() == typeof(SerialPortViewModel))
                     {
-                        if (MessageBox.Show("确定删除串口吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        if (MessageBox.Show("确定删除串口及其串口下的全部设备及变量吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                         {
                             return;
                         }
 
                         SerialPortViewModel model = node.Tag as SerialPortViewModel;
-                        this._project.SerialPorts.Remove(model);
 
                         SerialPortService service = new SerialPortService();
-                        service.DeleteSerialPort(model.Id);
+                        service.DeleteSerialPort(model);
+
+                        this._project.SerialPorts.Remove(model);
                     }
                     //设备节点
                     else if (tag.GetType() == typeof(DeviceViewModel))
                     {
-                        if (MessageBox.Show("确定删除设备吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        if (MessageBox.Show("确定删除设备及其设备下的全部变量吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                         {
                             return;
                         }
 
                         DeviceViewModel model = node.Tag as DeviceViewModel;
+
+                        DeviceService service = new DeviceService();
+                        service.DeleteDevice(model);
+
                         if (node.Level == 1)
                         {
                             this._project.Ethernet.Devices.Remove(model);
@@ -478,13 +869,15 @@ namespace ConfigEditor
                             SerialPortViewModel parentModel = node.Parent.Tag as SerialPortViewModel;
                             parentModel.Devices.Remove(model);
                         }
-
-                        DeviceService service = new DeviceService();
-                        service.DeleteDevice(model.Id);
                     }
 
                     this.itemListView.Items.Clear();
                     node.Parent.Nodes.Remove(node);
+                }
+                else
+                {
+                    MessageBox.Show("请选择删除的串口、设备或变量。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
                 }
             }
             catch (Exception ex)
@@ -503,7 +896,7 @@ namespace ConfigEditor
         {
             try
             {
-                ProjectPropertyForm frm = new ProjectPropertyForm();
+                ProjectPropertyForm frm = new ProjectPropertyForm(_project);
                 frm.ShowDialog();
             }
             catch (Exception ex)
@@ -532,6 +925,14 @@ namespace ConfigEditor
         {
             try
             {
+                if (MessageBox.Show("确定要清空项目吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+                {
+                    return;
+                }
+                ProjectReader.Clear();
+                LoadProject();
+
+                this.naviTreeView.SelectedNode = this.naviTreeView.Nodes[0];
             }
             catch (Exception ex)
             {
@@ -588,6 +989,8 @@ namespace ConfigEditor
             try
             {
                 this.itemListView.Items.Clear();
+                this.opcitemlistView.Items.Clear();
+
 
                 TreeNode node = e.Node;
                 object tag = node.Tag;
@@ -611,7 +1014,43 @@ namespace ConfigEditor
                         this.tsmiBatchAddItem.Enabled = false;
                         this.tsmiEdit.Enabled = false;
                         this.tsmiDelete.Enabled = false;
+                        this.tsmiEnable.Enabled = false;
+
+                        itemListView.Visible = true;
+                        opcitemlistView.Visible = false;
+                       
                     }
+
+
+                     else if (type == "DBConfig")
+                    {
+                        this.tsbAddSerialPort.Enabled = false;
+                        this.tsbAddDevice.Enabled = false;
+                        this.tsbAddItem.Enabled = true;
+                        this.tsbBatchAddItem.Enabled = false;
+                        this.tsbEdit.Enabled = true;
+                        this.tsbDelete.Enabled = true;
+
+                        this.tsmiAddSerialPort.Enabled = false;
+                        this.tsmiAddDevice.Enabled = false;
+                        this.tsmiAddItem.Enabled = true;
+                        this.tsmiBatchAddItem.Enabled = false;
+                        this.tsmiEdit.Enabled = true;
+                        this.tsmiDelete.Enabled = true;
+                        this.tsmiEnable.Enabled = false;
+                        this.itemPropertyGrid.SelectedObject = false;
+                      
+
+                       DBConfigViewModel dbconfig = node.Tag as DBConfigViewModel;
+
+                          
+                        this.RefreshOpcItemListView(dbconfig);
+
+                        itemListView.Visible = false;
+                        opcitemlistView.Visible = true;
+                        return;
+                    }
+
                     else
                     {
                         this.tsbAddSerialPort.Enabled = false;
@@ -627,8 +1066,14 @@ namespace ConfigEditor
                         this.tsmiBatchAddItem.Enabled = false;
                         this.tsmiEdit.Enabled = false;
                         this.tsmiDelete.Enabled = false;
+                        this.tsmiEnable.Enabled = false;
+
+                        itemListView.Visible = true;
+                        opcitemlistView.Visible = false;
+
                     }
                 }
+
                 else if (node.Level == 1)
                 {
                     //2级节点
@@ -648,27 +1093,44 @@ namespace ConfigEditor
                         this.tsmiBatchAddItem.Enabled = false;
                         this.tsmiEdit.Enabled = true;
                         this.tsmiDelete.Enabled = true;
+                        this.tsmiEnable.Enabled = true;
+
+                        itemListView.Visible = true;
+                        opcitemlistView.Visible = false;
+
+                        this.itemPropertyGrid.SelectedObject = null;
+                        DeviceViewModel device = node.Tag as DeviceViewModel;
+                        this.RefreshItemListView(device);
+                        return;
                     }
+
                     else
                     {
                         this.tsbAddSerialPort.Enabled = false;
-                        this.tsbAddDevice.Enabled = true;
+                        this.tsbAddDevice.Enabled = false;
                         this.tsbAddItem.Enabled = true;
                         this.tsbBatchAddItem.Enabled = true;
                         this.tsbEdit.Enabled = true;
                         this.tsbDelete.Enabled = true;
 
                         this.tsmiAddSerialPort.Enabled = false;
-                        this.tsmiAddDevice.Enabled = true;
+                        this.tsmiAddDevice.Enabled = false;
                         this.tsmiAddItem.Enabled = true;
                         this.tsmiBatchAddItem.Enabled = true;
                         this.tsmiEdit.Enabled = true;
                         this.tsmiDelete.Enabled = true;
+                        this.tsmiEnable.Enabled = true;
 
+                        itemListView.Visible = true;
+                        opcitemlistView.Visible = false;
+
+                        this.itemPropertyGrid.SelectedObject = null;
                         DeviceViewModel device = node.Tag as DeviceViewModel;
                         this.RefreshItemListView(device);
                         return;
+
                     }
+
                 }
                 else
                 {
@@ -686,13 +1148,20 @@ namespace ConfigEditor
                     this.tsmiBatchAddItem.Enabled = true;
                     this.tsmiEdit.Enabled = true;
                     this.tsmiDelete.Enabled = true;
+                    this.tsmiEnable.Enabled = true;
 
+
+                    itemListView.Visible = true;
+                    opcitemlistView.Visible = false;
+
+                    this.itemPropertyGrid.SelectedObject = null;
                     DeviceViewModel device = node.Tag as DeviceViewModel;
                     this.RefreshItemListView(device);
                     return;
                 }
 
                 this.itemListView.Items.Clear();
+                this.opcitemlistView.Items.Clear();
                 this.itemPropertyGrid.SelectedObject = null;
             }
             catch (Exception ex)
@@ -748,6 +1217,97 @@ namespace ConfigEditor
         private void itemListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.tsmiEdit_Click(this, null);
+        }
+
+        /// <summary>
+        /// 更新变量到EMS
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmiUpdateEms_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UpdateEmsForm frm = new UpdateEmsForm(this);
+                frm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// 测试方法
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tsmiTest_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                XmlFileGenerator.CreateMD44File();
+                XmlFileGenerator.CreateMDIAFile();
+                XmlFileGenerator.CreateR5104File();
+                XmlFileGenerator.CreateR5104VFile();
+
+                MessageBox.Show("成功生成XML文件。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+     
+        /// <summary>
+        /// Del键删除选中行
+        /// </summary>
+        private void opcitemlistView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                this.tsmiDelete_Click(this, null);
+            }
+        }
+
+        /// <summary>
+        /// 更新变量到EMS
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void opcitemlistView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.tsmiEdit_Click(this, null);
+        }
+
+        /// <summary>
+        /// 选择OpcItem变量对象
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void opcitemlistView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.opcitemlistView.SelectedItems.Count == 0)
+                {
+                    //this.itemPropertyGrid.SelectedObject = null;
+                    return;
+                }
+
+                ListViewItem lvi = this.opcitemlistView.SelectedItems[0];
+                DBConfigViewModel model = lvi.Tag as DBConfigViewModel;
+
+                //this.itemPropertyGrid.SelectedObject = model;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

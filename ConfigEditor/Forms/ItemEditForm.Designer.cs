@@ -85,7 +85,7 @@
             "线圈(0x)",
             "离散量输入(1x) ",
             "输入寄存器(3x)",
-            "保存寄存器(4x)"});
+            "保持寄存器(4x)"});
             this.cmbTableName.Location = new System.Drawing.Point(88, 18);
             this.cmbTableName.Name = "cmbTableName";
             this.cmbTableName.Size = new System.Drawing.Size(128, 20);
@@ -169,7 +169,7 @@
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(65, 12);
             this.label15.TabIndex = 12;
-            this.label15.Text = "小数精度：";
+            this.label15.Text = "小数位数：";
             // 
             // label14
             // 
@@ -302,7 +302,7 @@
             // 
             // txtMinimum
             // 
-            this.txtMinimum.Location = new System.Drawing.Point(339, 232);
+            this.txtMinimum.Location = new System.Drawing.Point(101, 233);
             this.txtMinimum.Name = "txtMinimum";
             this.txtMinimum.Size = new System.Drawing.Size(128, 21);
             this.txtMinimum.TabIndex = 21;
@@ -310,7 +310,7 @@
             // 
             // txtMaximum
             // 
-            this.txtMaximum.Location = new System.Drawing.Point(101, 232);
+            this.txtMaximum.Location = new System.Drawing.Point(339, 236);
             this.txtMaximum.Name = "txtMaximum";
             this.txtMaximum.Size = new System.Drawing.Size(128, 21);
             this.txtMaximum.TabIndex = 19;

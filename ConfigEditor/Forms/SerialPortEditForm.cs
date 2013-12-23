@@ -91,6 +91,7 @@ namespace ConfigEditor.Forms
             try
             {
                 string[] portNames = System.IO.Ports.SerialPort.GetPortNames();
+                
 
                 this.cmbPortName.Items.AddRange(portNames);
                 this.cmbBaudRate.Items.AddRange(EditHelper.COMMON_BAUD_RATE.Select(obj => obj.ToString()).ToArray());
@@ -109,11 +110,40 @@ namespace ConfigEditor.Forms
                 }
                 else if (this._action == UserActions.Edit)
                 {
+                    Parity parity = Parity.None;
+                    string parityShow = "无";
+                    bool success = Enum.TryParse<Parity>(this._model.Parity, out parity);
+                    if (success)
+                    {
+                        switch (parity)
+                        {
+                            case Parity.Even:
+                                parityShow = "偶";
+                                break;
+
+                            case Parity.Odd:
+                                parityShow = "奇";
+                                break;
+
+                            case Parity.None:
+                                parityShow = "无";
+                                break;
+
+                            case Parity.Mark:
+                                parityShow = "标志";
+                                break;
+
+                            case Parity.Space:
+                                parityShow = "空格";
+                                break;
+                        }
+                    }
+
                     this.cmbPortName.Text = this._model.PortName;
                     this.cmbBaudRate.Text = this._model.BaudRate.ToString();
                     this.cmbDataBits.Text = this._model.DataBits.ToString();
-                    this.cmbParity.Text = this._model.Parity;
-                    this.cmbStopBits.Text = this._model.StopBits;
+                    this.cmbParity.Text = parityShow;
+                    this.cmbStopBits.Text = (this._model.StopBits == "3" ) ? "1.5" : this._model.StopBits;
                     this.chkIsEnable.Checked = this._model.IsEnable;
 
                     if (this._model.Protocol == ModbusProtocols.ModbusRTU)
@@ -144,7 +174,7 @@ namespace ConfigEditor.Forms
             {
                 if (!Regex.IsMatch(this.cmbPortName.Text, @"^COM[0-9]+$"))
                 {
-                    MessageBox.Show("串口号格式不正确。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("串口号格式不正确,正确格式如：COM1", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
@@ -161,6 +191,30 @@ namespace ConfigEditor.Forms
                     return;
                 }
 
+                Parity parity = Parity.None;
+                switch (this.cmbParity.Text)
+                {
+                    case "偶":
+                        parity = Parity.Even;
+                        break;
+
+                    case "奇":
+                        parity = Parity.Odd;
+                        break;
+
+                    case "无":
+                        parity = Parity.None;
+                        break;
+
+                    case "标志":
+                        parity = Parity.Mark;
+                        break;
+
+                    case "空格":
+                        parity = Parity.Space;
+                        break;
+                }
+
                 if (this._action == UserActions.Add)
                 {
                     this._model = new SerialPortViewModel();
@@ -168,7 +222,7 @@ namespace ConfigEditor.Forms
                     this._model.PortName = this.cmbPortName.Text;
                     this._model.BaudRate = Convert.ToInt32(this.cmbBaudRate.Text);
                     this._model.DataBits = Convert.ToInt32(this.cmbDataBits.Text);
-                    this._model.Parity = this.cmbParity.Text;
+                    this._model.Parity = parity.ToString();
                     this._model.StopBits = this.cmbStopBits.Text;
                     this._model.IsEnable = this.chkIsEnable.Checked;
 
@@ -180,13 +234,14 @@ namespace ConfigEditor.Forms
                     {
                         this._model.Protocol = ModbusProtocols.ModbusASCII;
                     }
+
                 }
                 else
                 {
                     this._model.PortName = this.cmbPortName.Text;
                     this._model.BaudRate = Convert.ToInt32(this.cmbBaudRate.Text);
                     this._model.DataBits = Convert.ToInt32(this.cmbDataBits.Text);
-                    this._model.Parity = this.cmbParity.Text;
+                    this._model.Parity = parity.ToString();
                     this._model.StopBits = this.cmbStopBits.Text;
                     this._model.IsEnable = this.chkIsEnable.Checked;
 
@@ -201,6 +256,7 @@ namespace ConfigEditor.Forms
                 }
 
                 this.DialogResult = DialogResult.OK;
+              
             }
             catch (Exception ex)
             {

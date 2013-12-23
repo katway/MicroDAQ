@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ConfigEditor.Core.ViewModels;
+using ConfigEditor.Core.Models;
+using ConfigEditor.Core.Database;
 
 namespace ConfigEditor.Core.Services
 {
@@ -29,6 +31,104 @@ namespace ConfigEditor.Core.Services
         /// <param name="model"></param>
         public void AddDevice(DeviceViewModel model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException("输入的参数为空。");
+            }
+
+            if (model.ChannelType == ChannelTypes.SerialPort)
+            {
+                //串口通道的从站
+                SerialPortViewModel sp = model.Channel as SerialPortViewModel;
+
+                ModbusMasterDao mmDao = new ModbusMasterDao();
+                ModbusMaster mm = mmDao.GetBySerialPortID(sp.Id);
+
+                ModbusSlave ms = new ModbusSlave()
+                {
+                    Name = model.Name,
+                    Allias = model.Alias,
+                    Type = model.Protocol.ToString(),
+                    Slave = model.Slave,
+                    ModbusMaster_SerialID = mm.SerialID,
+                    IPSetting_SerialID = 0,
+                    Enable = model.IsEnable.ToString()
+                };
+
+                ModbusSlaveDao dao = new ModbusSlaveDao();
+                dao.Insert(ms);
+
+                model.Id = dao.GetLastSerialID();
+            }
+            else
+            {
+                //创建ModbusGateway对象
+                ModbusGatewayDao mgDao = new ModbusGatewayDao();
+                IList<ModbusGateway> mgList = mgDao.GetAll();
+                ModbusGateway mg = null;
+                if (mgList != null)
+                {
+                    mg = mgList.SingleOrDefault(obj => obj.Name == "Modbus");
+                    if (mg == null)
+                    {
+                        mg = new ModbusGateway()
+                        {
+                            Name = "Modbus",
+                            Allias = "Modbus",
+                            Enable = "True"
+                        };
+
+                        mgDao.Insert(mg);
+
+                        mg.SerialID = mgDao.GetLastSerialID();
+                    }
+                }
+
+                //以太网通道的从站
+                ModbusMasterDao mmDao = new ModbusMasterDao();
+                ModbusMaster mm = mmDao.GetBySerialPortID(0);
+                if (mm == null)
+                {
+                    //插入记录
+                    mm = new ModbusMaster()
+                    {
+                        SerialPort_SerialID = 0,
+                        ModbusGateway_SerialID = (mg != null) ? mg.SerialID : 0,
+                        Name = "TCP",
+                        Allias = "TCP",
+                        Enable = model.IsEnable.ToString()
+                    };
+
+                    mmDao.Insert(mm);
+                    mm.SerialID = mmDao.GetLastSerialID();
+                }
+
+                IPSetting ips = new IPSetting()
+                {
+                    IP = model.IpAddress,
+                    Port = model.IpPort,
+                    Enable = model.IsEnable.ToString()
+                };
+
+                IPSettingDao ipsDao = new IPSettingDao();
+                ipsDao.Insert(ips);
+
+                ModbusSlave ms = new ModbusSlave()
+                {
+                    Name = model.Name,
+                    Allias = model.Alias,
+                    Type = model.Protocol.ToString(),
+                    Slave = model.Slave,
+                    ModbusMaster_SerialID = (mm != null) ? mm.SerialID : 0,
+                    IPSetting_SerialID = ipsDao.GetLastSerialID(),
+                    Enable = model.IsEnable.ToString()
+                };
+
+                ModbusSlaveDao dao = new ModbusSlaveDao();
+                dao.Insert(ms);
+
+                model.Id = dao.GetLastSerialID();
+            }
 
         }
 
@@ -38,7 +138,86 @@ namespace ConfigEditor.Core.Services
         /// <param name="model"></param>
         public void EditDevice(DeviceViewModel model)
         {
+            if (model == null || model.Id == 0)
+            {
+                throw new ArgumentNullException("输入的参数为空。");
+            }
 
+            if (model.ChannelType == ChannelTypes.SerialPort)
+            {
+                SerialPortViewModel sp = model.Channel as SerialPortViewModel;
+
+                ModbusMasterDao mmDao = new ModbusMasterDao();
+                ModbusMaster mm = mmDao.GetBySerialPortID(sp.Id);
+
+                ModbusSlave ms = new ModbusSlave()
+                {
+                    SerialID = model.Id,
+                    Name = model.Name,
+                    Allias = model.Alias,
+                    Type = model.Protocol.ToString(),
+                    Slave = model.Slave,
+                    ModbusMaster_SerialID = mm.SerialID,
+                    IPSetting_SerialID = 0,
+                    Enable = model.IsEnable.ToString()
+                };
+
+                ModbusSlaveDao dao = new ModbusSlaveDao();
+                dao.Update(ms);
+            }
+            else
+            {
+                ModbusSlaveDao dao = new ModbusSlaveDao();
+                ModbusSlave ms = dao.GetByID(model.Id);
+                ms.Name = model.Name;
+                ms.Allias = model.Alias;
+                ms.Type = model.Protocol.ToString();
+                ms.Slave = model.Slave;
+                ms.Enable = model.IsEnable.ToString();
+                dao.Update(ms);
+
+                IPSettingDao ipsDao = new IPSettingDao();
+                IPSetting ips = ipsDao.GetByID((int)ms.IPSetting_SerialID);
+                ips.IP = model.IpAddress;
+                ips.Port = model.IpPort;
+                ips.Enable = model.IsEnable.ToString();
+                ipsDao.Update(ips);
+            }
+        }
+
+        /// <summary>
+        /// 删除设备
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteDevice(DeviceViewModel model)
+        {
+            if (model == null || model.Id == 0)
+            {
+                throw new ArgumentNullException("输入的参数为空。");
+            }
+
+            //删除变量
+            ModbusRegisterDao mrDao = new ModbusRegisterDao();
+            foreach (var item in model.Items)
+            {
+                mrDao.Delete(item.Id);
+            }
+
+            //删除从机
+            ModbusSlaveDao msDao = new ModbusSlaveDao();
+            ModbusSlave ms = msDao.GetByID(model.Id);
+            msDao.Delete(model.Id);
+
+            //删除IP设置
+            IPSettingDao ipsDao = new IPSettingDao();
+            IList<IPSetting> ipsList = ipsDao.GetAll();
+            foreach (IPSetting ips in ipsList)
+            {
+                if (ips.SerialID == ms.IPSetting_SerialID)
+                {
+                    ipsDao.Delete((int)ips.SerialID);
+                }
+            }
         }
 
         /// <summary>
@@ -47,7 +226,26 @@ namespace ConfigEditor.Core.Services
         /// <param name="id"></param>
         public void DeleteDevice(int id)
         {
+            if (id == 0)
+            {
+                throw new ArgumentNullException("输入的参数为空。");
+            }
 
+            //Todo：删除变量
+
+            ModbusSlaveDao dao = new ModbusSlaveDao();
+            ModbusSlave model = dao.GetByID(id);
+            dao.Delete(id);
+
+            IPSettingDao ipsDao = new IPSettingDao();
+            IList<IPSetting> ipsList = ipsDao.GetAll();
+            foreach (IPSetting ips in ipsList)
+            {
+                if (ips.SerialID == model.IPSetting_SerialID)
+                {
+                    ipsDao.Delete((int)ips.SerialID);
+                }
+            }
         }
     }
 }

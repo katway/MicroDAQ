@@ -1,4 +1,16 @@
-﻿using System;
+﻿/**
+ * 文件名：Program.cs
+ * 说明：程序启动类
+ * 作者：林安城
+ * 更改记录： 
+ * -------------------------------------------------------
+ * 改动人 	时间 			原因
+ * -------------------------------------------------------
+ * 林安城 	2013-09-20		创建文件
+ * -------------------------------------------------------
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -7,6 +19,9 @@ using Microsoft.VisualBasic.ApplicationServices;
 
 namespace ConfigEditor
 {
+    /// <summary>
+    /// 程序启动类
+    /// </summary>
     static class Program
     {
         //日志

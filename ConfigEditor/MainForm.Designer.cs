@@ -30,8 +30,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("串口");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("以太网");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("串口");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("以太网");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("DB块");
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.文件FToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiProjectProperty = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +50,9 @@
             this.tsmiDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.工具TToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiClearProject = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiUpdateEms = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiTest = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助HToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolStrip = new System.Windows.Forms.ToolStrip();
@@ -61,6 +64,8 @@
             this.tsbEdit = new System.Windows.Forms.ToolStripButton();
             this.tsbDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbHelp = new System.Windows.Forms.ToolStripButton();
             this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -68,6 +73,11 @@
             this.naviTreeView = new System.Windows.Forms.TreeView();
             this.commonImageList = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.opcitemlistView = new System.Windows.Forms.ListView();
+            this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader12 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.itemListView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -130,19 +140,19 @@
             // tsmiProjectProperty
             // 
             this.tsmiProjectProperty.Name = "tsmiProjectProperty";
-            this.tsmiProjectProperty.Size = new System.Drawing.Size(152, 22);
+            this.tsmiProjectProperty.Size = new System.Drawing.Size(139, 22);
             this.tsmiProjectProperty.Text = "项目属性(&P)";
             this.tsmiProjectProperty.Click += new System.EventHandler(this.tsmiProjectProperty_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(136, 6);
             // 
             // tsmiExit
             // 
             this.tsmiExit.Name = "tsmiExit";
-            this.tsmiExit.Size = new System.Drawing.Size(152, 22);
+            this.tsmiExit.Size = new System.Drawing.Size(139, 22);
             this.tsmiExit.Text = "退出(&X)";
             this.tsmiExit.Click += new System.EventHandler(this.tsmiExit_Click);
             // 
@@ -164,7 +174,7 @@
             // 
             // tsmiAddSerialPort
             // 
-            this.tsmiAddSerialPort.Image = global::ConfigEditor.Properties.Resources.new_channel;
+            this.tsmiAddSerialPort.Image = global::ConfigEditor.Properties.Resources.new_port_16;
             this.tsmiAddSerialPort.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsmiAddSerialPort.Name = "tsmiAddSerialPort";
             this.tsmiAddSerialPort.Size = new System.Drawing.Size(164, 22);
@@ -217,6 +227,8 @@
             // 
             // tsmiEdit
             // 
+            this.tsmiEdit.Image = global::ConfigEditor.Properties.Resources.property;
+            this.tsmiEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsmiEdit.Name = "tsmiEdit";
             this.tsmiEdit.Size = new System.Drawing.Size(164, 22);
             this.tsmiEdit.Text = "编辑(&E)";
@@ -224,6 +236,7 @@
             // 
             // tsmiDelete
             // 
+            this.tsmiDelete.Image = global::ConfigEditor.Properties.Resources.delete_16;
             this.tsmiDelete.Name = "tsmiDelete";
             this.tsmiDelete.Size = new System.Drawing.Size(164, 22);
             this.tsmiDelete.Text = "删除(&D)";
@@ -233,7 +246,9 @@
             // 
             this.工具TToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiClearProject,
-            this.tsmiOptions});
+            this.tsmiUpdateEms,
+            this.tsmiOptions,
+            this.tsmiTest});
             this.工具TToolStripMenuItem.Name = "工具TToolStripMenuItem";
             this.工具TToolStripMenuItem.Size = new System.Drawing.Size(59, 21);
             this.工具TToolStripMenuItem.Text = "工具(&T)";
@@ -241,16 +256,33 @@
             // tsmiClearProject
             // 
             this.tsmiClearProject.Name = "tsmiClearProject";
-            this.tsmiClearProject.Size = new System.Drawing.Size(152, 22);
+            this.tsmiClearProject.Size = new System.Drawing.Size(163, 22);
             this.tsmiClearProject.Text = "清空项目(&C)";
             this.tsmiClearProject.Click += new System.EventHandler(this.tsmiClearProject_Click);
+            // 
+            // tsmiUpdateEms
+            // 
+            this.tsmiUpdateEms.Name = "tsmiUpdateEms";
+            this.tsmiUpdateEms.Size = new System.Drawing.Size(163, 22);
+            this.tsmiUpdateEms.Text = "更新到 EMS (&U)";
+            this.tsmiUpdateEms.ToolTipText = "更新变量到 EMS 系统";
+            this.tsmiUpdateEms.Click += new System.EventHandler(this.tsmiUpdateEms_Click);
             // 
             // tsmiOptions
             // 
             this.tsmiOptions.Name = "tsmiOptions";
-            this.tsmiOptions.Size = new System.Drawing.Size(152, 22);
+            this.tsmiOptions.Size = new System.Drawing.Size(163, 22);
             this.tsmiOptions.Text = "选项(&O)";
+            this.tsmiOptions.Visible = false;
             this.tsmiOptions.Click += new System.EventHandler(this.tsmiOptions_Click);
+            // 
+            // tsmiTest
+            // 
+            this.tsmiTest.Name = "tsmiTest";
+            this.tsmiTest.Size = new System.Drawing.Size(163, 22);
+            this.tsmiTest.Text = "测试";
+            this.tsmiTest.Visible = false;
+            this.tsmiTest.Click += new System.EventHandler(this.tsmiTest_Click);
             // 
             // 帮助HToolStripMenuItem
             // 
@@ -278,6 +310,8 @@
             this.tsbEdit,
             this.tsbDelete,
             this.toolStripSeparator7,
+            this.toolStripButton1,
+            this.toolStripSeparator6,
             this.tsbHelp});
             this.mainToolStrip.Location = new System.Drawing.Point(0, 25);
             this.mainToolStrip.Name = "mainToolStrip";
@@ -287,7 +321,7 @@
             // 
             // tsbAddSerialPort
             // 
-            this.tsbAddSerialPort.Image = ((System.Drawing.Image)(resources.GetObject("tsbAddSerialPort.Image")));
+            this.tsbAddSerialPort.Image = global::ConfigEditor.Properties.Resources.new_port_16;
             this.tsbAddSerialPort.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddSerialPort.Name = "tsbAddSerialPort";
             this.tsbAddSerialPort.Size = new System.Drawing.Size(76, 22);
@@ -342,7 +376,7 @@
             // 
             // tsbDelete
             // 
-            this.tsbDelete.Image = ((System.Drawing.Image)(resources.GetObject("tsbDelete.Image")));
+            this.tsbDelete.Image = global::ConfigEditor.Properties.Resources.delete_16;
             this.tsbDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDelete.Name = "tsbDelete";
             this.tsbDelete.Size = new System.Drawing.Size(52, 22);
@@ -353,6 +387,21 @@
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.Image = global::ConfigEditor.Properties.Resources.update_database;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(94, 22);
+            this.toolStripButton1.Text = "更新到 EMS";
+            this.toolStripButton1.ToolTipText = "更新变量到 EMS 系统";
+            this.toolStripButton1.Click += new System.EventHandler(this.tsmiUpdateEms_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
             // 
             // tsbHelp
             // 
@@ -403,20 +452,30 @@
             // 
             this.naviTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.naviTreeView.HideSelection = false;
-            this.naviTreeView.ImageIndex = 0;
+            this.naviTreeView.ImageKey = "device.bmp";
             this.naviTreeView.ImageList = this.commonImageList;
             this.naviTreeView.Location = new System.Drawing.Point(0, 0);
             this.naviTreeView.Name = "naviTreeView";
-            treeNode3.Name = "节点0";
-            treeNode3.Tag = "SerialPorts";
-            treeNode3.Text = "串口";
-            treeNode4.Name = "节点1";
-            treeNode4.Tag = "Ethernet";
-            treeNode4.Text = "以太网";
+            treeNode4.ImageKey = "port.png";
+            treeNode4.Name = "串口";
+            treeNode4.SelectedImageKey = "port.png";
+            treeNode4.Tag = "SerialPorts";
+            treeNode4.Text = "串口";
+            treeNode5.ImageKey = "ethernet.png";
+            treeNode5.Name = "以太网";
+            treeNode5.SelectedImageKey = "ethernet.png";
+            treeNode5.Tag = "Ethernet";
+            treeNode5.Text = "以太网";
+            treeNode6.ImageKey = "new_tag.bmp";
+            treeNode6.Name = "DB块";
+            treeNode6.SelectedImageKey = "new_tag.bmp";
+            treeNode6.Tag = "DBConfig";
+            treeNode6.Text = "DB块";
             this.naviTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3,
-            treeNode4});
-            this.naviTreeView.SelectedImageIndex = 0;
+            treeNode4,
+            treeNode5,
+            treeNode6});
+            this.naviTreeView.SelectedImageKey = "device.bmp";
             this.naviTreeView.Size = new System.Drawing.Size(220, 610);
             this.naviTreeView.TabIndex = 0;
             this.naviTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.naviTreeView_AfterSelect);
@@ -443,6 +502,10 @@
             this.commonImageList.Images.SetKeyName(15, "warning.png");
             this.commonImageList.Images.SetKeyName(16, "error.png");
             this.commonImageList.Images.SetKeyName(17, "view.png");
+            this.commonImageList.Images.SetKeyName(18, "ethernet.png");
+            this.commonImageList.Images.SetKeyName(19, "port.png");
+            this.commonImageList.Images.SetKeyName(20, "disable_port.png");
+            this.commonImageList.Images.SetKeyName(21, "disable_tag.png");
             // 
             // splitContainer2
             // 
@@ -453,6 +516,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.opcitemlistView);
             this.splitContainer2.Panel1.Controls.Add(this.itemListView);
             // 
             // splitContainer2.Panel2
@@ -461,6 +525,47 @@
             this.splitContainer2.Size = new System.Drawing.Size(784, 610);
             this.splitContainer2.SplitterDistance = 574;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // opcitemlistView
+            // 
+            this.opcitemlistView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader9,
+            this.columnHeader10,
+            this.columnHeader11,
+            this.columnHeader12});
+            this.opcitemlistView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.opcitemlistView.FullRowSelect = true;
+            this.opcitemlistView.HideSelection = false;
+            this.opcitemlistView.Location = new System.Drawing.Point(0, 0);
+            this.opcitemlistView.Name = "opcitemlistView";
+            this.opcitemlistView.Size = new System.Drawing.Size(574, 610);
+            this.opcitemlistView.SmallImageList = this.commonImageList;
+            this.opcitemlistView.StateImageList = this.commonImageList;
+            this.opcitemlistView.TabIndex = 1;
+            this.opcitemlistView.UseCompatibleStateImageBehavior = false;
+            this.opcitemlistView.View = System.Windows.Forms.View.Details;
+            this.opcitemlistView.SelectedIndexChanged += new System.EventHandler(this.opcitemlistView_SelectedIndexChanged);
+            this.opcitemlistView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.opcitemlistView_KeyDown);
+            this.opcitemlistView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.opcitemlistView_MouseDoubleClick);
+            // 
+            // columnHeader9
+            // 
+            this.columnHeader9.Text = "名称";
+            this.columnHeader9.Width = 80;
+            // 
+            // columnHeader10
+            // 
+            this.columnHeader10.Text = "识别码";
+            // 
+            // columnHeader11
+            // 
+            this.columnHeader11.Text = "链接地址";
+            this.columnHeader11.Width = 260;
+            // 
+            // columnHeader12
+            // 
+            this.columnHeader12.Text = "读写属性";
+            this.columnHeader12.Width = 180;
             // 
             // itemListView
             // 
@@ -475,6 +580,7 @@
             this.columnHeader8});
             this.itemListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.itemListView.FullRowSelect = true;
+            this.itemListView.HideSelection = false;
             this.itemListView.Location = new System.Drawing.Point(0, 0);
             this.itemListView.Name = "itemListView";
             this.itemListView.Size = new System.Drawing.Size(574, 610);
@@ -490,7 +596,7 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "名称";
-            this.columnHeader1.Width = 150;
+            this.columnHeader1.Width = 140;
             // 
             // columnHeader2
             // 
@@ -503,11 +609,12 @@
             // columnHeader4
             // 
             this.columnHeader4.Text = "数据类型";
+            this.columnHeader4.Width = 70;
             // 
             // columnHeader5
             // 
             this.columnHeader5.Text = "功能区";
-            this.columnHeader5.Width = 80;
+            this.columnHeader5.Width = 75;
             // 
             // columnHeader6
             // 
@@ -519,12 +626,13 @@
             // 
             this.columnHeader7.Text = "长度";
             this.columnHeader7.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeader7.Width = 40;
             // 
             // columnHeader8
             // 
             this.columnHeader8.Text = "刷新周期(秒)";
             this.columnHeader8.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeader8.Width = 85;
+            this.columnHeader8.Width = 100;
             // 
             // itemPropertyGrid
             // 
@@ -705,6 +813,15 @@
         private System.Windows.Forms.ToolStripMenuItem 编辑ToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem1;
         private System.Windows.Forms.ToolStripButton tsbEdit;
+        private System.Windows.Forms.ToolStripMenuItem tsmiUpdateEms;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem tsmiTest;
+        private System.Windows.Forms.ListView opcitemlistView;
+        private System.Windows.Forms.ColumnHeader columnHeader9;
+        private System.Windows.Forms.ColumnHeader columnHeader10;
+        private System.Windows.Forms.ColumnHeader columnHeader11;
+        private System.Windows.Forms.ColumnHeader columnHeader12;
     }
 }
 

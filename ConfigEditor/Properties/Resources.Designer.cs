@@ -60,9 +60,23 @@ namespace ConfigEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap about {
+            get {
+                object obj = ResourceManager.GetObject("about", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap channel {
             get {
                 object obj = ResourceManager.GetObject("channel", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap delete_16 {
+            get {
+                object obj = ResourceManager.GetObject("delete_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -95,6 +109,20 @@ namespace ConfigEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap disable_port {
+            get {
+                object obj = ResourceManager.GetObject("disable_port", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap disable_tag {
+            get {
+                object obj = ResourceManager.GetObject("disable_tag", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap edit_tag {
             get {
                 object obj = ResourceManager.GetObject("edit_tag", resourceCulture);
@@ -105,6 +133,13 @@ namespace ConfigEditor.Properties {
         internal static System.Drawing.Bitmap group {
             get {
                 object obj = ResourceManager.GetObject("group", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap network_ethernet_16 {
+            get {
+                object obj = ResourceManager.GetObject("network_ethernet_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -130,9 +165,23 @@ namespace ConfigEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap new_port_16 {
+            get {
+                object obj = ResourceManager.GetObject("new_port_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap new_tag {
             get {
                 object obj = ResourceManager.GetObject("new_tag", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap port_16 {
+            get {
+                object obj = ResourceManager.GetObject("port_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -144,9 +193,23 @@ namespace ConfigEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap splash {
+            get {
+                object obj = ResourceManager.GetObject("splash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap tag {
             get {
                 object obj = ResourceManager.GetObject("tag", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap update_database {
+            get {
+                object obj = ResourceManager.GetObject("update_database", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

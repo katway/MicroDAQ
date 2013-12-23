@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Device xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Lighthouse R5104" Protocols="ModbusASCII">
+  <Items>
+    <Item>
+      <Name>Status</Name>
+      <DataModel>InputRegisters</DataModel>
+      <Address>0x0006</Address>
+      <Length>2</Length>
+      <DataType>Integer</DataType>
+      <Access>ReadOnly</Access>
+    </Item>
+    <Item>
+      <Name>Channel1</Name>
+      <DataModel>InputRegisters</DataModel>
+      <Address>0x0008</Address>
+      <Length>2</Length>
+      <DataType>Integer</DataType>
+      <Access>ReadOnly</Access>
+    </Item>
+    <Item>
+      <Name>Channel2</Name>
+      <DataModel>InputRegisters</DataModel>
+      <Address>0x000A</Address>
+      <Length>2</Length>
+      <DataType>Integer</DataType>
+      <Access>ReadOnly</Access>
+    </Item>
+  </Items>
+</Device>

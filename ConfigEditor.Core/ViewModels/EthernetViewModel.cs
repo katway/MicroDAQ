@@ -23,24 +23,12 @@ namespace ConfigEditor.Core.ViewModels
     /// </summary>
     public class EthernetViewModel : ChannelBase
     {
-
-        //Modbus通讯协议
-        private ModbusProtocols _protocol;
-
-        /// <summary>
-        /// Modbus通讯协议
-        /// </summary>
-        public ModbusProtocols Protocol
-        {
-            get { return _protocol; }
-            set { _protocol = value; }
-        }
-
         public EthernetViewModel()
         {
-            Type = ChannelTypes.SerialPort;
+            Type = ChannelTypes.Ethernet;
             Protocol = ModbusProtocols.ModbusTCP;
             Devices = new List<DeviceViewModel>();
+            IsEnable = true;
         }
     }
 }

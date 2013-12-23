@@ -17,11 +17,14 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using ConfigEditor.Core.Models;
 using ConfigEditor.Core.ViewModels;
-using System.Text.RegularExpressions;
 using ConfigEditor.Util;
+using ConfigEditor.Core.Xml;
+using ConfigEditor.Core.Util;
 
 namespace ConfigEditor.Forms
 {
@@ -98,6 +101,7 @@ namespace ConfigEditor.Forms
                 if (this._action == UserActions.Add)
                 {
                     this.cmbDeviceModels.SelectedIndex = 0;
+                    this.cmbProtocol.SelectedIndex = (int)this._channel.Protocol;
                     this.txtName.Text = this.GetNewDeviceName();
                     this.txtSlave.Text = this.GetNewSlave().ToString();
 
@@ -105,16 +109,19 @@ namespace ConfigEditor.Forms
                     {
                         this.txtIp.Enabled = true;
                         this.txtPort.Enabled = true;
+                        this.panel1.Visible = true;
                     }
                     else
                     {
                         this.txtIp.Enabled = false;
                         this.txtPort.Enabled = false;
+                        this.panel1.Visible = false;
                     }
                 }
                 else if (this._action == UserActions.Edit)
                 {
                     this.cmbDeviceModels.Enabled = false;
+                    this.cmbProtocol.SelectedIndex = (int)this._model.Protocol;
                     this.txtName.Text = this._model.Name;
                     this.txtAlias.Text = this._model.Alias;
                     this.txtSlave.Text = this._model.Slave.ToString();
@@ -122,15 +129,17 @@ namespace ConfigEditor.Forms
                     this.txtPort.Text = this._model.IpPort.ToString();
                     this.chkIsEnable.Checked = this._model.IsEnable;
 
-                    if (this._model.Protocol == ModbusProtocols.ModbusTCP)
+                    if (this._channel.Protocol == ModbusProtocols.ModbusTCP)
                     {
                         this.txtIp.Enabled = true;
                         this.txtPort.Enabled = true;
+                        this.panel1.Visible = true;
                     }
                     else
                     {
                         this.txtIp.Enabled = false;
                         this.txtPort.Enabled = false;
+                        this.panel1.Visible = false;
                     }
                 }
             }
@@ -180,6 +189,8 @@ namespace ConfigEditor.Forms
                 {
                     this._model = new DeviceViewModel();
                     this._model.Channel = this._channel;
+                    this._model.ChannelType = this._channel.Type;
+                    this._model.Protocol = (this._channel.Protocol != ModbusProtocols.ModbusTCP) ? this._channel.Protocol : (ModbusProtocols)this.cmbProtocol.SelectedIndex;
 
                     this._model.Name = this.txtName.Text;
                     this._model.Alias = this.txtAlias.Text;
@@ -187,9 +198,20 @@ namespace ConfigEditor.Forms
                     this._model.IpAddress = this.txtIp.Text;
                     this._model.IpPort = Convert.ToInt32(this.txtPort.Text);
                     this._model.IsEnable = this.chkIsEnable.Checked;
+
+                    //创建具体设备型号的变量
+                    if (this.cmbDeviceModels.Text != EditHelper.SUPPORT_DEVICES[0])
+                    {
+                        if (!this.CreateDefaultItems(this.cmbDeviceModels.Text))
+                        {
+                            return;
+                        }
+                    }
                 }
                 else
                 {
+                    this._model.Protocol = (this._channel.Protocol != ModbusProtocols.ModbusTCP) ? this._model.Protocol : (ModbusProtocols)this.cmbProtocol.SelectedIndex;
+                    
                     this._model.Name = this.txtName.Text;
                     this._model.Alias = this.txtAlias.Text;
                     this._model.Slave = Convert.ToInt32(this.txtSlave.Text);
@@ -205,6 +227,54 @@ namespace ConfigEditor.Forms
                 log.Error(ex);
                 MessageBox.Show(ex.Message, "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>
+        /// 创建默认变量
+        /// </summary>
+        /// <param name="deviceName"></param>
+        private bool CreateDefaultItems(string deviceName)
+        {
+            string xmlFile = Path.Combine(Application.StartupPath , string.Format(@"Devices\{0}.xml", deviceName));
+            if (!File.Exists(xmlFile))
+            {
+                MessageBox.Show("找不到设备驱动模板文件。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            XmlDevice device = XmlSerializeHelper.Deserialize(xmlFile);
+            if (device == null)
+            {
+                MessageBox.Show("设备驱动模板文件的格式错误。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (device.Protocols == null || !device.Protocols.Contains(this._channel.Protocol.ToString()))
+            {
+                MessageBox.Show("设备不支持当前通讯协议。", "系统消息", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            foreach (XmlItem item in device.Items)
+            {
+                ItemViewModel ivm = new ItemViewModel()
+                {
+                    Name = item.Name,
+                    TableName = EnumHelper.StringToEnum<ModbusDataModels>(item.DataModel),
+                    Address = item.Address,
+                    Length = item.Length,
+                    DataType = EnumHelper.StringToEnum<DataTypes>(item.DataType),
+                    Access = EnumHelper.StringToEnum<AccessRights>(item.Access),
+                    Alias = string.Empty,
+                    ScanPeriod = 1000,
+                    IsEnable = true,
+                    Device = this._model
+                };
+
+                this._model.Items.Add(ivm);
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -264,5 +334,12 @@ namespace ConfigEditor.Forms
 
             return ++val;
         }
+
+        private void txtAlias_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+      
     }
 }

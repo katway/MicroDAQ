@@ -18,9 +18,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using ConfigEditor.Core.ViewModels;
 using ConfigEditor.Core.Models;
-using System.Text.RegularExpressions;
 
 namespace ConfigEditor.Forms
 {
@@ -170,15 +170,61 @@ namespace ConfigEditor.Forms
                 return false;
             }
 
-            if (!Regex.IsMatch(this.txtLength.Text, @"^[0-9]+$") && Convert.ToInt32(this.txtLength.Text) > 0)
+            if (!Regex.IsMatch(this.txtLength.Text, @"^[0-9]+$"))
             {
                 MessageBox.Show("寄存器长度必须为正整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
             }
 
+            //判断寄存器长度是否正确
+            DataTypes dt = (DataTypes)this.cmbDataType.SelectedIndex;
+            int length = Convert.ToInt32(this.txtLength.Text);
+            switch (dt)
+            {
+                case DataTypes.Integer:
+                    if (length != 1 && length != 2 && length != 4)
+                    {
+                        MessageBox.Show("整型变量，其寄存器长度必须1、2或4。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                    break;
+
+                case DataTypes.Real:
+                    if (length != 2 && length != 4)
+                    {
+                        MessageBox.Show("实型变量，其寄存器长度必须2或4。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                    break;
+
+                case DataTypes.Discrete:
+                    if (length != 1)
+                    {
+                        MessageBox.Show("离散型变量，其寄存器长度必须1。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return false;
+                    }
+                    break;
+
+                case DataTypes.String:
+                default:
+                    break;
+            }
+
             if (!Regex.IsMatch(this.txtScanPeriod.Text, @"^[0-9]+$"))
             {
                 MessageBox.Show("刷新周期必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(this.txtMaximum.Text) && !Regex.IsMatch(this.txtMaximum.Text, @"^[0-9]+$"))
+            {
+                MessageBox.Show("最大有效值必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(this.txtMinimum.Text) && !Regex.IsMatch(this.txtMinimum.Text, @"^[0-9]+$"))
+            {
+                MessageBox.Show("最小有效值必须为整数。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
             }
 
@@ -305,7 +351,7 @@ namespace ConfigEditor.Forms
                 }
 
                 //更新主界面变量列表
-                this._parentForm.RefreshItemListView(this._model);
+                this._parentForm.SaveAndRefreshItemListView(this._model);
 
             }
             catch (Exception ex)
@@ -370,12 +416,14 @@ namespace ConfigEditor.Forms
                         this.cmbPrecision.Enabled = false;
                         this.txtMaximum.Enabled = true;
                         this.txtMinimum.Enabled = true;
+                        this.cmbPrecision.Text = null;
                         break;
 
                     case "实型":
                         this.cmbPrecision.Enabled = true;
                         this.txtMaximum.Enabled = true;
                         this.txtMinimum.Enabled = true;
+                        this.cmbPrecision.Text = "2";
                         break;
 
                     case "离散型":
@@ -383,6 +431,7 @@ namespace ConfigEditor.Forms
                         this.cmbPrecision.Enabled = false;
                         this.txtMaximum.Enabled = false;
                         this.txtMinimum.Enabled = false;
+                        this.cmbPrecision.Text = null;
                         break;
                 }
             }

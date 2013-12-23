@@ -61,8 +61,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label16 = new System.Windows.Forms.Label();
             this.nupdItemCount = new System.Windows.Forms.NumericUpDown();
+            this.label16 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupdItemCount)).BeginInit();
@@ -89,7 +89,7 @@
             "线圈(0x)",
             "离散量输入(1x) ",
             "输入寄存器(3x)",
-            "保存寄存器(4x)"});
+            "保持寄存器(4x)"});
             this.cmbTableName.Location = new System.Drawing.Point(88, 18);
             this.cmbTableName.Name = "cmbTableName";
             this.cmbTableName.Size = new System.Drawing.Size(128, 20);
@@ -173,7 +173,7 @@
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(65, 12);
             this.label15.TabIndex = 12;
-            this.label15.Text = "小数精度：";
+            this.label15.Text = "小数位数：";
             // 
             // label14
             // 
@@ -404,16 +404,6 @@
             this.groupBox3.TabIndex = 33;
             this.groupBox3.TabStop = false;
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.label16.Location = new System.Drawing.Point(245, 53);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(65, 12);
-            this.label16.TabIndex = 6;
-            this.label16.Text = "变量个数：";
-            // 
             // nupdItemCount
             // 
             this.nupdItemCount.Location = new System.Drawing.Point(326, 50);
@@ -436,6 +426,16 @@
             0,
             0,
             0});
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.label16.Location = new System.Drawing.Point(245, 53);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(65, 12);
+            this.label16.TabIndex = 6;
+            this.label16.Text = "变量个数：";
             // 
             // ItemBatchAddForm
             // 
