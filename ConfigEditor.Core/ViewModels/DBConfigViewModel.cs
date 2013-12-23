@@ -55,6 +55,8 @@ namespace ConfigEditor.Core.ViewModels
         //变量列表
         private List<ItemViewModel> _items;
 
+        private long _opcgateway_serialID;
+
 
         /// <summary>
         /// 变量编号
@@ -155,11 +157,18 @@ namespace ConfigEditor.Core.ViewModels
             set { _items = value; }
         }
 
+        public long OpcGateway_SerialID
+        {
+            get { return _opcgateway_serialID; }
+            set { _opcgateway_serialID = value; }
+        }
+
         public DBConfigViewModel()
         {
             Type = ChannelTypes.OpcItems;
             DBConfig = new List<DBConfigViewModel>();
             IsEnable = true;
+            OpcGateway_SerialID = 1;
         }
 
         public void Add(DBConfigViewModel model)

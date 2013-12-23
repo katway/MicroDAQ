@@ -72,7 +72,10 @@ namespace ConfigEditor.Core.Services
                 Accessibility = model.Accessibility.ToString(),
                 Address = model.Address,
                 Code = model.Code.HasValue ? Convert.ToInt32(model.Code) : 0,
-                Enable = model.IsEnable.ToString()
+                Enable = model.IsEnable.ToString(),
+                OpcGateway_SerialID = 1
+                
+                
             };
 
 

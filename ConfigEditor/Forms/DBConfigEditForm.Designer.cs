@@ -65,7 +65,7 @@
             "可读可写",
             "只读",
             "只写"});
-            this.cmbAccess.Location = new System.Drawing.Point(295, 170);
+            this.cmbAccess.Location = new System.Drawing.Point(295, 175);
             this.cmbAccess.Name = "cmbAccess";
             this.cmbAccess.Size = new System.Drawing.Size(100, 20);
             this.cmbAccess.TabIndex = 5;
@@ -154,7 +154,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(212, 62);
+            this.label2.Location = new System.Drawing.Point(212, 65);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 12);
             this.label2.TabIndex = 1;
@@ -169,7 +169,7 @@
             // 
             // txtType
             // 
-            this.txtType.Location = new System.Drawing.Point(295, 65);
+            this.txtType.Location = new System.Drawing.Point(295, 62);
             this.txtType.Name = "txtType";
             this.txtType.Size = new System.Drawing.Size(127, 21);
             this.txtType.TabIndex = 4;

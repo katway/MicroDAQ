@@ -45,6 +45,8 @@ namespace ConfigEditor.Core.Models
        //读取长度
         private string _length;
 
+        private long _opcgateway_serialID;
+
         /// <summary>
         /// 变量编号
         /// </summary>
@@ -133,6 +135,13 @@ namespace ConfigEditor.Core.Models
         {
             get { return _length; }
             set { _length = value; }
+        }
+
+
+        public long OpcGateway_SerialID
+        {
+            get { return _opcgateway_serialID; }
+            set { _opcgateway_serialID = value; }
         }
     }
 }

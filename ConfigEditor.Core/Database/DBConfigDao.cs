@@ -38,8 +38,8 @@ namespace ConfigEditor.Core.Database
             try
             {
                 DbDaoHelper dao = new DbDaoHelper(DataSources.PROJECT);
-                string sql = @" INSERT INTO DBConfig ( Address, Accessibility, Enable, Code)
-                                VALUES ('{0}','{1}','{2}','{3}')  ";
+                string sql = @" INSERT INTO DBConfig ( Address, Accessibility, Enable, Code,OpcGateway_SerialID)
+                                VALUES ('{0}','{1}','{2}','{3}','{4}')  ";
 
                 object[] objs = new object[]
                 {
@@ -51,7 +51,8 @@ namespace ConfigEditor.Core.Database
                     //config.StartAddress,
                     config.Accessibility,                        
                     config.Enable,
-                    config.Code
+                    config.Code,
+                    config.OpcGateway_SerialID
                   
                    
                 };
@@ -86,7 +87,7 @@ namespace ConfigEditor.Core.Database
                 string sql = @"
                                 UPDATE DBConfig
                                 SET   Address ='{1}', Enable ='{2}',
-                                      Accessibility ='{3}',Code = '{4}'
+                                      Accessibility ='{3}',Code = '{4}',OpcGateway_SerialID = '{5}'
                                 WHERE (SerialID = '{0}')
                               ";
                 object[] objs = new object[]
@@ -95,7 +96,8 @@ namespace ConfigEditor.Core.Database
                     config.Address,
                     config.Enable,                         
                     config.Accessibility,
-                    config.Code
+                    config.Code,
+                    config.OpcGateway_SerialID
                 };
                 string tmp = string.Format(sql, objs);
                 int rowCount = dao.ExecuteNonQuery(tmp);
@@ -191,7 +193,8 @@ namespace ConfigEditor.Core.Database
                         Address = Convert.ToString(row["Address"]),
                         Accessibility = Convert.ToString(row["Accessibility"]),
                         Enable = Convert.ToString(row["Enable"]),
-                        Code = row["Code"] != DBNull.Value ? Convert.ToInt32(row["Code"]) : 0
+                        Code = row["Code"] != DBNull.Value ? Convert.ToInt32(row["Code"]) : 0,
+                        OpcGateway_SerialID = Convert.ToInt32(row["OpcGateway_SerialID"])
                     };
 
                     list.Add(config);
@@ -228,7 +231,8 @@ namespace ConfigEditor.Core.Database
                         Address = Convert.ToString(row["Address"]),
                         Accessibility = Convert.ToString(row["Accessibility"]),
                         Enable = Convert.ToString(row["Enable"]),
-                        Code = row["Code"] != DBNull.Value ? Convert.ToInt32(row["Code"]) : 0
+                        Code = row["Code"] != DBNull.Value ? Convert.ToInt32(row["Code"]) : 0,
+                        OpcGateway_SerialID = Convert.ToInt32(row["OpcGateway_SerialID"])
                     };
 
                     list.Add(config);
@@ -262,6 +266,7 @@ namespace ConfigEditor.Core.Database
                     dbg.Address = Convert.ToString(row["Address"]);
                     dbg.Accessibility = Convert.ToString(row["Accessibility"]);
                     dbg.Enable = Convert.ToString(row["Enable"]);
+                    dbg.OpcGateway_SerialID = Convert.ToInt32(row[" OpcGateway_SerialID"]);
                   
                 }
             }
