@@ -272,6 +272,10 @@ namespace MicroDAQ.Specifical
                         createCtrl();
                         Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
                         Program.opcGateway.Start(pid);
+                        ///增加可配置的间隔时间
+                        int interval = 1000;
+                        int.TryParse(ini.GetValue("Database", "UpdateInterval"), out interval);
+                        Program.opcGateway.UpdateInterval = interval;
                         success = true;
                     }
             }

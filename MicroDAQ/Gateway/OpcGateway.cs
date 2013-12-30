@@ -35,6 +35,7 @@ namespace MicroDAQ.Gateway
             RemoteCtrlCycle = new CycleTask();
             UpdateCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(UpdateCycle_WorkStateChanged);
             RemoteCtrlCycle.WorkStateChanged += new CycleTask.WorkStateChangeEventHandle(RemoteCtrlCycle_WorkStateChanged);
+            this.UpdateInterval = 1000;
         }
 
 
@@ -70,7 +71,10 @@ namespace MicroDAQ.Gateway
         public IList<IDatabaseManage> DatabaseManagers { get; set; }
         public CycleTask UpdateCycle { get; private set; }
         public CycleTask RemoteCtrlCycle { get; private set; }
-
+        /// <summary>
+        /// 更新间隔，单位ms
+        /// </summary>
+        public int UpdateInterval { get; set; }
 
         protected virtual void Update()
         {
@@ -85,8 +89,8 @@ namespace MicroDAQ.Gateway
                             dbMgr.UpdateItem(item);
                         }
                     }
+                    System.Threading.Thread.Sleep(UpdateInterval);
                 }
-                System.Threading.Thread.Sleep(900);
             }
             catch (Exception ex)
             {
@@ -131,7 +135,7 @@ namespace MicroDAQ.Gateway
                                           );
                         Thread.Sleep(990);
                     }
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
             }
             catch (Exception ex)
             {
