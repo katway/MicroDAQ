@@ -23,6 +23,9 @@ namespace MicroDAQ.Specifical
         /// </summary>
         public string Connection { get; set; }
 
+        public int ConnectionState { get; set; }
+        public int NormalState { get; set; }
+
         /// <summary>
         /// 配置中声明的是否使用多个DB组
         /// </summary>
