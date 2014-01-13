@@ -1,7 +1,7 @@
 ﻿
 
 
-CREATE PROCEDURE [dbo].[UpdateHistoryData2]
+ALTER    PROCEDURE [dbo].[UpdateHistoryData2]
 (@MeterID int ,
 @MeterType int ,
 @MeterState int,
@@ -54,11 +54,13 @@ BEGIN
 									SET @value2=@value1;
 									SET @Warning =0;
 								END
-							IF (@meterID<11000)
-								BEGIN
+
 									--将生成的Value2写回到即时数据表
 									UPDATE meters_value SET value2= @Value2	WHERE id=@MeterID;
-									
+
+							IF (@meterID<11000)
+								BEGIN
+																
 									--将数据写入ZZ表
 									--SET	@sql2 = 'INSERT INTO ZZ'+ @uuid + ' (value,value2,timestamp) VALUES('
 										--+ CAST(@Value1 AS VARCHAR(10)) + ',' + CAST(@Value2 AS VARCHAR(10))  + ', GETDATE())';
@@ -95,12 +97,16 @@ BEGIN
 											DECLARE @now as datetime;
 											SET @now = GETDATE();
 
+
 											DECLARE @GetM3SQL as nvarchar(500);
 											DECLARE @V1 FloAT;
 											DECLARE @V2 FLOAT;
-											--SET @GetM3SQL ='SELECT @V1 = ISNULL(SUM(value),0), @V2 = ISNULL(SUM(value2),0),GETDATE() FROM ZZ' + @uuid + ' WHERE timestamp > DATEADD(second,-2070,GETDATE()) AND timestamp < GETDATE()';
-											SET @GetM3SQL ='SELECT @V1 = SUM(value), @V2 = SUM(value2) FROM ZZ' + @uuid + ' WHERE timestamp > DATEADD(second,-2070,GETDATE()) AND timestamp < GETDATE()';
-											EXEC sp_executesql @GetM3SQL,N'@V1 FLOAT OUTPUT,@V2 FLOAT OUTPUT',@V1 OUTPUT,@V2 OUTPUT;
+											--累加方式计算
+											--SET @GetM3SQL ='SELECT @V1 = ISNULL(SUM(value),0), @V2 = ISNULL(SUM(value2),0) FROM ZZ' + @uuid + ' WHERE timestamp > DATEADD(second,-2100,GETDATE()) AND timestamp <= GETDATE()';
+											--EXEC sp_executesql @GetM3SQL,N'@V1 FLOAT OUTPUT,@V2 FLOAT OUTPUT',@V1 OUTPUT,@V2 OUTPUT;
+											--35倍方式计算
+											SET @V1 = @value1*35;
+											SET @V2 = @value2*35;
 											
 											DECLARE @idM3 int;
 											SET @idM3 = @MeterID+30000;
@@ -120,11 +126,5 @@ BEGIN
 			END
 		END
 END
-
-
-
-
-
-
 
 

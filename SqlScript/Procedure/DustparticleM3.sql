@@ -32,10 +32,13 @@ BEGIN
 											DECLARE @GetM3SQL as nvarchar(500);
 											DECLARE @V1 FloAT;
 											DECLARE @V2 FLOAT;
-											--SET @GetM3SQL ='SELECT @V1 = ISNULL(SUM(value),0), @V2 = ISNULL(SUM(value2),0),GETDATE() FROM ZZ' + @uuid + ' WHERE timestamp > DATEADD(second,-2070,GETDATE()) AND timestamp < GETDATE()';
-											SET @GetM3SQL ='SELECT @V1 = SUM(value), @V2 = SUM(value2) FROM ZZ' + @uuid + ' WHERE timestamp > DATEADD(second,-2070,GETDATE()) AND timestamp < GETDATE()';
-											EXEC sp_executesql @GetM3SQL,N'@V1 FLOAT OUTPUT,@V2 FLOAT OUTPUT',@V1 OUTPUT,@V2 OUTPUT;
-											
+											--累加方式计算
+											--SET @GetM3SQL ='SELECT @V1 = ISNULL(SUM(value),0), @V2 = ISNULL(SUM(value2),0) FROM ZZ' + @uuid + ' WHERE timestamp > DATEADD(second,-2100,GETDATE()) AND timestamp <= GETDATE()';
+											--EXEC sp_executesql @GetM3SQL,N'@V1 FLOAT OUTPUT,@V2 FLOAT OUTPUT',@V1 OUTPUT,@V2 OUTPUT;
+											--35倍方式计算
+											SET @V1 = @value1*35;
+											SET @V2 = @value2*35;
+																	
 											EXEC UpdateTransientData2 @idM3,@MeterType,@MeterState,192, @V1,@V2,0,@last OUTPUT,@ResultState OUTPUT,@RestultMessage OUTPUT;
 											--SET @sql3 = 'INSERT INTO ZZ'+ @uidM3 + ' (value,value2,timestamp)  SELECT ISNULL(SUM(value),0), ISNULL(SUM(value2),0),GETDATE() FROM ZZ' + @uuid + ' WHERE timestamp > DATEADD(second,-2070,GETDATE()) AND timestamp < GETDATE()';
 											--SET @sql3 = 'INSERT INTO ZZ'+ @uidM3 + ' (value,value2,timestamp)  SELECT @V1,@V2,GETDATE()'
