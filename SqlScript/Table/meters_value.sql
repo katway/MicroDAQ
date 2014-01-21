@@ -19,65 +19,12 @@ CREATE TABLE [dbo].[meters_value] (
 ON [PRIMARY]
 GO
 
-CREATE INDEX [_WA_Sys_type_6F7F8B4B] ON [dbo].[meters_value]
-([type] ASC) 
-ON [PRIMARY]
-GO
 
 CREATE INDEX [_WA_Sys_id_6F7F8B4B] ON [dbo].[meters_value]
 ([id] ASC) 
 ON [PRIMARY]
 GO
 
-CREATE INDEX [_WA_Sys_time_6F7F8B4B] ON [dbo].[meters_value]
-([time] ASC) 
-ON [PRIMARY]
-GO
-
-CREATE INDEX [_WA_Sys_value1_6F7F8B4B] ON [dbo].[meters_value]
-([value1] ASC) 
-ON [PRIMARY]
-GO
-
-CREATE INDEX [_WA_Sys_value2_6F7F8B4B] ON [dbo].[meters_value]
-([value2] ASC) 
-ON [PRIMARY]
-GO
-
-CREATE INDEX [_WA_Sys_value3_6F7F8B4B] ON [dbo].[meters_value]
-([value3] ASC) 
-ON [PRIMARY]
-GO
-
-CREATE INDEX [_WA_Sys_state_6F7F8B4B] ON [dbo].[meters_value]
-([state] ASC) 
-ON [PRIMARY]
-GO
-
-CREATE INDEX [_WA_Sys_zzTime_6F7F8B4B] ON [dbo].[meters_value]
-([zzTime] ASC) 
-ON [PRIMARY]
-GO
-
-CREATE INDEX [_WA_Sys_alertTime_6F7F8B4B] ON [dbo].[meters_value]
-([alertTime] ASC) 
-ON [PRIMARY]
-GO
-
-CREATE INDEX [_WA_Sys_alert_6F7F8B4B] ON [dbo].[meters_value]
-([alert] ASC) 
-ON [PRIMARY]
-GO
-
-CREATE INDEX [_WA_Sys_quality_6F7F8B4B] ON [dbo].[meters_value]
-([quality] ASC) 
-ON [PRIMARY]
-GO
-
-CREATE INDEX [_WA_Sys_alertRecord_6F7F8B4B] ON [dbo].[meters_value]
-([alertRecord] ASC) 
-ON [PRIMARY]
-GO
 
 CREATE TRIGGER [dbo].[insert_alertRecord_after_meters-value_State_change]
 ON [dbo].[meters_value]
@@ -92,8 +39,8 @@ BEGIN
 	SELECT @value = value1 from inserted;
                      IF(@oldState!= @newState)
                             BEGIN
-																			IF( @newState >= 2)
-																					BEGIN
+								IF( @newState >= 2)
+									BEGIN
                                                 DECLARE @alertid VARCHAR(32);
                                                 DECLARE @uuid VARCHAR(32);
                                                 SET @uuid = (SELECT id FROM processitem WHERE slave =@ID);
@@ -105,7 +52,7 @@ BEGIN
                                            END
                                        ELSE
                                        		BEGIN
-                                       			SET @alertid = SELECT TOP1 alertRecordId FROM ProcessItem WHERE slave = @ID;
+                                       			SET @alertid = (SELECT TOP1 alertRecordId FROM ProcessItem WHERE slave = @ID);
                                        			UPDATE ProcessItemAlertRecord SET resettime =GETDATE()  WHERE Id = @alertid;
                                        		END
                                 END

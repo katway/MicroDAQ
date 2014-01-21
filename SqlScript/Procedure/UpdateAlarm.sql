@@ -15,7 +15,8 @@ BEGIN
   DECLARE @logic varchar(10);
 	SET @logic = null;	
 	DECLARE @alert int; DECLARE @red int;DECLARE @yellow int;DECLARE @green int;
-	SET @red =12;SET @yellow =2;SET @green =1;SET @alert = @green ;
+	SET @red =12;SET @yellow =2;SET @green =1;
+	SET @alert = @green ;
 	
 	SET @logic = (SELECT TOP 1 logic  FROM ProcessItem WHERE id = @uuid);
 	        --计算报警状态
@@ -50,23 +51,27 @@ BEGIN
 								UPDATE meters_value SET alert =@alert WHERE id = @MeterID;
 							END
 							--记录报警纪录
-							DECLARE @lastAlert DateTime;
-							SET @lastAlert = (SELECT [alerttime] FROM meters_value WHERE id = @MeterID);						
-							IF (@logic ='between')
-									BEGIN
-											DECLARE @alertid VARCHAR(32);				
-											IF ( @Value1 < @yellowMin OR  @Value1 >@yellowMax)
-													BEGIN
-															IF (@lastAlert is null OR ABS(DATEDIFF(ss,@lastAlert, GETDATE())) >= @rate)
+							IF(1=0)
+								BEGIN
+									DECLARE @lastAlert DateTime;
+									SET @lastAlert = (SELECT [alerttime] FROM meters_value WHERE id = @MeterID);						
+									IF (@logic ='between')
+											BEGIN
+													DECLARE @alertid VARCHAR(32);				
+													IF ( @Value1 < @yellowMin OR  @Value1 >@yellowMax)
 															BEGIN
-																	SET @alertid = REPLACE(NEWID(), '-', '');
-																	INSERT INTO ProcessItemAlertRecord (id,processItemId,[timestamp],[value],[confirm])
-																							VALUES(@alertid, @uuid,GETDATE(),@Value1,'未确认');
-																	UPDATE ProcessItem SET alertRecordId = @alertid WHERE slave = @MeterID;
-																	UPDATE meters_value SET alertTime = GETDATE() WHERE id =@MeterID;
-															END
-													END											
-									END
+																	IF (@lastAlert is null OR ABS(DATEDIFF(ss,@lastAlert, GETDATE())) >= @rate)
+																	BEGIN
+																			SET @alertid = REPLACE(NEWID(), '-', '');
+																			INSERT INTO ProcessItemAlertRecord (id,processItemId,[timestamp],[value],[confirm])
+																									VALUES(@alertid, @uuid,GETDATE(),@Value1,'未确认');
+																			UPDATE ProcessItem SET alertRecordId = @alertid WHERE slave = @MeterID;
+																			UPDATE meters_value SET alertTime = GETDATE() WHERE id =@MeterID;
+																	END
+															END											
+											END
+								END
 
 	END
-	
+		
+
