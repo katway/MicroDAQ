@@ -52,7 +52,7 @@ BEGIN
                                            END
                                        ELSE
                                        		BEGIN
-                                       			SET @alertid = (SELECT TOP1 alertRecordId FROM ProcessItem WHERE slave = @ID);
+                                       			SET @alertid = (SELECT TOP 1 alertRecordId FROM ProcessItem WHERE slave = @ID);
                                        			UPDATE ProcessItemAlertRecord SET resettime =GETDATE()  WHERE Id = @alertid;
                                        		END
                                 END
