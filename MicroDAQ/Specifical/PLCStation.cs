@@ -22,8 +22,15 @@ namespace MicroDAQ.Specifical
         /// 连接名称
         /// </summary>
         public string Connection { get; set; }
-
+        /// <summary>
+        /// PLC站的当前连接状态码
+        /// </summary>
         public int ConnectionState { get; set; }
+        public string ConnectionStateItem { get; set; }
+        public bool Connected { get; set; }
+        /// <summary>
+        /// PLC站在连接正常时的连接状态码（PLC连接状态总是应该保持在该状态码）
+        /// </summary>
         public int NormalState { get; set; }
 
         /// <summary>
@@ -64,6 +71,9 @@ namespace MicroDAQ.Specifical
         {
             ItemsHead = new List<string>();
             ItemsData = new List<string>();
+            this.NormalState = 20;
+            this.ConnectionState = 0;
+            this.Connected = false;
         }
 
         /// <summary>

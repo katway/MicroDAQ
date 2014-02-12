@@ -18,78 +18,58 @@ namespace MicroDAQ.Specifical
     /// </summary>
     internal class Loader
     {
-
-        /// <summary>
-        /// 使用哪个OPCServer
-        /// </summary>
-        string opcServerType = "SimaticNet";
-
-        private string wordItemFormat;
-        private string wordArrayItemFormat;
-        private string realItemFormat;
-
-        internal List<PLCStationInformation> Plcs;
-        private OpcOperate.Sync.OPCServer SyncOpc;
-        IniFile ini = null;
-
+        internal OpcOperate.Sync.OPCServer SyncOpc;
+        internal Configurator Configurator { get; set; }
+        internal Scout Scout { get; set; }
         ILog log;
-
-
-        internal Loader()
+        public Loader()
         {
+            Configurator = new Configurator();
+            Scout = new Scout(this);
             log = LogManager.GetLogger(this.GetType());
-            Plcs = new List<PLCStationInformation>();
-
-            ini = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "MicroDAQ.ini");
-
-            int plcCount = int.Parse(ini.GetValue("PLCConfig", "Amount"));
-            opcServerType = ini.GetValue("OpcServer", "Type").Trim();
-            for (int i = 0; i < plcCount; i++)
-            {
-                PLCStationInformation plc = new PLCStationInformation();
-                Plcs.Add(plc);
-                plc.Connection = string.Format(ini.GetValue(opcServerType, "ConnectionString"), i + 1);
-
-            }
         }
 
-
-
+        public void ReadConfigFromFile()
+        {
+            Configurator.ReadConfigFromFile();
+        }
+        public void CheckConfig()
+        {
+            this.Scout.CheckPLCsState();
+        }
         /// <summary>
         /// 读取配置
         /// </summary>
         private bool ReadConfig()
         {
+            OPCServer SyncOpc = this.SyncOpc;
+            List<PLCStationInformation> PlcsInfo = this.Configurator.PlcsInfo;
             bool success = false;
             try
             {
-                //读取Item地址格式           
-                string[] getPairsConfigItems = new string[Plcs.Count];
-                wordItemFormat = ini.GetValue(opcServerType, "WordItemFormat");
-                wordArrayItemFormat = ini.GetValue(opcServerType, "WordArrayItemFormat");
-                realItemFormat = ini.GetValue(opcServerType, "RealItemFormat");
+
                 if (SyncOpc.AddGroup("ConfigGroups"))
                 {
+                    string[] getPairsConfigItems = new string[PlcsInfo.Count];
                     #region 是否多组,有几组
                     //生成读取是否多组,有几组的Item地址
-                    for (int i = 0; i < Plcs.Count; i++)
+                    for (int i = 0; i < PlcsInfo.Count; i++)
                     {
-                        getPairsConfigItems[i] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 26, 2);
+                        getPairsConfigItems[i] = PlcsInfo[i].Connection + string.Format(Configurator.wordArrayItemFormat, 1, 26, 2);
+
                     }
                     //获取是否多组的数据,并转存到PlcStation列表里
-                    int[] itemHandle = new int[Plcs.Count];
-                    object[] values = new object[Plcs.Count];
+                    int[] itemHandle = new int[PlcsInfo.Count];
+                    object[] values = new object[PlcsInfo.Count];
                     if (SyncOpc.AddItems("ConfigGroups", getPairsConfigItems, itemHandle))
                     {
-                        foreach (string item in getPairsConfigItems)
-                            log.Info(item);
 
                         SyncOpc.SyncRead("ConfigGroups", values, itemHandle);
-                        for (int i = 0; i < Plcs.Count; i++)
+                        for (int i = 0; i < PlcsInfo.Count; i++)
                         {
                             ushort[] value = (ushort[])values[i];
-                            Plcs[i].MorePair = (value[0] == 2) ? (true) : false;
-                            Plcs[i].PairsNumber = value[1];
+                            PlcsInfo[i].MorePair = (value[0] == 2) ? (true) : false;
+                            PlcsInfo[i].PairsNumber = value[1];
                         }
                     }
                     #endregion
@@ -98,20 +78,20 @@ namespace MicroDAQ.Specifical
                     //读取配置监测点数量的Item,每个PLC的DB1,W30,W32|W34,W36|W38....
                     //生成读取配置监测点数量的Items
                     string[][] getItemsNumber = null;   //第一维为PlcStation编号,第二维为数量组的编号
-                    getItemsNumber = new string[Plcs.Count][];
-                    for (int i = 0; i < Plcs.Count; i++)
+                    getItemsNumber = new string[PlcsInfo.Count][];
+                    for (int i = 0; i < PlcsInfo.Count; i++)
                     {
-                        getItemsNumber[i] = new string[Plcs[i].PairsNumber];
-                        for (int j = 0; j < Plcs[i].PairsNumber; j++)
+                        getItemsNumber[i] = new string[PlcsInfo[i].PairsNumber];
+                        for (int j = 0; j < PlcsInfo[i].PairsNumber; j++)
                         {
-                            getItemsNumber[i][j] = Plcs[i].Connection + string.Format(wordArrayItemFormat, 1, 30 + j * 4, 2);
+                            getItemsNumber[i][j] = PlcsInfo[i].Connection + string.Format(Configurator.wordArrayItemFormat, 1, 30 + j * 4, 2);
                         }
                     }
                     //获取每个PLC中,每个DB组中存放的监测点数量
-                    for (int i = 0; i < Plcs.Count; i++)
+                    for (int i = 0; i < PlcsInfo.Count; i++)
                     {
-                        itemHandle = new int[Plcs[i].PairsNumber];
-                        values = new object[Plcs[i].PairsNumber];
+                        itemHandle = new int[PlcsInfo[i].PairsNumber];
+                        values = new object[PlcsInfo[i].PairsNumber];
 
                         foreach (string item in getItemsNumber[i])
                             log.Info(item);
@@ -120,11 +100,11 @@ namespace MicroDAQ.Specifical
 
                             SyncOpc.SyncRead("ConfigGroups", values, itemHandle);
                             //取1个PLC中的每个DB组中存放的监测点数量
-                            for (int j = 0; j < Plcs[i].PairsNumber; j++)
+                            for (int j = 0; j < PlcsInfo[i].PairsNumber; j++)
                             {
                                 ushort[] value = (ushort[])values[j];
-                                Plcs[i].ItemsNumber[j].SmallItems = value[0];
-                                Plcs[i].ItemsNumber[j].BigItems = value[1];
+                                PlcsInfo[i].ItemsNumber[j].SmallItems = value[0];
+                                PlcsInfo[i].ItemsNumber[j].BigItems = value[1];
                             }
                         }
                     }
@@ -145,13 +125,14 @@ namespace MicroDAQ.Specifical
         /// </summary>
         private bool CreateItems()
         {
+            List<PLCStationInformation> PlcsInfo = this.Configurator.PlcsInfo;
             bool success = false;
             try
             {
                 //遍历所有PLC
-                for (int i = 0; i < Plcs.Count; i++)
+                for (int i = 0; i < PlcsInfo.Count; i++)
                 {
-                    PLCStationInformation plc = Plcs[i];
+                    PLCStationInformation plc = PlcsInfo[i];
                     //遍历PLC中所有DB组
                     for (int j = 0; j < plc.ItemsNumber.Length; j++)
                     {
@@ -160,15 +141,15 @@ namespace MicroDAQ.Specifical
                         //根据20字节监测点数量生成Item地址
                         for (int k = 0; k < num.BigItems; k++)
                         {
-                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 4 + j * 2, 20 * k, 3));
-                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 4 + j * 2, 20 * k + 10));
+                            plc.ItemsHead.Add(plc.Connection + string.Format(Configurator.wordArrayItemFormat, 4 + j * 2, 20 * k, 3));
+                            plc.ItemsData.Add(plc.Connection + string.Format(Configurator.realItemFormat, 4 + j * 2, 20 * k + 10));
                         }
 
                         //根据10字节监测点数量生成Item地址
                         for (int k = 0; k < num.SmallItems; k++)
                         {
-                            plc.ItemsHead.Add(plc.Connection + string.Format(wordArrayItemFormat, 3 + j * 2, 10 * k, 3));
-                            plc.ItemsData.Add(plc.Connection + string.Format(realItemFormat, 3 + j * 2, 10 * k + 6));
+                            plc.ItemsHead.Add(plc.Connection + string.Format(Configurator.wordArrayItemFormat, 3 + j * 2, 10 * k, 3));
+                            plc.ItemsData.Add(plc.Connection + string.Format(Configurator.realItemFormat, 3 + j * 2, 10 * k + 6));
                         }
 
                     }
@@ -187,10 +168,11 @@ namespace MicroDAQ.Specifical
         private IList<IDataItemManage> createItemsMangers()
         {
             bool success = false;
+            List<PLCStationInformation> PlcsInfo = this.Configurator.PlcsInfo;
             IList<IDataItemManage> listDataItemManger = new List<IDataItemManage>();
             try
             {
-                foreach (var plc in Plcs)
+                foreach (var plc in PlcsInfo)
                 {
                     string[] head = new string[plc.ItemsHead.Count];
                     string[] data = new string[plc.ItemsHead.Count];
@@ -215,14 +197,14 @@ namespace MicroDAQ.Specifical
 
         private void createCtrl()
         {
-            string pid = ini.GetValue(opcServerType, "ProgramID");
+            string pid = this.Configurator.opcServerType;
             int i = 0;
-            foreach (var plc in Plcs)
+            foreach (var plc in this.Configurator.PlcsInfo)
             {
                 Controller MetersCtrl = new Controller("MetersCtrl",
 
-                                        new string[] { plc.Connection + string.Format(wordArrayItemFormat, 2, 100, 5) },
-                                        new string[] { plc.Connection + string.Format(wordArrayItemFormat, 2, 120, 5) }
+                                        new string[] { plc.Connection + string.Format(Configurator.wordArrayItemFormat, 2, 100, 5) },
+                                        new string[] { plc.Connection + string.Format(Configurator.wordArrayItemFormat, 2, 120, 5) }
                                       );
                 Program.MeterManager.CTMeters.Add(90 + i++, MetersCtrl);
                 MetersCtrl.Connect(pid, "127.0.0.1");
@@ -233,8 +215,9 @@ namespace MicroDAQ.Specifical
         private IList<IDatabaseManage> createDBManagers()
         {
             bool success = false;
+            IniFile ini = this.Configurator.ini;
             IList<IDatabaseManage> listDatabaseManger = new List<IDatabaseManage>();
-            string[] dbs = ini.GetValue("Database", "Members").Trim().Split(',');
+            string[] dbs = this.Configurator.ini.GetValue("Database", "Members").Trim().Split(',');
             try
             {
                 foreach (string dbName in dbs)
@@ -262,16 +245,21 @@ namespace MicroDAQ.Specifical
         public bool Start()
         {
             bool success = false;
-            SyncOpc = new OPCServer();
-            string pid = ini.GetValue(opcServerType, "ProgramID");
-            if (SyncOpc.Connect(pid, "127.0.0.1"))
+            this.SyncOpc = new OPCServer();
+            this.ReadConfigFromFile();
+            
+            IniFile ini = this.Configurator.ini;
+
+            if (this.SyncOpc.Connect(Configurator.OpcServerProgramID, "127.0.0.1"))
             {
+                this.CheckConfig();
                 if (ReadConfig())
                     if (CreateItems())
                     {
                         createCtrl();
                         Program.opcGateway = new OpcGateway(createItemsMangers(), createDBManagers());
-                        Program.opcGateway.Start(pid);
+                        Program.opcGateway.Start(Configurator.OpcServerProgramID);
+
                         ///增加可配置的间隔时间
                         int interval = 1000;
                         int.TryParse(ini.GetValue("Database", "UpdateInterval"), out interval);

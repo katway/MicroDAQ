@@ -92,6 +92,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Specifical\Configurator.cs" />
     <Compile Include="Specifical\DataState.cs" />
     <Compile Include="Specifical\DataType.cs" />
     <Compile Include="Specifical\Loader.cs" />

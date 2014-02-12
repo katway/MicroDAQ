@@ -25,24 +25,21 @@ namespace MicroDAQ.UI
         {
             InitializeComponent();
             ini = new IniFile(AppDomain.CurrentDomain.BaseDirectory + "MicroDAQ.ini");
+            log = LogManager.GetLogger(this.GetType());
         }
 
-        private void Form2_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
             ni.Icon = this.Icon;
             ni.Text = this.Text;
 
             bool autoStart = false;
-
-            log = LogManager.GetLogger(this.GetType());
             try
             {
                 this.Text = ini.GetValue("General", "Title");
                 this.tsslProject.Text = "项目代码：" + ini.GetValue("General", "ProjetCode");
                 this.tsslVersion.Text = "程序版本：" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 autoStart = bool.Parse(ini.GetValue("AutoRun", "AutoStart"));
-
-                Loader = new Loader();
             }
             catch (Exception ex)
             {
@@ -71,7 +68,7 @@ namespace MicroDAQ.UI
                     {
                         //添加获取采集点的数量
                         this.tsddbPLC.DropDownItems.Clear();
-                        foreach (PLCStationInformation plc in Loader.Plcs)
+                        foreach (PLCStationInformation plc in Loader.Configurator.PlcsInfo)
                         {
                             ToolStripMenuItem tsiPLC = new ToolStripMenuItem(plc.Connection);
                             this.tsddbPLC.DropDownItems.Add(tsiPLC);
@@ -141,6 +138,7 @@ namespace MicroDAQ.UI
             this.btnStart.Enabled = false;
 
             System.Threading.Thread.Sleep(Program.waitMillionSecond);
+            Loader = new Loader();
             bool success = this.Loader.Start();
             if (success)
             {

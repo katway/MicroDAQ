@@ -11,12 +11,110 @@ namespace MicroDAQ.Specifical
     /// </summary>
     internal class Scout
     {
-        internal Scout(OPCServer syncOPC)
+        Loader Loader;
+
+        internal Scout(Loader loader)
         {
-            this.SyncOpc = syncOPC;
+            Loader = loader;
+        }
+        internal bool CheckPLCsState()
+        {
+            bool success = true;
+
+            foreach (var plc in Loader.Configurator.PlcsInfo)
+            {
+                success &= GetPLCState(plc);
+            }
+
+            return success;
+
         }
 
 
-        internal OPCServer SyncOpc { get; private set; }
+        private bool GetPLCState(PLCStationInformation plcInfo)
+        {
+            bool success = false;
+
+            OpcOperate.Sync.OPCServer SyncOpc = Loader.SyncOpc;
+
+            ///准备ItemHandle
+            int[] connectionStateItemHandle = new int[1];
+
+            ///开始读取
+            SyncOpc.AddGroup("GetConnectionState");
+            SyncOpc.AddItems("GetConnectionState",
+                                        new string[] { plcInfo.ConnectionStateItem },
+                                        connectionStateItemHandle
+                                  );
+            ///接收数据
+            object[] value = null;
+            SyncOpc.SyncRead("GetConnectionState", value, connectionStateItemHandle);
+
+            ///填充到PLCStationInfomation结构中
+            switch (this.Loader.Configurator.opcServerType)
+            {
+                case "SimaticNet":
+                    for (int i = 0; i < value.Length; i++)
+                        Loader.Configurator.PlcsInfo[i].ConnectionState = (ushort)value[i];
+                    break;
+                case "Matrikon":
+                    for (int i = 0; i < value.Length; i++)
+                        Loader.Configurator.PlcsInfo[i].Connected = (bool)value[i];
+                    break;
+                default:
+                    throw new Exception("不支持的OPC服务器类型");
+
+            }
+            return success;
+
+        }
+
+
+        private bool GetPLCState()
+        {
+            bool success = false;
+
+            OpcOperate.Sync.OPCServer SyncOpc = Loader.SyncOpc;
+            ///生成读取连接状态的Item数组
+            List<string> connectionStateItem = new List<string>();
+            foreach (var plc in Loader.Configurator.PlcsInfo)
+            {
+                connectionStateItem.Add(plc.ConnectionStateItem);
+            }
+            ///准备ItemHandle
+            int[] connectionStateItemHandle = new int[Loader.Configurator.PlcsInfo.Count];
+
+            ///开始读取
+            SyncOpc.AddGroup("GetConnectionState");
+            SyncOpc.AddItems("GetConnectionState",
+                                        connectionStateItem.ToArray(),
+                                        connectionStateItemHandle
+                                  );
+            ///接收数据
+            object[] value = null;
+            SyncOpc.SyncRead("GetConnectionState", value, connectionStateItemHandle);
+
+            ///填充到PLCStationInfomation结构中
+
+            switch (this.Loader.Configurator.opcServerType)
+            {
+                case "SimaticNet":
+                    for (int i = 0; i < value.Length; i++)
+                        Loader.Configurator.PlcsInfo[i].ConnectionState = (ushort)value[i];
+                    break;
+                case "Mactrikon":
+                    for (int i = 0; i < value.Length; i++)
+                        Loader.Configurator.PlcsInfo[i].Connected = (bool)value[i];
+                    break;
+                default:
+                    throw new Exception("不支持的OPC服务器类型");
+
+            }
+
+
+            return success;
+        }
+
+
     }
 }
